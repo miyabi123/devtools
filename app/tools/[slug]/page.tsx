@@ -62,6 +62,10 @@ const toolComponents: Record<string, React.ComponentType> = {
   'base64-encode-decode': dynamic(() => import('@/components/tools/Base64Tool')),
   'url-encode-decode':    dynamic(() => import('@/components/tools/UrlEncodeDecode')),
   'pdf-base64':           dynamic(() => import('@/components/tools/PdfBase64')),
+  'hash-generator':       dynamic(() => import('@/components/tools/HashGenerator')),
+  'cron-builder':         dynamic(() => import('@/components/tools/CronBuilder')),
+  'cidr-calculator':      dynamic(() => import('@/components/tools/CidrCalculator')),
+  'regex-tester':         dynamic(() => import('@/components/tools/RegexTester')),
 }
 
 export default async function ToolPage({

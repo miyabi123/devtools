@@ -17,8 +17,8 @@ export default function ToolLayout({ tool, children }: Props) {
 
       {/* Nav */}
       <nav className="flex items-center justify-between px-6 py-3.5 bg-white border-b border-[#c8c6c0]">
-        <Link href="/" className="font-mono font-medium text-[15px] tracking-tight text-[#1a1917]">
-          dev<span className="opacity-40">/</span>tools
+        <Link href="/" style={{ fontFamily: 'var(--font-mono)', fontSize: 32, fontWeight: 500, color: '#1a1917', letterSpacing: '-0.02em', textDecoration: 'none' }}>
+            free<span style={{ opacity: 0.4 }}>util</span>
         </Link>
         <div className="flex items-center gap-3 text-[11px] font-mono text-[#a8a69e]">
           <Link href="/" className="hover:text-[#1a1917] transition-colors">← all tools</Link>

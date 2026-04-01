@@ -129,12 +129,12 @@ export const tools: Tool[] = [
   },
   {
     slug: 'cidr-calculator',
-    name: 'CIDR Calculator',
+    name: 'CIDR & Subnet Calculator',
     shortDesc: 'Subnet breakdown, host range & broadcast address',
     longDesc:
       'Calculate subnet details from CIDR notation. Shows network address, broadcast, usable host range, subnet mask, and total host count. Essential for network engineers and cloud infrastructure work.',
     category: 'dev',
-    keywords: ['cidr calculator', 'subnet calculator', 'ip subnet calculator', 'cidr notation', 'network calculator', 'subnet mask calculator'],
+    keywords: ['cidr calculator', 'subnet calculator', 'ip subnet calculator', 'cidr notation', 'network calculator', 'subnet mask calculator', 'cidr to subnet mask', 'ip address calculator', 'network address calculator'],
     howTo: [
       'Enter an IP address with CIDR prefix, e.g. 192.168.1.0/24',
       'View the calculated subnet mask and network address',
