@@ -9,7 +9,8 @@ Disallow: /dashboard
 Disallow: /api
 
 # Host
-Host: https://devtools.run
+Host: https://freeutil.app
 
 # Sitemaps
+Sitemap: https://freeutil.app/sitemap.xml
 Sitemap: https://devtools.run/sitemap.xml
