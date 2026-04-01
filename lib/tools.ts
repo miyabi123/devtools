@@ -203,6 +203,32 @@ export const tools: Tool[] = [
     related: ['base64-encode-decode', 'hash-generator', 'regex-tester'],
   },
   {
+    slug: 'pdf-base64',
+    name: 'PDF ↔ Base64',
+    shortDesc: 'Convert PDF files to Base64 and back',
+    longDesc:
+      'Convert PDF files to Base64 encoded strings for use in APIs, emails, and data URIs. Also decode Base64 strings back to downloadable PDF files. All processing is 100% client-side — your files never leave your browser.',
+    category: 'file',
+    keywords: ['pdf to base64', 'base64 to pdf', 'pdf encoder', 'base64 pdf converter', 'pdf data uri'],
+    howTo: [
+      'Select mode: PDF to Base64 or Base64 to PDF',
+      'For PDF to Base64: click Upload PDF and select your file',
+      'For Base64 to PDF: paste your Base64 string in the input',
+      'Download or copy the result',
+    ],
+    faq: [
+      {
+        q: 'Why convert PDF to Base64?',
+        a: 'Many APIs and email protocols require binary files to be encoded as Base64 text for safe transmission over text-based protocols.',
+      },
+      {
+        q: 'Is there a file size limit?',
+        a: 'The tool handles PDFs up to ~10MB. Larger files may slow down your browser as all processing is done client-side.',
+      },
+    ],
+    related: ['base64-encode-decode', 'json-formatter', 'url-encode-decode'],
+  },
+  {
     slug: 'hash-generator',
     name: 'Hash Generator',
     shortDesc: 'Generate MD5, SHA-256, SHA-512 hashes',

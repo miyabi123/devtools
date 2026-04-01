@@ -58,6 +58,10 @@ const toolComponents: Record<string, React.ComponentType> = {
   */
  const toolComponents: Record<string, React.ComponentType> = {
   'jwt-decoder':        dynamic(() => import('@/components/tools/JwtDecoder')),
+  'json-formatter': dynamic(() => import('@/components/tools/JsonFormatter')),
+  'base64-encode-decode': dynamic(() => import('@/components/tools/Base64Tool')),
+  'url-encode-decode':    dynamic(() => import('@/components/tools/UrlEncodeDecode')),
+  'pdf-base64':           dynamic(() => import('@/components/tools/PdfBase64')),
 }
 
 export default async function ToolPage({
