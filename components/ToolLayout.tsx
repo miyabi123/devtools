@@ -127,11 +127,14 @@ export default function ToolLayout({ tool, children }: Props) {
           )}
 
           {/* Privacy note */}
-          <div className="mt-5 p-3 bg-white border border-[#c8c6c0] rounded-lg">
+          <div className="mt-5 p-3 bg-white border border-[#e8e6e0] rounded-lg">
             <p className="font-mono text-[10px] text-[#a8a69e] tracking-widest mb-1.5">privacy</p>
-            <p className="text-[11px] text-[#6b6960] leading-relaxed">
+            <p className="text-[11px] text-[#6b6960] leading-relaxed mb-2">
               All processing runs in your browser. No data is sent to any server.
             </p>
+            <Link href="/privacy" style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#3c3489', textDecoration: 'underline' }}>
+              Privacy Policy →
+            </Link>
           </div>
         </aside>
 

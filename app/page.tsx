@@ -85,7 +85,7 @@ export default function HomePage() {
       <footer style={{ borderTop: '0.5px solid #c8c6c0', background: '#ffffff', padding: '16px 24px' }} className="flex items-center justify-between">
         <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#a8a69e' }}>freeutil.app · built with Next.js + Cloudflare</span>
         <div className="flex gap-4">
-          <Link href="#" style={{ fontSize: 11, color: '#a8a69e', textDecoration: 'none' }}>privacy</Link>
+          <Link href="/privacy" style={{ fontSize: 11, color: '#a8a69e', textDecoration: 'none' }}>privacy</Link>
           <Link href="#" style={{ fontSize: 11, color: '#a8a69e', textDecoration: 'none' }}>about</Link>
         </div>
       </footer>
