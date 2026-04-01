@@ -52,6 +52,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${dmSans.variable} ${dmMono.variable}`}>
+      <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-F8CDHZEK72"></script>
+        <script dangerouslySetInnerHTML={{ __html: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-F8CDHZEK72');
+        `}} />
+      </head>
       <body className="bg-[#f8f7f4] text-[#1a1917] font-sans antialiased">
         {children}
       </body>
