@@ -66,6 +66,7 @@ const toolComponents: Record<string, React.ComponentType> = {
   'cron-builder':         dynamic(() => import('@/components/tools/CronBuilder')),
   'cidr-calculator':      dynamic(() => import('@/components/tools/CidrCalculator')),
   'regex-tester':         dynamic(() => import('@/components/tools/RegexTester')),
+  'thai-date-converter':   dynamic(() => import('@/components/tools/ThaiDateConverter')),
 }
 
 export default async function ToolPage({
