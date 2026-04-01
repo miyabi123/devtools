@@ -17,7 +17,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen" style={{ fontFamily: 'var(--font-sans)', background: '#f8f7f4' }}>
       <nav style={{ background: '#ffffff', borderBottom: '0.5px solid #c8c6c0' }} className="px-6 py-3.5 flex items-center justify-between">
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 15, fontWeight: 500, color: '#1a1917' }}>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 32, fontWeight: 500, color: '#1a1917' }}>
           free<span style={{ opacity: 0.4 }}>util</span>
         </span>
         <div className="flex items-center gap-5">
