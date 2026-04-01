@@ -75,6 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           gtag('js', new Date());
           gtag('config', 'G-F8CDHZEK72');
         `}} />
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2562848751614063" crossOrigin="anonymous"></script>
       </head>
       <body className="bg-[#f8f7f4] text-[#1a1917] font-sans antialiased">
         {children}
