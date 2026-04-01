@@ -1,65 +1,94 @@
-import Image from "next/image";
+import Link from 'next/link'
+import { tools, categoryLabel, categoryColors } from '@/lib/tools'
+import type { Metadata } from 'next'
+import SearchInput from '@/components/SearchInput'
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: 'FreeUtil — Free Online Tools for Everyone',
+  description: 'Free online utility tools for developers, IT professionals, and everyday users. 100% free, no login required.',
+  openGraph: {
+    title: 'FreeUtil — Free Online Tools for Everyone',
+    description: 'JWT decoder, JSON formatter, Base64, Thai date converter and 50+ free tools.',
+    url: 'https://freeutil.app',
+  },
+}
+
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen" style={{ fontFamily: 'var(--font-sans)', background: '#f8f7f4' }}>
+      <nav style={{ background: '#ffffff', borderBottom: '0.5px solid #c8c6c0' }} className="px-6 py-3.5 flex items-center justify-between">
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 15, fontWeight: 500, color: '#1a1917' }}>
+          free<span style={{ opacity: 0.4 }}>util</span>
+        </span>
+        <div className="flex items-center gap-5">
+          <Link href="/tools/jwt-decoder" style={{ fontSize: 13, color: '#6b6960', textDecoration: 'none' }}>tools</Link>
+          <Link href="#" style={{ fontSize: 13, color: '#6b6960', textDecoration: 'none' }}>about</Link>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </nav>
+
+      <div className="px-6 py-12" style={{ borderBottom: '0.5px solid #c8c6c0', background: '#ffffff' }}>
+        <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#a8a69e', letterSpacing: '0.08em', marginBottom: 12 }}>
+          {tools.length}+ tools · free · no login required
+        </p>
+        <h1 style={{ fontSize: 36, fontWeight: 300, letterSpacing: '-0.03em', lineHeight: 1.15, marginBottom: 12, color: '#1a1917' }}>
+          Useful tools that<br /><strong style={{ fontWeight: 500 }}>actually work</strong>
+        </h1>
+        <p style={{ fontSize: 15, color: '#6b6960', lineHeight: 1.6, maxWidth: 440, marginBottom: 28 }}>
+          Fast, client-side utilities for developers and everyday users. No server, no tracking, no nonsense.
+        </p>
+        <SearchInput />
+      </div>
+
+      <div className="mx-6 mt-5 mb-2">
+        <div style={{ border: '0.5px dashed #c8c6c0', borderRadius: 8, background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 80 }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: '#a8a69e' }}>advertisement · 728×90</span>
         </div>
-      </main>
+      </div>
+
+      <div className="px-6 py-6">
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14 }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#a8a69e' }}>all tools</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#a8a69e' }}>{tools.length} tools</span>
+        </div>
+        <div id="toolGrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 1, background: '#c8c6c0', border: '0.5px solid #c8c6c0', borderRadius: 10, overflow: 'hidden' }}>
+          {tools.map(tool => {
+            const color = categoryColors[tool.category]
+            return (
+              <Link key={tool.slug} href={`/tools/${tool.slug}`} className="tool-card"
+                style={{ background: '#ffffff', padding: '18px 16px', textDecoration: 'none', display: 'block' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 10 }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 7, background: color.bg }} />
+                  <div style={{ display: 'flex', gap: 4 }}>
+                    {tool.isNew && <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, padding: '2px 6px', borderRadius: 99, background: '#eeedfe', color: '#3c3489', fontWeight: 500 }}>new</span>}
+                    {tool.isPopular && <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, padding: '2px 6px', borderRadius: 99, background: '#faece7', color: '#712b13', fontWeight: 500 }}>popular</span>}
+                  </div>
+                </div>
+                <p style={{ fontSize: 13, fontWeight: 500, color: '#1a1917', marginBottom: 4 }}>{tool.name}</p>
+                <p style={{ fontSize: 11, color: '#6b6960', lineHeight: 1.5 }}>{tool.shortDesc}</p>
+                <div style={{ marginTop: 8 }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, padding: '2px 7px', borderRadius: 99, fontWeight: 500, background: color.bg, color: color.text }}>
+                    {categoryLabel[tool.category]}
+                  </span>
+                </div>
+              </Link>
+            )
+          })}
+        </div>
+      </div>
+
+      <div className="mx-6 mb-6">
+        <div style={{ border: '0.5px dashed #c8c6c0', borderRadius: 8, background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 80 }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: '#a8a69e' }}>advertisement · 728×90</span>
+        </div>
+      </div>
+
+      <footer style={{ borderTop: '0.5px solid #c8c6c0', background: '#ffffff', padding: '16px 24px' }} className="flex items-center justify-between">
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#a8a69e' }}>freeutil.app · built with Next.js + Cloudflare</span>
+        <div className="flex gap-4">
+          <Link href="#" style={{ fontSize: 11, color: '#a8a69e', textDecoration: 'none' }}>privacy</Link>
+          <Link href="#" style={{ fontSize: 11, color: '#a8a69e', textDecoration: 'none' }}>about</Link>
+        </div>
+      </footer>
     </div>
-  );
+  )
 }
