@@ -4,12 +4,10 @@ import { getTool, tools } from '@/lib/tools'
 import ToolLayout from '@/components/ToolLayout'
 import dynamic from 'next/dynamic'
 
-// Build-time: generate static pages for every tool slug
 export function generateStaticParams() {
   return tools.map(t => ({ slug: t.slug }))
 }
 
-// Per-tool SEO metadata
 export async function generateMetadata({
   params,
 }: {
@@ -19,7 +17,7 @@ export async function generateMetadata({
   const tool = getTool(slug)
   if (!tool) return {}
 
-  const url = `https://devtools.run/tools/${tool.slug}`
+  const url = `https://freeutil.app/tools/${tool.slug}`
   const ogImage = `/api/og?slug=${tool.slug}`
 
   return {
@@ -28,37 +26,23 @@ export async function generateMetadata({
     keywords: tool.keywords,
     alternates: { canonical: url },
     openGraph: {
-      title: `${tool.name} | DevTools`,
+      title: `${tool.name} | FreeUtil`,
       description: tool.shortDesc,
       url,
       images: [{ url: ogImage, width: 1200, height: 630, alt: tool.name }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${tool.name} | DevTools`,
+      title: `${tool.name} | FreeUtil`,
       description: tool.shortDesc,
       images: [ogImage],
     },
   }
 }
 
-// Lazy-load each tool component — only ships JS for that tool
-/*
 const toolComponents: Record<string, React.ComponentType> = {
-  'jwt-decoder':        dynamic(() => import('@/components/tools/JwtDecoder')),
-  'json-formatter':     dynamic(() => import('@/components/tools/JsonFormatter')),
-  'base64-encode-decode': dynamic(() => import('@/components/tools/Base64Tool')),
-  'regex-tester':       dynamic(() => import('@/components/tools/RegexTester')),
-  'cidr-calculator':    dynamic(() => import('@/components/tools/CidrCalculator')),
-  'cron-builder':       dynamic(() => import('@/components/tools/CronBuilder')),
-  'url-encode-decode':  dynamic(() => import('@/components/tools/UrlEncodeDecode')),
-  'hash-generator':     dynamic(() => import('@/components/tools/HashGenerator')),
-  'thai-date-converter': dynamic(() => import('@/components/tools/ThaiDateConverter')),
-}
-  */
- const toolComponents: Record<string, React.ComponentType> = {
-  'jwt-decoder':        dynamic(() => import('@/components/tools/JwtDecoder')),
-  'json-formatter': dynamic(() => import('@/components/tools/JsonFormatter')),
+  'jwt-decoder':          dynamic(() => import('@/components/tools/JwtDecoder')),
+  'json-formatter':       dynamic(() => import('@/components/tools/JsonFormatter')),
   'base64-encode-decode': dynamic(() => import('@/components/tools/Base64Tool')),
   'url-encode-decode':    dynamic(() => import('@/components/tools/UrlEncodeDecode')),
   'pdf-base64':           dynamic(() => import('@/components/tools/PdfBase64')),
@@ -66,7 +50,7 @@ const toolComponents: Record<string, React.ComponentType> = {
   'cron-builder':         dynamic(() => import('@/components/tools/CronBuilder')),
   'cidr-calculator':      dynamic(() => import('@/components/tools/CidrCalculator')),
   'regex-tester':         dynamic(() => import('@/components/tools/RegexTester')),
-  'thai-date-converter':   dynamic(() => import('@/components/tools/ThaiDateConverter')),
+  'thai-date-converter':  dynamic(() => import('@/components/tools/ThaiDateConverter')),
 }
 
 export default async function ToolPage({
@@ -80,7 +64,6 @@ export default async function ToolPage({
 
   const ToolComponent = toolComponents[tool.slug]
 
-  // JSON-LD structured data — injected per tool
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -88,7 +71,7 @@ export default async function ToolPage({
         '@type': 'WebApplication',
         name: tool.name,
         description: tool.longDesc,
-        url: `https://devtools.run/tools/${tool.slug}`,
+        url: `https://freeutil.app/tools/${tool.slug}`,
         applicationCategory: 'DeveloperApplication',
         operatingSystem: 'Web Browser',
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
@@ -97,9 +80,9 @@ export default async function ToolPage({
       {
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://devtools.run' },
-          { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://devtools.run/tools' },
-          { '@type': 'ListItem', position: 3, name: tool.name, item: `https://devtools.run/tools/${tool.slug}` },
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://freeutil.app' },
+          { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://freeutil.app/tools' },
+          { '@type': 'ListItem', position: 3, name: tool.name, item: `https://freeutil.app/tools/${tool.slug}` },
         ],
       },
       {
@@ -132,7 +115,7 @@ export default async function ToolPage({
       <ToolLayout tool={tool}>
         {ToolComponent ? <ToolComponent /> : (
           <div className="text-sm text-[#a8a69e] font-mono py-8 text-center">
-            tool component coming soon
+            tool coming soon
           </div>
         )}
       </ToolLayout>

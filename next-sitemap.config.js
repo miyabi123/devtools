@@ -11,7 +11,7 @@ module.exports = {
     return tools.map((tool) => ({
       loc: `/tools/${tool.slug}`,
       changefreq: 'weekly',
-      priority: 0.8,
+      priority: tool.isPopular ? 0.9 : 0.8,
       lastmod: new Date().toISOString(),
     }))
   },
@@ -20,6 +20,14 @@ module.exports = {
       { userAgent: '*', allow: '/' },
       { userAgent: '*', disallow: ['/admin', '/dashboard', '/api'] },
     ],
-    additionalSitemaps: ['https://devtools.run/sitemap.xml'],
+  },
+  transform: async (config, path) => {
+    const priority = path === '/' ? 1.0 : path === '/tools' ? 0.9 : 0.8
+    return {
+      loc: path,
+      changefreq: 'weekly',
+      priority: priority,
+      lastmod: new Date().toISOString(),
+    }
   },
 }

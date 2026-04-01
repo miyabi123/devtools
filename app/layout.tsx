@@ -17,35 +17,50 @@ const dmMono = DM_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://devtools.run'),
+  metadataBase: new URL('https://freeutil.app'),
   title: {
-    default: 'DevTools — Free Online Developer Tools',
-    template: '%s | DevTools',
+    default: 'FreeUtil — Free Online Tools for Everyone',
+    template: '%s | FreeUtil',
   },
   description:
-    'Free online tools for developers and IT professionals. JWT decoder, JSON formatter, Base64, regex tester, CIDR calculator, Thai date converter, and 50+ more. 100% client-side.',
-  keywords: ['developer tools', 'online tools', 'jwt decoder', 'json formatter', 'base64', 'regex tester'],
-  authors: [{ name: 'DevTools' }],
-  creator: 'DevTools',
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: 'https://devtools.run',
-    siteName: 'DevTools',
-    title: 'DevTools — Free Online Developer Tools',
-    description: 'JWT decoder, JSON formatter, Base64, regex tester, CIDR calculator and 50+ more free tools.',
-    images: [{ url: '/og-default.png', width: 1200, height: 630 }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'DevTools — Free Online Developer Tools',
-    description: 'JWT decoder, JSON formatter, Base64 and 50+ free tools. 100% client-side.',
-    images: ['/og-default.png'],
-  },
+    'Free online utility tools for developers, IT professionals, and everyday users. JWT decoder, JSON formatter, Base64, regex tester, CIDR calculator, Thai date converter and 50+ more. 100% client-side, no login required.',
+  keywords: [
+    'free online tools', 'developer tools', 'utility tools',
+    'jwt decoder', 'json formatter', 'base64 encoder', 'regex tester',
+    'cidr calculator', 'subnet calculator', 'thai date converter',
+    'hash generator', 'url encoder', 'cron builder', 'pdf base64',
+  ],
+  authors: [{ name: 'FreeUtil', url: 'https://freeutil.app' }],
+  creator: 'FreeUtil',
+  publisher: 'FreeUtil',
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true, 'max-image-preview': 'large' },
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    alternateLocale: 'th_TH',
+    url: 'https://freeutil.app',
+    siteName: 'FreeUtil',
+    title: 'FreeUtil — Free Online Tools for Everyone',
+    description: 'JWT decoder, JSON formatter, Base64, regex tester, CIDR calculator and 50+ free tools. No login required.',
+    images: [{ url: '/og-default.png', width: 1200, height: 630, alt: 'FreeUtil — Free Online Tools' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'FreeUtil — Free Online Tools for Everyone',
+    description: 'JWT decoder, JSON formatter, Base64 and 50+ free tools. 100% client-side.',
+    images: ['/og-default.png'],
+  },
+  alternates: {
+    canonical: 'https://freeutil.app',
   },
 }
 

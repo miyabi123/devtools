@@ -13,4 +13,3 @@ Host: https://freeutil.app
 
 # Sitemaps
 Sitemap: https://freeutil.app/sitemap.xml
-Sitemap: https://devtools.run/sitemap.xml
