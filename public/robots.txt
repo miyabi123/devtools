@@ -1,0 +1,15 @@
+# *
+User-agent: *
+Allow: /
+
+# *
+User-agent: *
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /api
+
+# Host
+Host: https://devtools.run
+
+# Sitemaps
+Sitemap: https://devtools.run/sitemap.xml
