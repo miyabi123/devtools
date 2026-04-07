@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { Tool, getRelatedTools, categoryLabel, categoryColors } from '@/lib/tools'
+import { AdLeaderboard, AdSidebar, AdInArticle } from '@/components/AdSense'
 
 interface Props {
   tool: Tool
@@ -54,7 +55,7 @@ export default function ToolLayout({ tool, children }: Props) {
 
           {/* Ad slot — top (728×90 leaderboard) */}
           <div className="mx-6 mt-5">
-            <AdSlot label="728×90 leaderboard" height={90} />
+            <AdLeaderboard style={{ marginBottom: 16 }} />
           </div>
 
           {/* Tool-specific UI */}
@@ -76,6 +77,8 @@ export default function ToolLayout({ tool, children }: Props) {
                 ))}
               </ol>
             </section>
+            
+            <AdInArticle style={{ margin: '16px 0' }} />
 
             <section>
               <h2 className="font-mono text-[13px] text-[#6b6960] tracking-wide mb-3 font-medium">frequently asked</h2>
@@ -96,7 +99,7 @@ export default function ToolLayout({ tool, children }: Props) {
         <aside className="w-[240px] flex-shrink-0 p-4 hidden lg:block">
 
           {/* Ad slot — sidebar (240×400) */}
-          <AdSlot label="240×400 sidebar" height={400} />
+          <AdSidebar style={{ marginBottom: 20 }} />
 
           {/* Related tools */}
           {related.length > 0 && (
@@ -139,18 +142,6 @@ export default function ToolLayout({ tool, children }: Props) {
         </aside>
 
       </div>
-    </div>
-  )
-}
-
-// ── Ad slot placeholder ─────────────────────────────────────────
-function AdSlot({ label, height }: { label: string; height: number }) {
-  return (
-    <div
-      className="w-full flex items-center justify-center border border-dashed border-[#d0cec8] rounded-lg bg-white mb-4"
-      style={{ minHeight: height }}
-    >
-      <span className="font-mono text-[9px] text-[#a8a69e] tracking-wider">advertisement · {label}</span>
     </div>
   )
 }
