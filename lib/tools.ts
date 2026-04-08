@@ -193,6 +193,26 @@ export const tools: Tool[] = [
     isNew: true,
   },
   {
+    slug: 'uuid-generator',
+    name: 'UUID Generator',
+    shortDesc: 'Generate UUID v1, v4, and v5 instantly',
+    longDesc: 'Free online UUID generator supporting UUID v1 (time-based), v4 (random), and v5 (namespace-based). Generate single or bulk UUIDs instantly. All generation runs 100% in your browser using the Web Crypto API — no data is sent to any server. Essential for developers needing unique identifiers for databases, APIs, and distributed systems.',
+    category: 'dev',
+    keywords: ['uuid generator', 'uuid v4 generator', 'random uuid', 'guid generator', 'unique id generator', 'uuid online', 'bulk uuid generator'],
+    howTo: [
+      'Select UUID version: v1 (time-based), v4 (random), or v5 (namespace)',
+      'Set the quantity of UUIDs to generate (1-100)',
+      'Click Generate or use auto-generate mode',
+      'Copy a single UUID or all UUIDs at once',
+    ],
+    faq: [
+      { q: 'What is the difference between UUID v1 and v4?', a: 'UUID v1 is time-based and includes the MAC address, making it sortable but less private. UUID v4 is completely random and is the most commonly used version.' },
+      { q: 'Is UUID truly unique?', a: 'UUID v4 has 122 random bits, making collisions astronomically unlikely. The probability of generating a duplicate is negligible for all practical purposes.' },
+    ],
+    related: ['hash-generator', 'unix-timestamp', 'jwt-decoder'],
+    isNew: true,
+  },
+  {
     slug: 'pdf-base64',
     name: 'PDF ↔ Base64',
     shortDesc: 'Convert PDF files to Base64 and back',
