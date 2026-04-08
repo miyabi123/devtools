@@ -213,6 +213,26 @@ export const tools: Tool[] = [
     isNew: true,
   },
   {
+    slug: 'password-generator',
+    name: 'Password Generator',
+    shortDesc: 'Generate secure random passwords instantly',
+    longDesc: 'Free online secure password generator. Create strong, random passwords with custom length and character sets including uppercase, lowercase, numbers, and symbols. Generate multiple passwords at once. Measure password strength in real-time. All generation uses the Web Crypto API in your browser — passwords are never sent to any server.',
+    category: 'dev',
+    keywords: ['password generator', 'random password generator', 'secure password generator', 'strong password generator', 'password creator online', 'generate password'],
+    howTo: [
+      'Set the desired password length using the slider',
+      'Choose character types: uppercase, lowercase, numbers, symbols',
+      'Click Generate or use auto-generate mode',
+      'Copy your password with one click',
+    ],
+    faq: [
+      { q: 'How secure are the generated passwords?', a: 'Passwords are generated using the Web Crypto API (crypto.getRandomValues) which provides cryptographically secure randomness. No passwords are stored or transmitted.' },
+      { q: 'What makes a strong password?', a: 'A strong password is at least 12 characters long and includes a mix of uppercase, lowercase, numbers, and symbols. Avoid dictionary words and personal information.' },
+    ],
+    related: ['hash-generator', 'uuid-generator', 'base64-encode-decode'],
+    isNew: true,
+  },
+  {
     slug: 'pdf-base64',
     name: 'PDF ↔ Base64',
     shortDesc: 'Convert PDF files to Base64 and back',
