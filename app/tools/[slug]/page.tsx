@@ -51,6 +51,7 @@ const toolComponents: Record<string, React.ComponentType> = {
   'cidr-calculator':      dynamic(() => import('@/components/tools/CidrCalculator')),
   'regex-tester':         dynamic(() => import('@/components/tools/RegexTester')),
   'thai-date-converter':  dynamic(() => import('@/components/tools/ThaiDateConverter')),
+  'unix-timestamp': dynamic(() => import('@/components/tools/UnixTimestamp')),
 }
 
 export default async function ToolPage({

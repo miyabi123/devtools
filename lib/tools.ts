@@ -173,6 +173,26 @@ export const tools: Tool[] = [
     related: ['base64-encode-decode', 'jwt-decoder', 'url-encode-decode'],
   },
   {
+    slug: 'unix-timestamp',
+    name: 'Unix Timestamp Converter',
+    shortDesc: 'Convert Unix timestamps to human-readable dates',
+    longDesc: 'Free online Unix timestamp converter. Convert Unix epoch timestamps to human-readable dates and times, or convert any date back to a Unix timestamp. Shows current timestamp in real-time. Supports seconds, milliseconds, and microseconds. Essential tool for developers working with APIs, databases, and log files. All processing is 100% client-side.',
+    category: 'dev',
+    keywords: ['unix timestamp', 'epoch converter', 'timestamp to date', 'date to timestamp', 'epoch time converter', 'unix time converter', 'seconds to date'],
+    howTo: [
+      'View the current Unix timestamp updating in real-time',
+      'Paste any Unix timestamp to convert to human-readable date',
+      'Or pick a date and time to convert to Unix timestamp',
+      'Toggle between seconds, milliseconds, and microseconds',
+    ],
+    faq: [
+      { q: 'What is a Unix timestamp?', a: 'A Unix timestamp is the number of seconds elapsed since January 1, 1970 00:00:00 UTC (the Unix epoch). It is widely used in programming and databases.' },
+      { q: 'What is the difference between seconds and milliseconds timestamp?', a: 'Unix timestamps are usually in seconds (10 digits). JavaScript uses milliseconds (13 digits). Divide by 1000 to convert milliseconds to seconds.' },
+    ],
+    related: ['cron-builder', 'thai-date-converter', 'json-formatter'],
+    isNew: true,
+  },
+  {
     slug: 'pdf-base64',
     name: 'PDF ↔ Base64',
     shortDesc: 'Convert PDF files to Base64 and back',
