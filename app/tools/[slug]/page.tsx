@@ -57,6 +57,7 @@ const toolComponents: Record<string, React.ComponentType> = {
   'json-to-csv':          dynamic(() => import('@/components/tools/JsonToCsv')),
   'json-to-yaml': dynamic(() => import('@/components/tools/JsonToYaml')),
   'qr-code-generator': dynamic(() => import('@/components/tools/QrCodeGenerator')),
+  'image-resize': dynamic(() => import('@/components/tools/ImageResize')),
 }
 
 export default async function ToolPage({

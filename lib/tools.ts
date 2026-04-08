@@ -311,6 +311,26 @@ export const tools: Tool[] = [
     related: ['base64-encode-decode', 'url-encode-decode', 'hash-generator'],
     isNew: true,
   },
+  {
+    slug: 'image-resize',
+    name: 'Image Resize',
+    shortDesc: 'Resize images online — maintain aspect ratio',
+    longDesc: 'Free online image resizer. Resize JPG, PNG, WebP, and GIF images by pixel dimensions or percentage. Maintain aspect ratio automatically or set custom width and height. Preview before download. All processing runs 100% client-side using Canvas API — your images never leave your browser.',
+    category: 'file',
+    keywords: ['image resize', 'resize image online', 'image resizer', 'resize jpg online', 'resize png online', 'image size reducer', 'compress image dimensions'],
+    howTo: [
+      'Upload your image by dragging and dropping or clicking to browse',
+      'Set the target width and height in pixels or percentage',
+      'Toggle aspect ratio lock to maintain proportions',
+      'Preview the result and download as JPG, PNG, or WebP',
+    ],
+    faq: [
+      { q: 'What image formats are supported?', a: 'The tool supports JPG, PNG, WebP, GIF, and BMP files as input. You can download the output as JPG, PNG, or WebP.' },
+      { q: 'Is there a file size limit?', a: 'The tool handles images up to ~20MB. Very large images may be slow as all processing is done client-side in your browser.' },
+    ],
+    related: ['pdf-base64', 'qr-code-generator', 'base64-encode-decode'],
+    isNew: true,
+  },
 
   // ── Phase 2: Thai tools ────────────────────────────────────────
   {
