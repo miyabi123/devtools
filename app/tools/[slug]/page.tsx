@@ -53,7 +53,9 @@ const toolComponents: Record<string, React.ComponentType> = {
   'thai-date-converter':  dynamic(() => import('@/components/tools/ThaiDateConverter')),
   'unix-timestamp':       dynamic(() => import('@/components/tools/UnixTimestamp')),
   'uuid-generator':       dynamic(() => import('@/components/tools/UuidGenerator')),
-  'password-generator': dynamic(() => import('@/components/tools/PasswordGenerator')),
+  'password-generator':   dynamic(() => import('@/components/tools/PasswordGenerator')),
+  'json-to-csv':          dynamic(() => import('@/components/tools/JsonToCsv')),
+  'json-to-yaml': dynamic(() => import('@/components/tools/JsonToYaml')),
 }
 
 export default async function ToolPage({
