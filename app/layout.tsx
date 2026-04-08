@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { DM_Mono, DM_Sans } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 
 const dmSans = DM_Sans({
@@ -67,18 +68,25 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${dmSans.variable} ${dmMono.variable}`}>
-      <head>
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-F8CDHZEK72"></script>
-        <script dangerouslySetInnerHTML={{ __html: `
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-F8CDHZEK72');
-        `}} />
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2562848751614063" crossOrigin="anonymous"></script>
-      </head>
       <body className="bg-[#f8f7f4] text-[#1a1917] font-sans antialiased">
         {children}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-F8CDHZEK72"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-F8CDHZEK72');
+          `}
+        </Script>
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2562848751614063"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+        />
       </body>
     </html>
   )

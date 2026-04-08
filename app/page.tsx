@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { tools, categoryLabel, categoryColors } from '@/lib/tools'
 import type { Metadata } from 'next'
 import SearchInput from '@/components/SearchInput'
+import HomeAdSlot from '@/components/HomeAdSlot'
 
 export const metadata: Metadata = {
   title: 'FreeUtil — Free Online Tools for Everyone',
@@ -40,9 +41,7 @@ export default function HomePage() {
       </div>
 
       <div className="mx-6 mt-5 mb-2">
-        <div style={{ border: '0.5px dashed #c8c6c0', borderRadius: 8, background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 80 }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: '#a8a69e' }}>advertisement · 728×90</span>
-        </div>
+        <HomeAdSlot />
       </div>
 
       <div className="px-6 py-6">
@@ -77,9 +76,7 @@ export default function HomePage() {
       </div>
 
       <div className="mx-6 mb-6">
-        <div style={{ border: '0.5px dashed #c8c6c0', borderRadius: 8, background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 80 }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: '#a8a69e' }}>advertisement · 728×90</span>
-        </div>
+        <HomeAdSlot />
       </div>
 
       <footer style={{ borderTop: '0.5px solid #c8c6c0', background: '#ffffff', padding: '16px 24px' }} className="flex items-center justify-between">
