@@ -291,6 +291,26 @@ export const tools: Tool[] = [
     ],
     related: ['base64-encode-decode', 'json-formatter', 'url-encode-decode'],
   },
+  {
+    slug: 'qr-code-generator',
+    name: 'QR Code Generator',
+    shortDesc: 'Generate QR codes for URLs, text, and more',
+    longDesc: 'Free online QR code generator. Create QR codes instantly for URLs, plain text, email addresses, phone numbers, WiFi credentials, and more. Customize size and error correction level. Download as PNG. All generation runs 100% client-side — your data never leaves your browser.',
+    category: 'file',
+    keywords: ['qr code generator', 'qr code maker', 'create qr code', 'free qr code generator', 'qr code online', 'generate qr code url'],
+    howTo: [
+      'Select input type: URL, Text, Email, Phone, or WiFi',
+      'Enter your content in the input field',
+      'QR code generates instantly',
+      'Download as PNG or copy to clipboard',
+    ],
+    faq: [
+      { q: 'What types of content can I encode?', a: 'You can encode URLs, plain text, email addresses, phone numbers, SMS, and WiFi credentials.' },
+      { q: 'What is error correction level?', a: 'Error correction allows QR codes to be read even if partially damaged. Higher levels (Q, H) are more robust but create denser codes.' },
+    ],
+    related: ['base64-encode-decode', 'url-encode-decode', 'hash-generator'],
+    isNew: true,
+  },
 
   // ── Phase 2: Thai tools ────────────────────────────────────────
   {

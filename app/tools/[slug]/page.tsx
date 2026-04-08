@@ -56,6 +56,7 @@ const toolComponents: Record<string, React.ComponentType> = {
   'password-generator':   dynamic(() => import('@/components/tools/PasswordGenerator')),
   'json-to-csv':          dynamic(() => import('@/components/tools/JsonToCsv')),
   'json-to-yaml': dynamic(() => import('@/components/tools/JsonToYaml')),
+  'qr-code-generator': dynamic(() => import('@/components/tools/QrCodeGenerator')),
 }
 
 export default async function ToolPage({
