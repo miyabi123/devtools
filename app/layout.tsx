@@ -52,13 +52,11 @@ export const metadata: Metadata = {
     siteName: 'FreeUtil',
     title: 'FreeUtil — Free Online Tools for Everyone',
     description: 'JWT decoder, JSON formatter, Base64, regex tester, CIDR calculator and 50+ free tools. No login required.',
-    images: [{ url: '/og-default.png', width: 1200, height: 630, alt: 'FreeUtil — Free Online Tools' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'FreeUtil — Free Online Tools for Everyone',
     description: 'JWT decoder, JSON formatter, Base64 and 50+ free tools. 100% client-side.',
-    images: ['/og-default.png'],
   },
   alternates: {
     canonical: 'https://freeutil.app',

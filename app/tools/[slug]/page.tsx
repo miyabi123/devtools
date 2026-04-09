@@ -18,7 +18,6 @@ export async function generateMetadata({
   if (!tool) return {}
 
   const url = `https://freeutil.app/tools/${tool.slug}`
-  const ogImage = `/api/og?slug=${tool.slug}`
 
   return {
     title: `${tool.name} — ${tool.shortDesc}`,
@@ -29,13 +28,11 @@ export async function generateMetadata({
       title: `${tool.name} | FreeUtil`,
       description: tool.shortDesc,
       url,
-      images: [{ url: ogImage, width: 1200, height: 630, alt: tool.name }],
     },
     twitter: {
       card: 'summary_large_image',
       title: `${tool.name} | FreeUtil`,
       description: tool.shortDesc,
-      images: [ogImage],
     },
   }
 }
@@ -58,7 +55,8 @@ const toolComponents: Record<string, React.ComponentType> = {
   'json-to-yaml':         dynamic(() => import('@/components/tools/JsonToYaml')),
   'qr-code-generator':    dynamic(() => import('@/components/tools/QrCodeGenerator')),
   'image-resize':         dynamic(() => import('@/components/tools/ImageResize')),
-  'favicon-generator': dynamic(() => import('@/components/tools/FaviconGenerator')),
+  'favicon-generator':    dynamic(() => import('@/components/tools/FaviconGenerator')),
+  'image-compressor':     dynamic(() => import('@/components/tools/ImageCompressor')),
 }
 
 export default async function ToolPage({
@@ -99,7 +97,7 @@ export default async function ToolPage({
         step: tool.howTo.map((text, i) => ({
           '@type': 'HowToStep',
           position: i + 1,
-          name: `Step ${i + 1}`,
+          name: text,
           text,
         })),
       },

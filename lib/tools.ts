@@ -351,6 +351,26 @@ export const tools: Tool[] = [
     related: ['image-resize', 'qr-code-generator', 'base64-encode-decode'],
     isNew: true,
   },
+  {
+    slug: 'image-compressor',
+    name: 'Image Compressor',
+    shortDesc: 'Compress JPG, PNG, WebP without losing quality',
+    longDesc: 'Free online image compressor. Reduce image file size without visible quality loss. Compress JPG, PNG, WebP, and GIF files instantly. Compare before and after with a live preview. Batch compress multiple images at once. All compression runs 100% client-side using Canvas API — your images never leave your browser.',
+    category: 'file',
+    keywords: ['image compressor', 'compress image online', 'reduce image size', 'image size reducer', 'compress jpg online', 'compress png online', 'image optimizer', 'compress image without losing quality'],
+    howTo: [
+      'Upload one or multiple images by dragging and dropping',
+      'Adjust quality slider to control compression level',
+      'Compare original vs compressed size instantly',
+      'Download compressed images individually or all at once',
+    ],
+    faq: [
+      { q: 'Does compression reduce image quality?', a: 'The tool uses smart compression that minimizes visible quality loss. At 80% quality setting, most images look identical to the original but are significantly smaller.' },
+      { q: 'What formats are supported?', a: 'JPG, PNG, WebP, and GIF are supported as input. Output can be JPG, PNG, or WebP format.' },
+    ],
+    related: ['image-resize', 'favicon-generator', 'pdf-base64'],
+    isPopular: true,
+  },
 
   // ── Phase 2: Thai tools ────────────────────────────────────────
   {
