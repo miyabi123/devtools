@@ -16,15 +16,29 @@ export const metadata: Metadata = {
   },
 }
 
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'FreeUtil',
+  url: 'https://freeutil.app',
+  logo: 'https://freeutil.app/icon-512.png',
+  description: 'Free online utility tools for developers and everyday users. 100% client-side, no login required.',
+  sameAs: [],
+}
+
 export default function HomePage() {
   return (
     <div className="min-h-screen" style={{ fontFamily: 'var(--font-sans)', background: '#f8f7f4' }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
       <nav style={{ background: '#ffffff', borderBottom: '0.5px solid #c8c6c0' }} className="px-6 py-3.5 flex items-center justify-between">
         <span style={{ fontFamily: 'var(--font-mono)', fontSize: 32, fontWeight: 500, color: '#1a1917' }}>
           free<span style={{ opacity: 0.4 }}>util</span>
         </span>
         <div className="flex items-center gap-5">
-          <Link href="/tools/jwt-decoder" style={{ fontSize: 13, color: '#6b6960', textDecoration: 'none' }}>tools</Link>
+          <Link href="/tools" style={{ fontSize: 13, color: '#6b6960', textDecoration: 'none' }}>tools</Link>
           <Link href="#" style={{ fontSize: 13, color: '#6b6960', textDecoration: 'none' }}>about</Link>
         </div>
       </nav>

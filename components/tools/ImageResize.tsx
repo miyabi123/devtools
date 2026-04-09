@@ -41,10 +41,22 @@ export default function ImageResize() {
   const [isDragging, setIsDragging] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
   const aspectRatio = useRef(1)
+  const originalUrlRef = useRef('')
+  const outputUrlRef = useRef('')
+
+  useEffect(() => {
+    return () => {
+      if (originalUrlRef.current) URL.revokeObjectURL(originalUrlRef.current)
+      if (outputUrlRef.current) URL.revokeObjectURL(outputUrlRef.current)
+    }
+  }, [])
 
   const loadImage = useCallback((file: File) => {
     if (!file.type.startsWith('image/')) return
+    if (originalUrlRef.current) URL.revokeObjectURL(originalUrlRef.current)
+    if (outputUrlRef.current) { URL.revokeObjectURL(outputUrlRef.current); outputUrlRef.current = '' }
     const url = URL.createObjectURL(file)
+    originalUrlRef.current = url
     const img = new Image()
     img.onload = () => {
       aspectRatio.current = img.width / img.height
@@ -110,7 +122,9 @@ export default function ImageResize() {
       ctx.drawImage(img, 0, 0, width, height)
       canvas.toBlob(blob => {
         if (!blob) return
+        if (outputUrlRef.current) URL.revokeObjectURL(outputUrlRef.current)
         const url = URL.createObjectURL(blob)
+        outputUrlRef.current = url
         setOutputUrl(url)
         setOutputSize(blob.size)
         setProcessing(false)
@@ -127,6 +141,8 @@ export default function ImageResize() {
   }
 
   const reset = () => {
+    if (originalUrlRef.current) { URL.revokeObjectURL(originalUrlRef.current); originalUrlRef.current = '' }
+    if (outputUrlRef.current) { URL.revokeObjectURL(outputUrlRef.current); outputUrlRef.current = '' }
     setOriginal(null); setOutputUrl(''); setWidth(0); setHeight(0)
     if (fileRef.current) fileRef.current.value = ''
   }

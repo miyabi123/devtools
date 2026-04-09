@@ -2,31 +2,39 @@
 module.exports = {
   siteUrl: 'https://freeutil.app',
   generateRobotsTxt: true,
-  changefreq: 'weekly',
-  priority: 0.7,
   sitemapSize: 5000,
   exclude: ['/admin/*', '/dashboard/*', '/api/*'],
-  additionalPaths: async (config) => {
-    const { tools } = require('./lib/tools.ts')
-    return tools.map((tool) => ({
-      loc: `/tools/${tool.slug}`,
-      changefreq: 'weekly',
-      priority: tool.isPopular ? 0.9 : 0.8,
-      lastmod: new Date().toISOString(),
-    }))
-  },
   robotsTxtOptions: {
     policies: [
-      { userAgent: '*', allow: '/' },
-      { userAgent: '*', disallow: ['/admin', '/dashboard', '/api'] },
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: ['/admin', '/dashboard', '/api'],
+      },
     ],
   },
-  transform: async (config, path) => {
-    const priority = path === '/' ? 1.0 : path === '/tools' ? 0.9 : 0.8
+  transform: async (_config, path) => {
+    let priority = 0.7
+    let changefreq = 'monthly'
+
+    if (path === '/') {
+      priority = 1.0
+      changefreq = 'weekly'
+    } else if (path === '/tools') {
+      priority = 0.9
+      changefreq = 'weekly'
+    } else if (path.startsWith('/tools/')) {
+      priority = 0.8
+      changefreq = 'monthly'
+    } else if (path === '/privacy') {
+      priority = 0.3
+      changefreq = 'yearly'
+    }
+
     return {
       loc: path,
-      changefreq: 'weekly',
-      priority: priority,
+      changefreq,
+      priority,
       lastmod: new Date().toISOString(),
     }
   },

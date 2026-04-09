@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { DM_Mono, DM_Sans } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
@@ -61,6 +61,12 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://freeutil.app',
   },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#1a1917',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
