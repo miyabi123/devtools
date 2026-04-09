@@ -63,6 +63,11 @@ export default function ToolLayout({ tool, children }: Props) {
             {children}
           </div>
 
+          {/* Ad slot — below tool (mobile only, replaces hidden sidebar) */}
+          <div className="px-6 pb-4 block lg:hidden">
+            <AdInArticle />
+          </div>
+
           {/* SEO content — HowTo + FAQ */}
           <div className="px-6 pb-8 border-t border-[#c8c6c0] mt-4 pt-6 space-y-6">
 
@@ -97,6 +102,7 @@ export default function ToolLayout({ tool, children }: Props) {
 
         {/* Sidebar */}
         <aside className="w-[240px] flex-shrink-0 p-4 hidden lg:block">
+          <div style={{ position: 'sticky', top: 20 }}>
 
           {/* Ad slot — sidebar (240×400) */}
           <AdSidebar style={{ marginBottom: 20 }} />
@@ -139,6 +145,7 @@ export default function ToolLayout({ tool, children }: Props) {
               Privacy Policy →
             </Link>
           </div>
+          </div>{/* end sticky */}
         </aside>
 
       </div>

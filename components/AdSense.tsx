@@ -14,39 +14,34 @@ function AdUnit({ slot, format, layout, style }: {
   layout?: string
   style?: React.CSSProperties
 }) {
-  const ref = useRef<HTMLDivElement>(null)
+  const insRef = useRef<HTMLModElement>(null)
   const pushed = useRef(false)
-  const [visible, setVisible] = useState(false)
+  const [filled, setFilled] = useState(false)
 
   useEffect(() => {
     if (pushed.current) return
+    pushed.current = true
     try {
-      pushed.current = true
       ;(window.adsbygoogle = window.adsbygoogle || []).push({})
     } catch {}
 
-    // ตรวจว่า ads โหลดสำเร็จไหม หลัง 2 วินาที
-    const timer = setTimeout(() => {
-      const ins = ref.current?.querySelector('ins.adsbygoogle')
-      const status = ins?.getAttribute('data-ad-status')
-      if (status === 'filled') setVisible(true)
-    }, 2000)
-
-    return () => clearTimeout(timer)
+    // Watch data-ad-status — fires immediately when AdSense fills/unfills the slot
+    const observer = new MutationObserver(() => {
+      if (insRef.current?.getAttribute('data-ad-status') === 'filled') {
+        setFilled(true)
+        observer.disconnect()
+      }
+    })
+    if (insRef.current) {
+      observer.observe(insRef.current, { attributes: true, attributeFilter: ['data-ad-status'] })
+    }
+    return () => observer.disconnect()
   }, [])
 
   return (
-    <div
-      ref={ref}
-      style={{
-        width: '100%',
-        overflow: 'hidden',
-        maxHeight: visible ? 200 : 0,
-        transition: 'max-height 0.3s ease',
-        ...style,
-      }}
-    >
+    <div style={{ overflow: 'hidden', height: filled ? 'auto' : 0, width: '100%', ...style }}>
       <ins
+        ref={insRef}
         className="adsbygoogle"
         style={{ display: 'block' }}
         data-ad-client="ca-pub-2562848751614063"
