@@ -331,6 +331,26 @@ export const tools: Tool[] = [
     related: ['pdf-base64', 'qr-code-generator', 'base64-encode-decode'],
     isNew: true,
   },
+  {
+    slug: 'favicon-generator',
+    name: 'Favicon Generator',
+    shortDesc: 'Generate favicon from any image — .ico, PNG, SVG',
+    longDesc: 'Free online favicon generator. Upload any image and instantly generate favicon files in all required sizes: 16×16, 32×32, 48×48, 64×64, 128×128, and 192×192 pixels. Download as .ico file or individual PNG files. Perfect for websites, web apps, and PWA icons. All processing runs 100% client-side — your images never leave your browser.',
+    category: 'file',
+    keywords: ['favicon generator', 'favicon maker', 'create favicon', 'ico generator', 'favicon from image', 'website icon generator', 'favicon online'],
+    howTo: [
+      'Upload your image (PNG, JPG, SVG recommended)',
+      'Preview all favicon sizes instantly',
+      'Download individual PNG sizes or all as a ZIP',
+      'Place favicon.ico in your website root directory',
+    ],
+    faq: [
+      { q: 'What image format should I use?', a: 'PNG with transparent background works best. Square images (1:1 ratio) give the best results. Minimum 512×512px recommended.' },
+      { q: 'Which favicon sizes do I need?', a: 'The essential sizes are 16×16 (browser tab), 32×32 (taskbar), 180×180 (Apple touch icon), and 192×192 (Android/PWA). This tool generates all of them.' },
+    ],
+    related: ['image-resize', 'qr-code-generator', 'base64-encode-decode'],
+    isNew: true,
+  },
 
   // ── Phase 2: Thai tools ────────────────────────────────────────
   {

@@ -55,9 +55,10 @@ const toolComponents: Record<string, React.ComponentType> = {
   'uuid-generator':       dynamic(() => import('@/components/tools/UuidGenerator')),
   'password-generator':   dynamic(() => import('@/components/tools/PasswordGenerator')),
   'json-to-csv':          dynamic(() => import('@/components/tools/JsonToCsv')),
-  'json-to-yaml': dynamic(() => import('@/components/tools/JsonToYaml')),
-  'qr-code-generator': dynamic(() => import('@/components/tools/QrCodeGenerator')),
-  'image-resize': dynamic(() => import('@/components/tools/ImageResize')),
+  'json-to-yaml':         dynamic(() => import('@/components/tools/JsonToYaml')),
+  'qr-code-generator':    dynamic(() => import('@/components/tools/QrCodeGenerator')),
+  'image-resize':         dynamic(() => import('@/components/tools/ImageResize')),
+  'favicon-generator': dynamic(() => import('@/components/tools/FaviconGenerator')),
 }
 
 export default async function ToolPage({
