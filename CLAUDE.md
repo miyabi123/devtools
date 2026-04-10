@@ -10,6 +10,81 @@ Built as a passive income project with Google AdSense monetization.
 - **Fonts:** DM Sans (`--font-sans`), DM Mono (`--font-mono`)
 - **Package manager:** pnpm
 - **CI/CD:** GitHub → Cloudflare Pages (auto-deploy on push)
+- **Output mode:** `output: 'export'` (Static HTML — no server/Workers)
+
+---
+
+## Architecture — Static Export (Important!)
+
+Since April 2026, the project uses `output: 'export'` in `next.config.ts`.
+
+```ts
+// next.config.ts
+const nextConfig: NextConfig = {
+  output: 'export',
+  trailingSlash: true,
+  images: { unoptimized: true },
+}
+```
+
+### What this means:
+- Next.js generates **pure static HTML/CSS/JS** files
+- Cloudflare Pages serves files directly from CDN — **no Workers involved**
+- Solved Error 1101 (Worker exceeded resource limits)
+- Faster page load, better Core Web Vitals, better SEO
+- **No API routes** (`/api/*`) — cannot use server-side code
+
+### Rules when adding new files:
+- Any dynamic route file (e.g. `opengraph-image.tsx`) **must have** `generateStaticParams()`
+- Any special route file must have `export const dynamic = 'force-static'`
+- **Never** use `export const runtime = 'nodejs'` — incompatible with static export
+
+### Files that needed fixing for static export:
+- `app/opengraph-image.tsx` — added `export const dynamic = 'force-static'`
+- `app/manifest.ts` — added `export const dynamic = 'force-static'`
+- `app/tools/[slug]/opengraph-image.tsx` — added both `dynamic = 'force-static'` + `generateStaticParams()`
+
+---
+
+## Phase 2 Architecture — Cloudflare Workers (Separate)
+
+Since the main site is static export, **Phase 2 server-side tools cannot use Next.js API routes**.
+Instead, deploy a **separate Cloudflare Worker** at `api.freeutil.app`.
+
+### Plan:
+```
+freeutil.app          → Static site (Cloudflare Pages)
+api.freeutil.app      → Cloudflare Worker (Phase 2 tools)
+```
+
+### Worker setup:
+```js
+// wrangler.toml
+name = "freeutil-api"
+main = "src/worker.js"
+compatibility_date = "2026-01-01"
+
+[route]
+pattern = "api.freeutil.app/*"
+zone_name = "freeutil.app"
+```
+
+### Phase 2 tools → Worker endpoints:
+```
+GET /api/dns?domain=example.com&type=A    → DNS Record Lookup (DoH 1.1.1.1)
+GET /api/myip                             → My IP (CF-Connecting-IP header)
+GET /api/geoip?ip=1.2.3.4                → IP Geolocation (CF-IPCountry/City)
+GET /api/ssl?domain=example.com          → SSL Certificate info
+GET /api/currency?from=THB&to=USD        → Currency rates (external API)
+```
+
+### Client-side fetch from Worker:
+```tsx
+const res = await fetch('https://api.freeutil.app/dns?domain=google.com&type=A')
+const data = await res.json()
+```
+
+### CF Workers free tier: 100,000 req/day — sufficient until significant traffic
 
 ---
 
@@ -18,29 +93,32 @@ Built as a passive income project with Google AdSense monetization.
 ```
 devtools/
 ├── app/
-│   ├── layout.tsx          # Root layout — GA + AdSense scripts via next/script
-│   ├── page.tsx            # Homepage — search + tool grid
-│   ├── privacy/page.tsx    # Privacy policy page
-│   └── tools/
-│       └── [slug]/
-│           └── page.tsx    # Tool page — generateMetadata + JSON-LD + toolComponents map
-├── components/
-│   ├── AdSense.tsx         # AdLeaderboard, AdSidebar, AdInArticle components
-│   ├── HomeAdSlot.tsx      # Client wrapper for AdSense on homepage
-│   ├── SearchInput.tsx     # Search input component
-│   ├── ToolLayout.tsx      # Shared layout for all tool pages
-│   └── tools/              # Individual tool components (one file per tool)
-├── lib/
-│   └── tools.ts            # Central tool registry — all tool metadata
-├── public/
-│   ├── ads.txt             # AdSense verification
-│   ├── icon-192.png
-│   └── icon-512.png
-├── app/
+│   ├── layout.tsx                    # Root layout — GA + AdSense via next/script
+│   ├── page.tsx                      # Homepage — search + tool grid
+│   ├── manifest.ts                   # PWA manifest (force-static)
+│   ├── opengraph-image.tsx           # Homepage OG image (force-static)
+│   ├── privacy/page.tsx              # Privacy policy
 │   ├── favicon.ico
 │   ├── apple-icon.png
-│   └── icon.svg
-└── next-sitemap.config.js  # Sitemap + robots.txt generation
+│   ├── icon.svg
+│   └── tools/
+│       └── [slug]/
+│           ├── page.tsx              # Tool page — metadata + JSON-LD + toolComponents
+│           └── opengraph-image.tsx   # Per-tool OG image (force-static + generateStaticParams)
+├── components/
+│   ├── AdSense.tsx                   # AdLeaderboard, AdSidebar, AdInArticle
+│   ├── HomeAdSlot.tsx                # Client wrapper for AdSense on homepage
+│   ├── SearchInput.tsx               # Search input
+│   ├── ToolLayout.tsx                # Shared layout for all tool pages
+│   └── tools/                       # Individual tool components (one file per tool)
+├── lib/
+│   └── tools.ts                     # Central tool registry
+├── public/
+│   ├── ads.txt                      # AdSense: google.com, pub-2562848751614063, DIRECT, f08c47fec0942fa0
+│   ├── icon-192.png
+│   └── icon-512.png
+├── next.config.ts                   # output: 'export', trailingSlash, images unoptimized
+└── next-sitemap.config.js           # Sitemap + robots.txt (runs postbuild)
 ```
 
 ---
@@ -74,19 +152,16 @@ Status colors:
 
 ### Typography
 ```tsx
-// Mono — used for all technical content, labels, tags, code
+// Mono — technical content, labels, tags, code
 style={{ fontFamily: 'var(--font-mono)' }}
 
-// Sans — used for body text, descriptions
+// Sans — body text, descriptions
 style={{ fontFamily: 'var(--font-sans)' }}
 ```
 
-### Common patterns
+### Common UI Patterns
 ```tsx
-// Section header label
-<p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#a8a69e', letterSpacing: '0.06em' }}>LABEL</p>
-
-// Input box
+// Input box (primary)
 <div style={{ background: '#ffffff', border: '1.5px solid #1a1917', borderRadius: 10, overflow: 'hidden' }}>
 
 // Card / result box
@@ -108,6 +183,9 @@ style={{ fontFamily: 'var(--font-sans)' }}
   border: `0.5px solid ${copied ? '#1D9E75' : '#e8e6e0'}`, borderRadius: 3 }}>
   {copied ? '✓' : 'copy'}
 </button>
+
+// Section label
+<p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#a8a69e', letterSpacing: '0.06em' }}>LABEL</p>
 ```
 
 ---
@@ -115,91 +193,64 @@ style={{ fontFamily: 'var(--font-sans)' }}
 ## Adding a New Tool — Checklist
 
 ### Step 1 — Register in `lib/tools.ts`
-
 ```typescript
 {
-  slug: 'tool-slug',              // URL: /tools/tool-slug
+  slug: 'tool-slug',
   name: 'Tool Name',
   shortDesc: 'One line description',
-  longDesc: 'SEO-optimized long description 2-4 sentences with keywords...',
-  category: 'dev',               // dev | thai | file | finance
-  keywords: ['keyword 1', 'keyword 2', ...],
-  howTo: [
-    'Step 1',
-    'Step 2',
-    'Step 3',
-  ],
-  faq: [
-    { q: 'Question?', a: 'Answer.' },
-  ],
+  longDesc: 'SEO-optimized 2-4 sentences with keywords...',
+  category: 'dev',   // dev | thai | file | finance
+  keywords: ['keyword 1', 'keyword 2'],
+  howTo: ['Step 1', 'Step 2', 'Step 3'],
+  faq: [{ q: 'Question?', a: 'Answer.' }],
   related: ['other-slug-1', 'other-slug-2'],
-  isNew: true,        // optional — shows "new" badge
-  isPopular: true,    // optional — shows "popular" badge
+  isNew: true,      // optional
+  isPopular: true,  // optional
 }
 ```
 
-### Step 2 — Create component `components/tools/ToolName.tsx`
-
+### Step 2 — Create `components/tools/ToolName.tsx`
 ```tsx
 'use client'
-
 import { useState } from 'react'
 
 export default function ToolName() {
   return (
     <div className="space-y-4">
-      {/* tool UI here */}
+      {/* tool UI */}
     </div>
   )
 }
 ```
 
 ### Step 3 — Register in `app/tools/[slug]/page.tsx`
-
 ```tsx
 const toolComponents: Record<string, React.ComponentType> = {
-  // ... existing tools
+  // existing tools...
   'tool-slug': dynamic(() => import('@/components/tools/ToolName')),
 }
 ```
 
-### Step 4 — Push and rebuild sitemap
-
+### Step 4 — Push
 ```powershell
 git add .
 git commit -m "add tool-name tool"
 git push
 ```
 
-Sitemap auto-generates on each Cloudflare build.
-After deploy, request indexing in Google Search Console.
-
----
-
-## Tool Categories
-
-| Category | color tag | Description |
-|---|---|---|
-| `dev` | purple | Developer & IT tools |
-| `thai` | teal | Thai-specific tools |
-| `file` | amber | File & image tools |
-| `finance` | coral | Finance calculators |
-
-> Future categories to add to `ToolCategory` type and `categoryLabel`/`categoryColors`:
-> `linux`, `network`, `text`, `openssl`
+Cloudflare auto-deploys → sitemap regenerates → request indexing in Search Console.
 
 ---
 
 ## Analytics & Monetization
 
-### Google Analytics
-- ID: `G-F8CDHZEK72`
-- Loaded via `<Script strategy="afterInteractive">` in `app/layout.tsx`
+### Google Analytics — ID: `G-F8CDHZEK72`
+Loaded via `<Script strategy="afterInteractive">` in `app/layout.tsx`
 
-### Google AdSense
-- Publisher ID: `ca-pub-2562848751614063`
+### Google AdSense — Publisher: `ca-pub-2562848751614063`
 - Loaded via `<Script strategy="afterInteractive">` in `app/layout.tsx`
-- `ads.txt` at `/public/ads.txt`
+- `ads.txt`: `google.com, pub-2562848751614063, DIRECT, f08c47fec0942fa0`
+- Status: Authorized ✅ | Approval: Getting ready ⏳
 
 **Ad slots:**
 | Component | Slot ID | Format | Placement |
@@ -208,21 +259,22 @@ After deploy, request indexing in Google Search Console.
 | `<AdSidebar />` | 7704215914 | auto square | Right sidebar |
 | `<AdInArticle />` | 9484201440 | fluid in-article | Between how-to and FAQ |
 
-**Auto ads:** Enable in AdSense dashboard → Ads → By site → freeutil.app → Auto ads ON
+**AdSense behavior:** Hides automatically (max-height: 0) when no ads loaded — no empty white space.
 
 ---
 
 ## SEO Structure
 
 - Per-tool metadata via `generateMetadata()` in `app/tools/[slug]/page.tsx`
-- JSON-LD structured data: WebApplication, BreadcrumbList, HowTo, FAQPage
-- Canonical URLs: `https://freeutil.app/tools/{slug}`
-- Sitemap: auto-generated via `next-sitemap` postbuild
-- All tool `longDesc` must be SEO-optimized with keywords
+- JSON-LD: WebApplication, BreadcrumbList, HowTo, FAQPage per tool
+- Canonical: `https://freeutil.app/tools/{slug}`
+- Sitemap: auto via `next-sitemap` postbuild
+- OG images: auto-generated per tool via `app/tools/[slug]/opengraph-image.tsx`
+- Static export = faster TTFB = better Core Web Vitals = better rank
 
 ---
 
-## Tools Completed ✅ (20 tools)
+## Tools Completed ✅ (23 tools)
 
 | Slug | Component | Category |
 |---|---|---|
@@ -239,7 +291,10 @@ After deploy, request indexing in Google Search Console.
 | password-generator | PasswordGenerator.tsx | dev |
 | json-to-csv | JsonToCsv.tsx | dev |
 | json-to-yaml | JsonToYaml.tsx | dev |
+| color-converter | ColorConverter.tsx | dev |
 | thai-date-converter | ThaiDateConverter.tsx | thai |
+| thai-number-to-text | ThaiNumberToText.tsx | thai |
+| thai-baht-to-words | ThaiNumberToText.tsx (shared) | thai |
 | pdf-base64 | PdfBase64.tsx | file |
 | qr-code-generator | QrCodeGenerator.tsx | file |
 | image-resize | ImageResize.tsx | file |
@@ -250,111 +305,104 @@ After deploy, request indexing in Google Search Console.
 
 ## Tools Roadmap
 
-### Phase 1 — Client-side only (no server needed)
+### Phase 1 — Client-side only
 
 #### Dev / IT
-- [ ] Color Converter — HEX ↔ RGB ↔ HSL
-- [ ] Diff Checker — compare two text blocks
-- [ ] Markdown Preview — render markdown live
-- [ ] Word Counter — count words, chars, lines
+- [ ] Diff Checker
+- [ ] Markdown Preview
+- [ ] Word Counter
 
 #### Thai Tools
-- [ ] Thai ID Validator — ตรวจเลขบัตรประชาชน 13 หลัก
-- [ ] Thai VAT Calculator — คำนวณ VAT 7%
-- [ ] Thai Tax Calculator — ภาษีเงินได้บุคคลธรรมดา
-- [ ] Thai Number → Text — แปลงตัวเลขเป็นคำอ่าน
-- [ ] Thai Baht to Words — จำนวนเงินเป็นตัวอักษร (สำหรับเขียนเช็ค)
-- [ ] Thai Phone Formatter — จัดรูปแบบเบอร์โทร
+- [ ] Thai ID Validator
+- [ ] Thai VAT Calculator
+- [ ] Thai Tax Calculator
+- [ ] Thai Phone Formatter
 
 #### PDF & Image
-- [ ] Image → WebP — convert images to WebP
-- [ ] QR Code Reader — decode QR from image
-- [ ] Image → Base64 — convert image to Base64
-- [ ] SVG Optimizer — minify SVG files
+- [ ] Image → WebP
+- [ ] QR Code Reader
+- [ ] Image → Base64
+- [ ] SVG Optimizer
 
 #### Linux & DevOps
-- [ ] Chmod Calculator — Linux file permissions (rwx ↔ octal)
-- [ ] SSH Config Generator — generate ~/.ssh/config
-- [ ] Nginx Config Generator — server block, reverse proxy, SSL
-- [ ] iptables Rule Builder — build iptables rules visually
-- [ ] Systemd Unit Generator — generate .service files
-- [ ] Tar Command Builder — build tar commands visually
-- [ ] Find Command Builder — build find commands visually
+- [ ] Chmod Calculator
+- [ ] SSH Config Generator
+- [ ] Nginx Config Generator
+- [ ] iptables Rule Builder
+- [ ] Systemd Unit Generator
+- [ ] Tar Command Builder
+- [ ] Find Command Builder
 
 #### Finance
-- [ ] Loan Calculator — monthly payment & amortization table
-- [ ] Compound Interest — investment growth calculator
-- [ ] ROI Calculator — return on investment
-- [ ] Percentage Calculator — % of, % change, ratio
-- [ ] Insurance Premium Calculator — ประมาณเบี้ยประกัน
-- [ ] Break-even Calculator — business break-even point
+- [ ] Loan Calculator
+- [ ] Compound Interest
+- [ ] ROI Calculator
+- [ ] Percentage Calculator
+- [ ] Insurance Premium Calculator
+- [ ] Break-even Calculator
 
 #### Text & Content
-- [ ] Lorem Ipsum Generator — placeholder text
-- [ ] Text Case Converter — UPPER, lower, camelCase, snake_case, PascalCase
-- [ ] String Escape/Unescape — escape special characters
+- [ ] Lorem Ipsum Generator
+- [ ] Text Case Converter
+- [ ] String Escape/Unescape
 
 #### OpenSSL & Certificate
-- [ ] CSR Generator — Certificate Signing Request (Web Crypto API)
-- [ ] Self-signed Cert Generator — for dev/test environments
-- [ ] Certificate Decoder — decode & inspect PEM/CRT files
-- [ ] PEM ↔ DER Converter — convert certificate formats
-- [ ] RSA Key Generator — generate RSA key pairs (Web Crypto API)
-- [ ] OpenSSL Command Builder — build openssl commands visually
+- [ ] CSR Generator (Web Crypto API)
+- [ ] Self-signed Cert Generator
+- [ ] Certificate Decoder
+- [ ] PEM ↔ DER Converter
+- [ ] RSA Key Generator (Web Crypto API)
+- [ ] OpenSSL Command Builder
 
 ---
 
-### Phase 2 — Cloudflare Workers required
+### Phase 2 — Cloudflare Workers at `api.freeutil.app`
 
-> Free tier: 100,000 requests/day. Paid: $5/mo for 10M requests/month.
+> ⚠️ Cannot use Next.js API routes — site is static export.
+> Must deploy separate Cloudflare Worker at `api.freeutil.app`
 
-- [ ] DNS Record Lookup — DoH API via 1.1.1.1
-- [ ] My IP Address — read CF-Connecting-IP header
-- [ ] IP Geolocation — read CF-IPCountry, CF-IPCity headers
-- [ ] SSL Certificate Checker — fetch domain cert info
-- [ ] Bandwidth Calculator — client-side calculation (no Workers needed)
-- [ ] IPv6 Calculator — client-side calculation (no Workers needed)
-- [ ] Port Reference Table — static data (no Workers needed)
-- [ ] Currency Converter — exchange rate API (requires external API key)
-- [ ] SSL Expiry Monitor — requires DB for email storage
-
----
-
-### Phase 3 — Requires VPS (not possible on Cloudflare)
-
-> These tools require ICMP or raw socket access which Cloudflare Workers don't support.
-
-- [ ] Ping — ICMP not available in CF Workers
-- [ ] Traceroute — requires raw socket
-- [ ] Port Scanner — CF blocks outbound TCP scanning + ToS risk
+- [ ] DNS Record Lookup — `GET /api/dns?domain=&type=`
+- [ ] My IP Address — `GET /api/myip` (CF-Connecting-IP)
+- [ ] IP Geolocation — `GET /api/geoip?ip=` (CF-IPCountry/City)
+- [ ] SSL Certificate Checker — `GET /api/ssl?domain=`
+- [ ] Currency Converter — `GET /api/currency?from=&to=` (external API)
+- [ ] Bandwidth Calculator — client-side (no Worker needed)
+- [ ] IPv6 Calculator — client-side (no Worker needed)
+- [ ] Port Reference Table — static data (no Worker needed)
+- [ ] SSL Expiry Monitor — needs DB for email (complex)
 
 ---
 
-## Homepage Redesign Plan (Pending)
+### Phase 3 — Requires VPS
 
-When tools reach 30+, redesign homepage with:
-- Large search bar (centered)
-- Category pills filter (All, Dev, Linux, Network, PDF, Thai, Finance, Text, OpenSSL)
-- Popular section — dynamic via Cloudflare KV (track tool usage, update daily)
-- Tool grid filtered by selected category
+> Not possible on Cloudflare — needs ICMP/raw socket
 
-**Cloudflare KV structure for popular tracking:**
-```
-tool:jwt-decoder     → 1842
-tool:json-formatter  → 1203
-...
-```
+- [ ] Ping
+- [ ] Traceroute
+- [ ] Port Scanner
+
+---
+
+## Homepage Redesign Plan (Pending — at 30+ tools)
+
+- Large search bar centered
+- Category pills filter
+- Popular section via Cloudflare KV (real-time usage tracking)
+- Tool grid filtered by category
 
 ---
 
 ## Known Issues & Notes
 
-- **Error 1101 (Worker exceeded resource limits):** Add `export const runtime = 'nodejs'` to `app/tools/[slug]/page.tsx` if encountered on Cloudflare Pages free tier
-- **AdSense ads not showing:** Normal for new sites — requires real organic traffic. Ads will appear once Google has enough data to match advertisers
-- **next-sitemap with TypeScript:** `next-sitemap.config.js` must use plain JavaScript syntax (no TypeScript types)
-- **`<Script>` component:** Always use `strategy="afterInteractive"` for GA and AdSense — never put raw `<script>` tags in `<head>`
-- **crossOrigin:** Must be `crossOrigin` (capital O) in JSX, not `crossorigin`
-- **Tool 404 on dev:** Run `Remove-Item -Recurse -Force .next && pnpm dev` to clear cache when adding new tools
+- **Error 1101 FIXED:** Switched to `output: 'export'` in `next.config.ts` — no more Workers
+- **Static export rules:** Any dynamic route needs `generateStaticParams()` + `export const dynamic = 'force-static'`
+- **No API routes:** Phase 2 tools must use separate CF Worker at `api.freeutil.app`
+- **AdSense:** `ads.txt` = Authorized ✅. Status still "Getting ready" — waiting for organic traffic
+- **AdSense warning** `data-nscript attribute` — cosmetic only, ignore
+- **next-sitemap config:** Must be plain JS (no TypeScript types)
+- **Script tags:** Always `<Script strategy="afterInteractive">` — never raw `<script>` in `<head>`
+- **crossOrigin:** Capital O in JSX (`crossOrigin` not `crossorigin`)
+- **Cache issues:** `Remove-Item -Recurse -Force .next && pnpm dev` when tools show 404
 
 ---
 
@@ -362,17 +410,13 @@ tool:json-formatter  → 1203
 
 ```powershell
 # Start of day
-git pull
+git pull && pnpm dev
 
-# Development
-pnpm dev
-
-# After adding tools
+# After changes
 git add .
 git commit -m "add [tool-name] tool"
 git push
-
-# Cloudflare auto-deploys — sitemap regenerates automatically
+# Cloudflare auto-deploys in ~2-3 min
 ```
 
 ---
@@ -384,4 +428,4 @@ git push
 - pnpm: 10.x
 - TypeScript: 5.x
 - Tailwind: 4.x
-- Cloudflare Pages (free tier)
+- Cloudflare Pages (free tier) — static export, no Workers
