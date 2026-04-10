@@ -1,4 +1,3 @@
-export const dynamic = 'force-static'
 
 import { ImageResponse } from 'next/og'
 import { getTool, tools } from '@/lib/tools'
