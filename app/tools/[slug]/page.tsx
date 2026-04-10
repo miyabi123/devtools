@@ -57,6 +57,9 @@ const toolComponents: Record<string, React.ComponentType> = {
   'image-resize':         dynamic(() => import('@/components/tools/ImageResize')),
   'favicon-generator':    dynamic(() => import('@/components/tools/FaviconGenerator')),
   'image-compressor':     dynamic(() => import('@/components/tools/ImageCompressor')),
+  'color-converter':      dynamic(() => import('@/components/tools/ColorConverter')),
+  'thai-number-to-text':  dynamic(() => import('@/components/tools/ThaiNumberToText')),
+  'thai-baht-to-words':   dynamic(() => import('@/components/tools/ThaiNumberToText')),
 }
 
 export default async function ToolPage({

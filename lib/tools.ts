@@ -273,6 +273,26 @@ export const tools: Tool[] = [
     isNew: true,
   },
   {
+    slug: 'color-converter',
+    name: 'Color Converter',
+    shortDesc: 'Convert colors between HEX, RGB, HSL, and HSV',
+    longDesc: 'Free online color converter. Convert colors between HEX, RGB, HSL, and HSV formats instantly. Pick colors with a visual color picker, see live preview, and copy values in any format. Essential tool for web developers, designers, and UI/UX professionals. All conversion runs 100% client-side.',
+    category: 'dev',
+    keywords: ['color converter', 'hex to rgb', 'rgb to hex', 'hex to hsl', 'color picker online', 'css color converter', 'rgba converter', 'hsl color converter'],
+    howTo: [
+      'Enter a color value in any format — HEX, RGB, or HSL',
+      'Or use the color picker to visually select a color',
+      'All formats update instantly',
+      'Click copy on any format to copy to clipboard',
+    ],
+    faq: [
+      { q: 'What is the difference between HEX and RGB?', a: 'HEX is a 6-digit hexadecimal representation of RGB values (e.g. #ff5733). RGB uses three numbers from 0-255 for red, green, and blue channels.' },
+      { q: 'What is HSL?', a: 'HSL stands for Hue, Saturation, Lightness. It is more intuitive than RGB for humans — hue is the color angle (0-360°), saturation is color intensity (0-100%), and lightness is brightness (0-100%).' },
+    ],
+    related: ['hash-generator', 'image-compressor', 'favicon-generator'],
+    isNew: true,
+  },
+  {
     slug: 'pdf-base64',
     name: 'PDF ↔ Base64',
     shortDesc: 'Convert PDF files to Base64 and back',
@@ -393,6 +413,31 @@ export const tools: Tool[] = [
     ],
     related: ['cron-builder', 'hash-generator'],
     isPopular: true,
+  },
+  {
+    slug: 'thai-number-to-text',
+    name: 'แปลงตัวเลขเป็นคำอ่านภาษาไทย',
+    shortDesc: 'แปลงตัวเลขเป็นคำอ่านภาษาไทย และจำนวนเงินบาท',
+    longDesc: 'เครื่องมือแปลงตัวเลขเป็นคำอ่านภาษาไทยฟรี ออนไลน์ รองรับทั้งตัวเลขทั่วไปและจำนวนเงินบาท เช่น 1234 → หนึ่งพันสองร้อยสามสิบสี่ และ 1500.50 → หนึ่งพันห้าร้อยบาทห้าสิบสตางค์ เหมาะสำหรับการเขียนเช็ค เอกสารทางกฎหมาย และงานบัญชี ประมวลผลทั้งหมดในเบราว์เซอร์ — Thai number to text converter supporting both general numbers and Thai Baht currency format.',
+    category: 'thai',
+    keywords: [
+      'แปลงตัวเลขเป็นคำอ่านภาษาไทย', 'ตัวเลขเป็นตัวหนังสือ', 'แปลงเลขเป็นคำ',
+      'จำนวนเงินเป็นตัวอักษร', 'เขียนเช็คภาษาไทย', 'thai number to text',
+      'baht to words', 'แปลงเงินเป็นตัวหนังสือ', 'ตัวเลขภาษาไทย'
+    ],
+    howTo: [
+      'กรอกตัวเลขที่ต้องการแปลงในช่องป้อนข้อมูล',
+      'เลือกโหมด: ตัวเลขทั่วไป หรือ จำนวนเงินบาท',
+      'ผลลัพธ์แสดงทันทีพร้อมคัดลอก',
+      'สามารถแปลงได้ทั้งเลขจำนวนเต็มและทศนิยม',
+    ],
+    faq: [
+      { q: 'รองรับตัวเลขสูงสุดเท่าไหร่?', a: 'รองรับตัวเลขสูงสุดถึง 999,999,999,999 (เก้าร้อยเก้าสิบเก้าพันล้าน) ครับ' },
+      { q: 'ใช้สำหรับเขียนเช็คได้ไหม?', a: 'ได้ครับ เลือกโหมด "จำนวนเงินบาท" จะได้รูปแบบที่ถูกต้องตามมาตรฐานการเขียนเช็คและเอกสารทางกฎหมายไทย' },
+      { q: 'รองรับทศนิยม (สตางค์) ไหม?', a: 'รองรับครับ ในโหมดจำนวนเงิน ทศนิยม 2 ตำแหน่งจะแปลงเป็นสตางค์โดยอัตโนมัติ เช่น 10.50 = สิบบาทห้าสิบสตางค์' },
+    ],
+    related: ['thai-date-converter', 'thai-vat-calculator', 'thai-id-validator'],
+    isNew: true,
   },
 ]
 

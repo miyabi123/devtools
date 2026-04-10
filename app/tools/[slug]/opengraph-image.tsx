@@ -1,8 +1,14 @@
+export const dynamic = 'force-static'
+
 import { ImageResponse } from 'next/og'
-import { getTool } from '@/lib/tools'
+import { getTool, tools } from '@/lib/tools'
 
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
+
+export function generateStaticParams() {
+  return tools.map(t => ({ slug: t.slug }))
+}
 
 const categoryColors: Record<string, { bg: string; text: string; label: string }> = {
   dev:     { bg: '#eeedfe', text: '#3c3489', label: 'Developer Tool' },
@@ -31,49 +37,19 @@ export default async function Image({ params }: { params: { slug: string } }) {
           fontFamily: 'sans-serif',
         }}
       >
-        {/* Category badge */}
         <div style={{ display: 'flex' }}>
-          <div
-            style={{
-              background: cat.bg,
-              color: cat.text,
-              fontSize: 24,
-              fontWeight: 600,
-              padding: '10px 24px',
-              borderRadius: 10,
-            }}
-          >
+          <div style={{ background: cat.bg, color: cat.text, fontSize: 24, fontWeight: 600, padding: '10px 24px', borderRadius: 10 }}>
             {cat.label}
           </div>
         </div>
-
-        {/* Tool name + description */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          <div
-            style={{
-              fontSize: 76,
-              fontWeight: 700,
-              color: '#1a1917',
-              lineHeight: 1.05,
-              display: 'flex',
-            }}
-          >
+          <div style={{ fontSize: 76, fontWeight: 700, color: '#1a1917', lineHeight: 1.05, display: 'flex' }}>
             {tool.name}
           </div>
-          <div
-            style={{
-              fontSize: 34,
-              color: '#6b6960',
-              lineHeight: 1.4,
-              display: 'flex',
-              maxWidth: 900,
-            }}
-          >
+          <div style={{ fontSize: 34, color: '#6b6960', lineHeight: 1.4, display: 'flex', maxWidth: 900 }}>
             {tool.shortDesc}
           </div>
         </div>
-
-        {/* Footer branding */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ fontSize: 30, color: '#1a1917', fontWeight: 500, display: 'flex' }}>
             free<span style={{ opacity: 0.35 }}>util</span>
