@@ -59,7 +59,7 @@ const toolComponents: Record<string, React.ComponentType> = {
   'image-compressor':     dynamic(() => import('@/components/tools/ImageCompressor')),
   'color-converter':      dynamic(() => import('@/components/tools/ColorConverter')),
   'thai-number-to-text':  dynamic(() => import('@/components/tools/ThaiNumberToText')),
-  'thai-baht-to-words':   dynamic(() => import('@/components/tools/ThaiNumberToText')),
+  'thai-baht-to-words':   dynamic(() => import('@/components/tools/ThaiBahtToWords')),
 }
 
 export default async function ToolPage({
