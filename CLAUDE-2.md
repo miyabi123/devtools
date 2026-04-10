@@ -11,8 +11,6 @@ Built as a passive income project with Google AdSense monetization.
 - **Package manager:** pnpm
 - **CI/CD:** GitHub → Cloudflare Pages (auto-deploy on push)
 - **Output mode:** `output: 'export'` (Static HTML — no server/Workers)
-- **Hosting:** Cloudflare Pages (migrated from Workers April 2026)
-- **Branches:** `cloudflare-pages` (production) | `main` (Worker backup)
 
 ---
 
@@ -276,7 +274,7 @@ Loaded via `<Script strategy="afterInteractive">` in `app/layout.tsx`
 
 ---
 
-## Tools Completed ✅ (22 tools)
+## Tools Completed ✅ (23 tools)
 
 | Slug | Component | Category |
 |---|---|---|
@@ -296,7 +294,7 @@ Loaded via `<Script strategy="afterInteractive">` in `app/layout.tsx`
 | color-converter | ColorConverter.tsx | dev |
 | thai-date-converter | ThaiDateConverter.tsx | thai |
 | thai-number-to-text | ThaiNumberToText.tsx | thai |
-| thai-baht-to-words | ThaiBahtToWords.tsx (clone of ThaiNumberToText) | thai |
+| thai-baht-to-words | ThaiNumberToText.tsx (shared) | thai |
 | pdf-base64 | PdfBase64.tsx | file |
 | qr-code-generator | QrCodeGenerator.tsx | file |
 | image-resize | ImageResize.tsx | file |
@@ -396,12 +394,9 @@ Loaded via `<Script strategy="afterInteractive">` in `app/layout.tsx`
 
 ## Known Issues & Notes
 
-- **Cloudflare Pages ✅:** ย้ายจาก Workers → Pages สำเร็จ April 2026 — Desktop 100/100, SEO 100/100
-- **Error 1101 FIXED:** ใช้ `output: 'export'` + Cloudflare Pages — ไม่มี Workers เลย
-- **`app/opengraph-image.tsx` ถูกลบ:** ไม่รองรับ `output: 'export'` กับ `ImageResponse` — ลบออกแล้ว
+- **Error 1101 FIXED:** Switched to `output: 'export'` in `next.config.ts` — no more Workers
 - **Static export rules:** Any dynamic route needs `generateStaticParams()` + `export const dynamic = 'force-static'`
 - **No API routes:** Phase 2 tools must use separate CF Worker at `api.freeutil.app`
-- **ThaiBahtToWords:** เป็น full clone ของ ThaiNumberToText.tsx — ไม่ใช่ re-export
 - **AdSense:** `ads.txt` = Authorized ✅. Status still "Getting ready" — waiting for organic traffic
 - **AdSense warning** `data-nscript attribute` — cosmetic only, ignore
 - **next-sitemap config:** Must be plain JS (no TypeScript types)
@@ -411,22 +406,9 @@ Loaded via `<Script strategy="afterInteractive">` in `app/layout.tsx`
 
 ---
 
-## Git Branches
-
-```
-cloudflare-pages  → Production branch (Cloudflare Pages deploys from this)
-main              → Worker backup (ไม่ได้ใช้ deploy แล้ว)
-```
-
-**สำคัญ:** ทำงานและ push ที่ branch `cloudflare-pages` เสมอครับ
+## Git Workflow
 
 ```powershell
-# ตรวจสอบ branch ปัจจุบัน
-git branch
-
-# สลับไป cloudflare-pages
-git checkout cloudflare-pages
-
 # Start of day
 git pull && pnpm dev
 
@@ -434,7 +416,7 @@ git pull && pnpm dev
 git add .
 git commit -m "add [tool-name] tool"
 git push
-# Cloudflare Pages auto-deploys in ~2-3 min
+# Cloudflare auto-deploys in ~2-3 min
 ```
 
 ---
