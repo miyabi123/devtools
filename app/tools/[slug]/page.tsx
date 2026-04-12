@@ -60,6 +60,7 @@ const toolComponents: Record<string, React.ComponentType> = {
   'color-converter':      dynamic(() => import('@/components/tools/ColorConverter')),
   'thai-number-to-text':  dynamic(() => import('@/components/tools/ThaiNumberToText')),
   'thai-baht-to-words':   dynamic(() => import('@/components/tools/ThaiBahtToWords')),
+  'thai-tax-calculator':  dynamic(() => import('@/components/tools/ThaiTaxCalculator')),
 }
 
 export default async function ToolPage({
