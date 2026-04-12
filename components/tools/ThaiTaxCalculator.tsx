@@ -29,12 +29,11 @@ function fmt(n: number): string {
   return n.toLocaleString('th-TH', { maximumFractionDigits: 0 })
 }
 
-// ── NumInput — local string state เพื่อไม่ให้ cursor กระโดด ────
+// ── ย้ายทุก component ออกมาข้างนอก ThaiTaxCalculator ──────────
+// เพื่อไม่ให้ React สร้าง component ใหม่ทุก render → focus ไม่หาย
+
 function NumInput({
-  value,
-  onChange,
-  placeholder = '0',
-  max,
+  value, onChange, placeholder = '0', max,
 }: {
   value: number
   onChange: (v: number) => void
@@ -42,7 +41,6 @@ function NumInput({
   max?: number
 }) {
   const [str, setStr] = useState(value === 0 ? '' : String(value))
-
   return (
     <input
       type="text"
@@ -63,6 +61,46 @@ function NumInput({
         boxSizing: 'border-box',
       }}
     />
+  )
+}
+
+function Row({ label, value, sub }: { label: string; value: string; sub?: string }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '6px 0', borderBottom: '0.5px solid #e8e6e0' }}>
+      <div>
+        <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#1a1917' }}>{label}</span>
+        {sub && <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#a8a69e', marginLeft: 6 }}>{sub}</span>}
+      </div>
+      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: '#1a1917' }}>{value}</span>
+    </div>
+  )
+}
+
+function Field({ label, sub, children }: { label: string; sub?: string; children: React.ReactNode }) {
+  return (
+    <div style={{ marginBottom: 12 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+        <label style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#1a1917' }}>{label}</label>
+        {sub && <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#a8a69e', textAlign: 'right', maxWidth: '55%' }}>{sub}</span>}
+      </div>
+      {children}
+    </div>
+  )
+}
+
+function NavBtn({ label, target, currentStep, onClick }: {
+  label: string
+  target: number
+  currentStep: number
+  onClick: (t: number) => void
+}) {
+  return (
+    <button onClick={() => onClick(target)} style={{
+      fontFamily: 'var(--font-mono)', fontSize: 11, padding: '8px 16px',
+      background: target > currentStep ? '#1a1917' : '#f8f7f4',
+      color: target > currentStep ? '#f8f7f4' : '#6b6960',
+      border: '0.5px solid #c8c6c0', borderRadius: 6, cursor: 'pointer',
+    }}>{label}</button>
   )
 }
 
@@ -125,7 +163,6 @@ export default function ThaiTaxCalculator() {
   const deductionTotal = useMemo(() => {
     const cap = (v: number, mx: number) => Math.min(v, mx)
     const pct = (v: number, p: number) => Math.min(v, income * p)
-
     let total = 60000
     if (d.spouse) total += 60000
     total += d.children * 30000 + d.childrenPost62 * 30000
@@ -135,12 +172,10 @@ export default function ThaiTaxCalculator() {
     total += cap(d.socialSecurity, 9000)
     total += cap(d.lifeInsurance, 100000) + cap(d.healthInsurance, 25000)
     total += cap(d.parentHealthInsurance, 15000)
-
     const rmfCap = Math.min(pct(d.rmf, 0.30), 500000)
     const ssfCap = Math.min(pct(d.ssf, 0.30), 200000)
     const esgCap = Math.min(pct(d.thaiEsg, 0.30), 300000)
     total += Math.min(rmfCap + ssfCap + esgCap, 500000)
-
     total += Math.min(pct(d.govPension, 0.30), 500000)
     total += Math.min(cap(d.providentFund, 500000), pct(d.providentFund, 0.15))
     total += cap(d.nsf, 30000)
@@ -149,48 +184,16 @@ export default function ThaiTaxCalculator() {
     total += cap(d.newHouse, 100000)
     total += cap(d.tourMain, 20000)
     total += cap(d.tourSecondary, 20000)
-
     const afterDeduct = Math.max(0, incomeAfterExpense - total)
     total += Math.min(d.donationEducation * 2, afterDeduct * 0.10)
     total += Math.min(d.donationGeneral, afterDeduct * 0.10)
     total += cap(d.donationPolitical, 10000)
-
     return Math.round(total)
   }, [d, income, incomeAfterExpense])
 
   const netIncome = Math.max(0, incomeAfterExpense - deductionTotal)
   const tax = calcTax(netIncome)
   const effectiveRate = income > 0 ? (tax / income) * 100 : 0
-
-  const Row = ({ label, value, sub }: { label: string; value: string; sub?: string }) => (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '6px 0', borderBottom: '0.5px solid #e8e6e0' }}>
-      <div>
-        <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#1a1917' }}>{label}</span>
-        {sub && <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#a8a69e', marginLeft: 6 }}>{sub}</span>}
-      </div>
-      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: '#1a1917' }}>{value}</span>
-    </div>
-  )
-
-  const Field = ({ label, sub, children }: { label: string; sub?: string; children: React.ReactNode }) => (
-    <div style={{ marginBottom: 12 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-        <label style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#1a1917' }}>{label}</label>
-        {sub && <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#a8a69e', textAlign: 'right', maxWidth: '55%' }}>{sub}</span>}
-      </div>
-      {children}
-    </div>
-  )
-
-  const NavBtn = ({ label, target }: { label: string; target: number }) => (
-    <button onClick={() => setStep(target)} style={{
-      fontFamily: 'var(--font-mono)', fontSize: 11, padding: '8px 16px',
-      background: target > step ? '#1a1917' : '#f8f7f4',
-      color: target > step ? '#f8f7f4' : '#6b6960',
-      border: '0.5px solid #c8c6c0', borderRadius: 6, cursor: 'pointer',
-    }}>{label}</button>
-  )
-
   const reset = () => { setIncome(0); setD(defaultDeductions); setStep(0) }
 
   return (
@@ -215,6 +218,7 @@ export default function ThaiTaxCalculator() {
             <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#4a4845', margin: 0 }}>ขั้นตอนที่ 1 — รายได้ต่อปี</p>
           </div>
           <div style={{ padding: '16px 14px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+
             <Field label="ประเภทเงินได้">
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {[
@@ -239,22 +243,18 @@ export default function ThaiTaxCalculator() {
               <NumInput value={income} onChange={setIncome} placeholder="เช่น 600000" />
             </Field>
 
-            {income > 0 && (
-              <div style={{ 
-                    background: '#eeedfe', 
-                    border: '0.5px solid #c8c6c0', 
-                    borderRadius: 6, 
-                    padding: '10px 14px',
-                    opacity: income > 0 ? 1 : 0.3,
-                }}>
-                <Row label="รายได้รวม" value={`${fmt(income)} บาท`} />
-                <Row label="หักค่าใช้จ่าย" value={`${fmt(expense)} บาท`} sub={incomeType === '40-8' ? '60%' : '50%'} />
-                <Row label="คงเหลือหลังหักค่าใช้จ่าย" value={`${fmt(incomeAfterExpense)} บาท`} />
-              </div>
-            )}
+            <div style={{
+              background: '#eeedfe', border: '0.5px solid #c8c6c0',
+              borderRadius: 6, padding: '10px 14px',
+              opacity: income > 0 ? 1 : 0.35,
+            }}>
+              <Row label="รายได้รวม" value={`${fmt(income)} บาท`} />
+              <Row label="หักค่าใช้จ่าย" value={`${fmt(expense)} บาท`} sub={incomeType === '40-8' ? '60%' : '50%'} />
+              <Row label="คงเหลือหลังหักค่าใช้จ่าย" value={`${fmt(incomeAfterExpense)} บาท`} />
+            </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <NavBtn label="ต่อไป → ค่าลดหย่อนส่วนตัว" target={1} />
+              <NavBtn label="ต่อไป → ค่าลดหย่อนส่วนตัว" target={1} currentStep={step} onClick={setStep} />
             </div>
           </div>
         </div>
@@ -274,9 +274,7 @@ export default function ThaiTaxCalculator() {
               <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
                 <input type="checkbox" checked={d.spouse}
                   onChange={e => setD(p => ({ ...p, spouse: e.target.checked }))} />
-                <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#1a1917' }}>
-                  มีคู่สมรสที่ไม่มีรายได้ — ลดหย่อน 60,000 บาท
-                </span>
+                <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#1a1917' }}>มีคู่สมรสที่ไม่มีรายได้ — ลดหย่อน 60,000 บาท</span>
               </label>
             </Field>
             <Field label="จำนวนบุตร" sub="คนละ 30,000 บาท">
@@ -295,8 +293,8 @@ export default function ThaiTaxCalculator() {
               <NumInput value={d.prenatal} onChange={setNum('prenatal')} placeholder="0" max={60000} />
             </Field>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <NavBtn label="← กลับ" target={0} />
-              <NavBtn label="ต่อไป → ประกัน/ลงทุน" target={2} />
+              <NavBtn label="← กลับ" target={0} currentStep={step} onClick={setStep} />
+              <NavBtn label="ต่อไป → ประกัน/ลงทุน" target={2} currentStep={step} onClick={setStep} />
             </div>
           </div>
         </div>
@@ -340,8 +338,8 @@ export default function ThaiTaxCalculator() {
               <NumInput value={d.nsf} onChange={setNum('nsf')} placeholder="0" max={30000} />
             </Field>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <NavBtn label="← กลับ" target={1} />
-              <NavBtn label="ต่อไป → กระตุ้นเศรษฐกิจ" target={3} />
+              <NavBtn label="← กลับ" target={1} currentStep={step} onClick={setStep} />
+              <NavBtn label="ต่อไป → กระตุ้นเศรษฐกิจ" target={3} currentStep={step} onClick={setStep} />
             </div>
           </div>
         </div>
@@ -370,8 +368,8 @@ export default function ThaiTaxCalculator() {
               <NumInput value={d.tourSecondary} onChange={setNum('tourSecondary')} placeholder="0" max={20000} />
             </Field>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <NavBtn label="← กลับ" target={2} />
-              <NavBtn label="ต่อไป → บริจาค" target={4} />
+              <NavBtn label="← กลับ" target={2} currentStep={step} onClick={setStep} />
+              <NavBtn label="ต่อไป → บริจาค" target={4} currentStep={step} onClick={setStep} />
             </div>
           </div>
         </div>
@@ -394,8 +392,8 @@ export default function ThaiTaxCalculator() {
               <NumInput value={d.donationPolitical} onChange={setNum('donationPolitical')} placeholder="0" max={10000} />
             </Field>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <NavBtn label="← กลับ" target={3} />
-              <NavBtn label="ดูผลลัพธ์ →" target={5} />
+              <NavBtn label="← กลับ" target={3} currentStep={step} onClick={setStep} />
+              <NavBtn label="ดูผลลัพธ์ →" target={5} currentStep={step} onClick={setStep} />
             </div>
           </div>
         </div>
@@ -459,7 +457,7 @@ export default function ThaiTaxCalculator() {
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <NavBtn label="← แก้ไขข้อมูล" target={0} />
+            <NavBtn label="← แก้ไขข้อมูล" target={0} currentStep={step} onClick={setStep} />
             <button onClick={reset} style={{
               fontFamily: 'var(--font-mono)', fontSize: 11, padding: '8px 16px',
               background: '#fcebeb', color: '#a32d2d',
