@@ -240,7 +240,13 @@ export default function ThaiTaxCalculator() {
             </Field>
 
             {income > 0 && (
-              <div style={{ background: '#eeedfe', border: '0.5px solid #c8c6c0', borderRadius: 6, padding: '10px 14px' }}>
+              <div style={{ 
+                    background: '#eeedfe', 
+                    border: '0.5px solid #c8c6c0', 
+                    borderRadius: 6, 
+                    padding: '10px 14px',
+                    opacity: income > 0 ? 1 : 0.3,
+                }}>
                 <Row label="รายได้รวม" value={`${fmt(income)} บาท`} />
                 <Row label="หักค่าใช้จ่าย" value={`${fmt(expense)} บาท`} sub={incomeType === '40-8' ? '60%' : '50%'} />
                 <Row label="คงเหลือหลังหักค่าใช้จ่าย" value={`${fmt(incomeAfterExpense)} บาท`} />
