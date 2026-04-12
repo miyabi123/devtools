@@ -40,19 +40,17 @@ function NumInput({
   placeholder?: string
   max?: number
 }) {
-  const [str, setStr] = useState(value === 0 ? '' : String(value))
   return (
     <input
       type="text"
       inputMode="numeric"
       pattern="[0-9]*"
       placeholder={placeholder}
-      value={str}
+      value={value === 0 ? '' : String(value)}
       onChange={e => {
         const raw = e.target.value.replace(/[^0-9]/g, '')
-        setStr(raw)
-        const n = Math.max(0, Number(raw) || 0)
-        onChange(max ? Math.min(n, max) : n)
+        const n = raw === '' ? 0 : Math.max(0, Number(raw))
+        onChange(max !== undefined ? Math.min(n, max) : n)
       }}
       style={{
         width: '100%', padding: '8px 10px', border: '0.5px solid #c8c6c0',
