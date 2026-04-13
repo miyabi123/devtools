@@ -62,6 +62,9 @@ const toolComponents: Record<string, React.ComponentType> = {
   'thai-baht-to-words':   dynamic(() => import('@/components/tools/ThaiBahtToWords')),
   'thai-tax-calculator':  dynamic(() => import('@/components/tools/ThaiTaxCalculator')),
   'word-counter':         dynamic(() => import('@/components/tools/WordCounter')),
+  'markdown-preview':     dynamic(() => import('@/components/tools/MarkdownPreview')),
+  'diff-checker':         dynamic(() => import('@/components/tools/DiffChecker')),
+  'lorem-ipsum-generator': dynamic(() => import('@/components/tools/LoremIpsumGenerator')),
 }
 
 export default async function ToolPage({
