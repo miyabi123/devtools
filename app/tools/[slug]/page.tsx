@@ -61,6 +61,7 @@ const toolComponents: Record<string, React.ComponentType> = {
   'thai-number-to-text':  dynamic(() => import('@/components/tools/ThaiNumberToText')),
   'thai-baht-to-words':   dynamic(() => import('@/components/tools/ThaiBahtToWords')),
   'thai-tax-calculator':  dynamic(() => import('@/components/tools/ThaiTaxCalculator')),
+  'word-counter':         dynamic(() => import('@/components/tools/WordCounter')),
 }
 
 export default async function ToolPage({

@@ -293,6 +293,27 @@ export const tools: Tool[] = [
     isNew: true,
   },
   {
+    slug: 'word-counter',
+    name: 'Word Counter',
+    shortDesc: 'Count words, characters, sentences and reading time',
+    longDesc: 'Free online word counter tool. Count words, characters (with and without spaces), sentences, paragraphs, and estimated reading time instantly as you type. Perfect for writers, students, bloggers, and SEO professionals checking content length. Works with any language including Thai. All processing runs 100% client-side — your text never leaves your browser.',
+    category: 'dev',
+    keywords: ['word counter', 'character counter', 'word count online', 'count words', 'word counter tool', 'character count', 'text analyzer', 'reading time calculator', 'word counter free'],
+    howTo: [
+      'Paste or type your text into the input area',
+      'Word count, character count, and other stats update instantly',
+      'See estimated reading time based on average reading speed',
+      'Use the clear button to reset and start over',
+    ],
+    faq: [
+      { q: 'Does it support Thai text?', a: 'Yes — the character counter works with Thai and all Unicode languages. Word counting uses spaces as separators.' },
+      { q: 'What is the reading time based on?', a: 'Reading time is calculated at 200 words per minute, which is the average adult reading speed.' },
+      { q: 'Is there a character limit?', a: 'No limit — the tool handles large texts. All processing is done in your browser.' },
+    ],
+    related: ['thai-number-to-text', 'json-formatter', 'url-encode-decode'],
+    isNew: true,
+  },
+  {
     slug: 'pdf-base64',
     name: 'PDF ↔ Base64',
     shortDesc: 'Convert PDF files to Base64 and back',
