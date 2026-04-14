@@ -65,6 +65,9 @@ const toolComponents: Record<string, React.ComponentType> = {
   'markdown-preview':     dynamic(() => import('@/components/tools/MarkdownPreview')),
   'diff-checker':         dynamic(() => import('@/components/tools/DiffChecker')),
   'lorem-ipsum-generator': dynamic(() => import('@/components/tools/LoremIpsumGenerator')),
+  'csr-generator':        dynamic(() => import('@/components/tools/CSRGenerator')),
+  'self-signed-cert':     dynamic(() => import('@/components/tools/SelfSignedCertGenerator')),
+  'pem-der-converter': dynamic(() => import('@/components/tools/PemDerConverter')),
 }
 
 export default async function ToolPage({

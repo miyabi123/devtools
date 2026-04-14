@@ -1,4 +1,4 @@
-export type ToolCategory = 'dev' | 'thai' | 'file' | 'finance'
+export type ToolCategory = 'dev' | 'thai' | 'file' | 'finance' | 'openssl'
 
 export interface Tool {
   slug: string
@@ -573,6 +573,71 @@ export const tools: Tool[] = [
     related: ['thai-vat-calculator', 'thai-number-to-text', 'thai-date-converter'],
     isNew: true,
   },
+
+  // ──  OpenSSL & Cert ────────────────────────────────────────
+  {
+    slug: 'csr-generator',
+    name: 'CSR Generator',
+    shortDesc: 'Generate Certificate Signing Requests online',
+    longDesc: 'Free online CSR (Certificate Signing Request) generator. Generate CSR and private key pairs instantly in your browser using the Web Crypto API. Fill in your organization details and download the CSR file ready to submit to your Certificate Authority (CA). Private key never leaves your browser — 100% client-side and secure.',
+    category: 'openssl',
+    keywords: ['csr generator', 'certificate signing request', 'generate csr online', 'ssl csr generator', 'openssl csr', 'csr creator', 'ssl certificate request', 'pem csr generator'],
+    howTo: [
+      'Fill in your organization details — Common Name, Organization, Country',
+      'Select key size (2048 or 4096 bits)',
+      'Click Generate — CSR and private key are created in your browser',
+      'Download both files and submit the CSR to your Certificate Authority',
+    ],
+    faq: [
+      { q: 'Is my private key secure?', a: 'Yes — the private key is generated entirely in your browser using Web Crypto API and never sent to any server.' },
+      { q: 'What is a CSR?', a: 'A Certificate Signing Request (CSR) is a file you submit to a Certificate Authority (CA) to apply for an SSL certificate. It contains your public key and organization information.' },
+      { q: 'What key size should I use?', a: '2048-bit is standard and sufficient for most use cases. Use 4096-bit for extra security, though it is slower to generate.' },
+    ],
+    related: ['hash-generator', 'uuid-generator', 'base64-encode-decode'],
+    isNew: true,
+  },
+  {
+    slug: 'self-signed-cert',
+    name: 'Self-signed Certificate Generator',
+    shortDesc: 'Generate self-signed SSL certificates for development',
+    longDesc: 'Free online self-signed SSL certificate generator. Generate self-signed certificates instantly in your browser using the Web Crypto API. Perfect for local development, testing environments, and internal services. Fill in your details and download the certificate and private key files ready to use with Nginx, Apache, or Node.js. All generation runs 100% client-side — your private key never leaves your browser.',
+    category: 'openssl',
+    keywords: ['self signed certificate', 'self signed ssl', 'generate ssl certificate', 'ssl certificate generator', 'openssl self signed', 'development ssl certificate', 'localhost ssl', 'self signed cert generator'],
+    howTo: [
+      'Fill in certificate details — Common Name, Organization, Country',
+      'Set the validity period in days',
+      'Click Generate — certificate and private key are created in your browser',
+      'Download both files and configure your web server',
+    ],
+    faq: [
+      { q: 'What is a self-signed certificate?', a: 'A self-signed certificate is signed by its own private key instead of a Certificate Authority. Browsers will show a warning, but it is perfect for development and testing.' },
+      { q: 'Can I use this for production?', a: 'Not recommended for production — browsers will show security warnings. Use a CA-issued certificate (e.g. Let\'s Encrypt) for production sites.' },
+      { q: 'How do I use it with Nginx?', a: 'Add ssl_certificate /path/to/cert.pem and ssl_certificate_key /path/to/key.pem to your Nginx server block.' },
+    ],
+    related: ['csr-generator', 'hash-generator', 'base64-encode-decode'],
+    isNew: true,
+  },
+  {
+    slug: 'pem-der-converter',
+    name: 'PEM ↔ DER Converter',
+    shortDesc: 'Convert SSL certificates between PEM and DER formats',
+    longDesc: 'Free online PEM to DER and DER to PEM converter. Convert SSL certificates, private keys, and CSR files between PEM (Base64 text) and DER (binary) formats instantly in your browser. Perfect for developers working with different server and application requirements. All conversion runs 100% client-side — your certificates never leave your browser.',
+    category: 'openssl',
+    keywords: ['pem to der', 'der to pem', 'pem der converter', 'certificate format converter', 'ssl certificate converter', 'openssl pem der', 'convert certificate format', 'pem der online'],
+    howTo: [
+      'Select conversion direction: PEM → DER or DER → PEM',
+      'For PEM → DER: paste your PEM text or upload a .pem file',
+      'For DER → PEM: upload a .der or .crt binary file',
+      'Click Convert and download the result',
+    ],
+    faq: [
+      { q: 'What is the difference between PEM and DER?', a: 'PEM is a Base64-encoded text format wrapped with -----BEGIN----- headers, commonly used on Linux/Apache/Nginx. DER is a binary format commonly used on Windows and Java applications.' },
+      { q: 'Which format does Nginx use?', a: 'Nginx uses PEM format. Windows IIS and Java keystores typically use DER or PKCS#12 format.' },
+      { q: 'Can I convert private keys too?', a: 'Yes — the converter works with certificates, private keys, CSRs, and any PEM/DER encoded file.' },
+    ],
+    related: ['csr-generator', 'self-signed-cert', 'base64-encode-decode'],
+    isNew: true,
+  },
 ]
 
 // ── Helpers ─────────────────────────────────────────────────────
@@ -590,10 +655,11 @@ export const toolsByCategory = (cat: ToolCategory): Tool[] =>
   tools.filter(t => t.category === cat)
 
 export const categoryLabel: Record<ToolCategory, string> = {
-  dev: 'Dev / IT',
-  thai: 'Thai tools',
-  file: 'File & convert',
+  dev:     'Dev / IT',
+  thai:    'Thai tools',
+  file:    'File & convert',
   finance: 'Finance',
+  openssl: 'OpenSSL & Cert',
 }
 
 export const categoryColors: Record<ToolCategory, { bg: string; text: string }> = {
@@ -601,4 +667,5 @@ export const categoryColors: Record<ToolCategory, { bg: string; text: string }> 
   thai:    { bg: '#e1f5ee', text: '#085041' },
   file:    { bg: '#faeeda', text: '#633806' },
   finance: { bg: '#faece7', text: '#712b13' },
+  openssl: { bg: '#eef6ff', text: '#1D4ED8' },
 }
