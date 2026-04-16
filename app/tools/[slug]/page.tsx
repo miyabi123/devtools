@@ -68,6 +68,7 @@ const toolComponents: Record<string, React.ComponentType> = {
   'csr-generator':        dynamic(() => import('@/components/tools/CSRGenerator')),
   'self-signed-cert':     dynamic(() => import('@/components/tools/SelfSignedCertGenerator')),
   'pem-der-converter': dynamic(() => import('@/components/tools/PemDerConverter')),
+  'certificate-decoder': dynamic(() => import('@/components/tools/CertificateDecoder')),
 }
 
 export default async function ToolPage({

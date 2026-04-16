@@ -638,6 +638,48 @@ export const tools: Tool[] = [
     related: ['csr-generator', 'self-signed-cert', 'base64-encode-decode'],
     isNew: true,
   },
+  {
+    slug: 'certificate-decoder',
+    name: 'Certificate Decoder',
+    shortDesc: 'Decode and inspect SSL/TLS certificate details',
+    longDesc: 'Free online SSL certificate decoder. Paste a PEM certificate and instantly see all details including subject, issuer, validity dates, SANs, key size, signature algorithm, and fingerprints. Perfect for developers and sysadmins verifying certificate information before deployment. All decoding runs 100% client-side — your certificate never leaves your browser.',
+    category: 'openssl',
+    keywords: ['certificate decoder', 'ssl certificate decoder', 'pem decoder', 'x509 certificate viewer', 'ssl cert info', 'certificate details', 'decode ssl certificate', 'certificate inspector', 'openssl x509'],
+    howTo: [
+      'Paste your PEM certificate into the input box',
+      'Click Decode to inspect all certificate details',
+      'View subject, issuer, validity dates, SANs, and fingerprints',
+      'Use it to verify certificates before installing on your server',
+    ],
+    faq: [
+      { q: 'What certificate formats are supported?', a: 'Supports PEM format (-----BEGIN CERTIFICATE-----). If you have a DER binary file, use the PEM ↔ DER Converter tool first.' },
+      { q: 'Is my certificate data secure?', a: 'Yes — all decoding happens entirely in your browser using the Web Crypto API. Your certificate is never sent to any server.' },
+      { q: 'What information can I see?', a: 'Subject (CN, O, OU, C), Issuer, validity period (Not Before / Not After), Subject Alternative Names (SANs), public key info, signature algorithm, and SHA-1/SHA-256 fingerprints.' },
+    ],
+    related: ['csr-generator', 'self-signed-cert', 'pem-der-converter'],
+    isNew: true,
+  },
+  {
+    slug: 'openssl-command-builder',
+    name: 'OpenSSL Command Builder',
+    shortDesc: 'Build OpenSSL commands visually without memorizing syntax',
+    longDesc: 'Free online OpenSSL command builder. Generate OpenSSL commands visually for common tasks including generating keys, creating CSRs, signing certificates, converting formats, inspecting certificates, and testing SSL connections. Perfect for developers and sysadmins who need OpenSSL commands without memorizing complex syntax. Copy the generated command and run it directly in your terminal.',
+    category: 'openssl',
+    keywords: ['openssl command', 'openssl command generator', 'openssl cheatsheet', 'openssl csr', 'openssl certificate', 'openssl keygen', 'openssl convert', 'openssl verify', 'openssl s_client'],
+    howTo: [
+      'Select the OpenSSL operation you want to perform',
+      'Fill in the required parameters',
+      'Copy the generated command',
+      'Run it in your terminal',
+    ],
+    faq: [
+      { q: 'Do I need OpenSSL installed?', a: 'Yes — this tool generates commands for you to run locally. OpenSSL is pre-installed on most Linux/macOS systems. Windows users can install it via Git Bash, WSL, or the OpenSSL installer.' },
+      { q: 'What operations are supported?', a: 'Key generation, CSR creation, self-signed certs, format conversion (PEM/DER/PFX), certificate inspection, SSL connection testing, and more.' },
+      { q: 'Are the commands safe to run?', a: 'Yes — all generated commands use standard OpenSSL syntax. Always review the command before running, especially when specifying file paths.' },
+    ],
+    related: ['csr-generator', 'self-signed-cert', 'certificate-decoder', 'pem-der-converter'],
+    isNew: true,
+  },
 ]
 
 // ── Helpers ─────────────────────────────────────────────────────
