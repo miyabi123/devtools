@@ -69,6 +69,7 @@ const toolComponents: Record<string, React.ComponentType> = {
   'self-signed-cert':     dynamic(() => import('@/components/tools/SelfSignedCertGenerator')),
   'pem-der-converter': dynamic(() => import('@/components/tools/PemDerConverter')),
   'certificate-decoder': dynamic(() => import('@/components/tools/CertificateDecoder')),
+  'openssl-command-builder': dynamic(() => import('@/components/tools/OpenSSLCommandBuilder')),
 }
 
 export default async function ToolPage({
