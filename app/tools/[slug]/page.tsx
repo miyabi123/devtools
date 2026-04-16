@@ -70,6 +70,7 @@ const toolComponents: Record<string, React.ComponentType> = {
   'pem-der-converter': dynamic(() => import('@/components/tools/PemDerConverter')),
   'certificate-decoder': dynamic(() => import('@/components/tools/CertificateDecoder')),
   'openssl-command-builder': dynamic(() => import('@/components/tools/OpenSSLCommandBuilder')),
+  'rsa-key-generator': dynamic(() => import('@/components/tools/RSAKeyGenerator')),
 }
 
 export default async function ToolPage({

@@ -680,6 +680,27 @@ export const tools: Tool[] = [
     related: ['csr-generator', 'self-signed-cert', 'certificate-decoder', 'pem-der-converter'],
     isNew: true,
   },
+  {
+    slug: 'rsa-key-generator',
+    name: 'RSA Key Generator',
+    shortDesc: 'Generate RSA key pairs instantly in your browser',
+    longDesc: 'Free online RSA key pair generator. Generate RSA public and private key pairs instantly in your browser using the Web Crypto API. Choose from 1024, 2048, or 4096-bit key sizes. Download keys in PEM format ready for use with OpenSSL, Node.js, Python, Java, and more. Private key never leaves your browser — 100% client-side and secure.',
+    category: 'openssl',
+    keywords: ['rsa key generator', 'rsa key pair generator', 'generate rsa keys online', 'rsa public private key', 'rsa keygen', 'pem key generator', 'openssl rsa key', 'asymmetric key generator'],
+    howTo: [
+      'Select key size: 2048-bit (standard) or 4096-bit (high security)',
+      'Click Generate — key pair is created in your browser instantly',
+      'Download or copy the private key and public key separately',
+      'Use the keys with OpenSSL, Node.js, Python, or any RSA-compatible system',
+    ],
+    faq: [
+      { q: 'Is my private key secure?', a: 'Yes — keys are generated entirely in your browser using the Web Crypto API (crypto.subtle.generateKey). Nothing is sent to any server.' },
+      { q: 'What key size should I use?', a: '2048-bit is the current standard and sufficient for most use cases. Use 4096-bit for maximum security, though generation takes longer and operations are slower.' },
+      { q: 'What format are the keys in?', a: 'Keys are exported in PEM format (PKCS#8 for private key, SPKI for public key) — compatible with OpenSSL, Node.js, Python cryptography library, Java, and most modern systems.' },
+    ],
+    related: ['csr-generator', 'self-signed-cert', 'openssl-command-builder'],
+    isNew: true,
+  },
 ]
 
 // ── Helpers ─────────────────────────────────────────────────────
