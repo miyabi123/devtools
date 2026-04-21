@@ -135,6 +135,22 @@ export default function ToolLayout({ tool, children }: Props) {
             </div>
           )}
 
+          {/* Related article */}
+          {tool.relatedArticle && (
+            <div className="mt-5 p-3 bg-white border border-[#e8e6e0] rounded-lg">
+              <p className="font-mono text-[10px] text-[#a8a69e] tracking-widest mb-1.5">read the guide</p>
+              <Link
+                href={`/blog/${tool.relatedArticle}`}
+                style={{ textDecoration: 'none' }}
+              >
+                <p className="text-[12px] font-medium text-[#1a1917] leading-snug mb-1 hover:text-[#3c3489] transition-colors">
+                  {tool.relatedArticleName}
+                </p>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#3c3489' }}>Read article →</span>
+              </Link>
+            </div>
+          )}
+
           {/* Privacy note */}
           <div className="mt-5 p-3 bg-white border border-[#e8e6e0] rounded-lg">
             <p className="font-mono text-[10px] text-[#a8a69e] tracking-widest mb-1.5">privacy</p>

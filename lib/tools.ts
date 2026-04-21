@@ -10,6 +10,8 @@ export interface Tool {
   howTo: string[]
   faq: { q: string; a: string }[]
   related: string[]
+  relatedArticle?: string
+  relatedArticleName?: string
   isNew?: boolean
   isPopular?: boolean
 }
@@ -34,6 +36,8 @@ export const tools: Tool[] = [
       { q: 'What JWT algorithms are supported?', a: 'This decoder supports all standard JWT algorithms including HS256, HS512, RS256, RS512, ES256, and more.' },
     ],
     related: ['base64-encode-decode', 'json-formatter', 'hash-generator'],
+    relatedArticle: 'what-is-jwt',
+    relatedArticleName: 'What is JWT? Understanding JSON Web Tokens',
     isPopular: true,
   },
   {
@@ -74,6 +78,8 @@ export const tools: Tool[] = [
       { q: 'What is the difference between Base64 and URL-safe Base64?', a: 'URL-safe Base64 replaces + with - and / with _ to make it safe for use in URLs and filenames.' },
     ],
     related: ['jwt-decoder', 'url-encode-decode', 'hash-generator'],
+    relatedArticle: 'base64-encoding-explained',
+    relatedArticleName: 'Base64 Encoding Explained: What It Is and When to Use It',
   },
   {
     slug: 'regex-tester',
@@ -93,6 +99,8 @@ export const tools: Tool[] = [
       { q: 'What does the global (g) flag do?', a: 'The global flag finds all matches in the string. Without it, only the first match is returned.' },
     ],
     related: ['json-formatter', 'url-encode-decode', 'hash-generator'],
+    relatedArticle: 'regex-guide-for-developers',
+    relatedArticleName: 'Regular Expressions (Regex) Guide for Developers',
     isNew: true,
   },
   {
@@ -113,6 +121,8 @@ export const tools: Tool[] = [
       { q: 'How many hosts can a /24 subnet hold?', a: 'A /24 subnet has 256 addresses, with 254 usable hosts (excluding network and broadcast addresses).' },
     ],
     related: ['url-encode-decode', 'hash-generator', 'jwt-decoder'],
+    relatedArticle: 'cidr-subnetting-guide',
+    relatedArticleName: 'CIDR Notation and Subnetting: A Complete Guide',
   },
   {
     slug: 'cron-builder',
@@ -132,6 +142,8 @@ export const tools: Tool[] = [
       { q: 'What is the format of a cron expression?', a: 'A standard cron expression has 5 fields: minute (0-59), hour (0-23), day of month (1-31), month (1-12), day of week (0-6, 0=Sunday).' },
     ],
     related: ['jwt-decoder', 'json-formatter'],
+    relatedArticle: 'cron-expression-guide',
+    relatedArticleName: 'Cron Expression Guide: Schedule Jobs Like a Pro',
     isNew: true,
   },
   {
@@ -171,6 +183,8 @@ export const tools: Tool[] = [
       { q: 'What is the difference between SHA-256 and SHA-512?', a: 'SHA-512 produces a longer 512-bit hash and is slightly more secure, but SHA-256 is sufficient for most applications and is faster on 32-bit systems.' },
     ],
     related: ['base64-encode-decode', 'jwt-decoder', 'url-encode-decode'],
+    relatedArticle: 'hash-functions-md5-sha256-sha512',
+    relatedArticleName: 'MD5 vs SHA-256 vs SHA-512: Hash Functions Explained',
   },
   {
     slug: 'unix-timestamp',
@@ -190,6 +204,8 @@ export const tools: Tool[] = [
       { q: 'What is the difference between seconds and milliseconds timestamp?', a: 'Unix timestamps are usually in seconds (10 digits). JavaScript uses milliseconds (13 digits). Divide by 1000 to convert milliseconds to seconds.' },
     ],
     related: ['cron-builder', 'thai-date-converter', 'json-formatter'],
+    relatedArticle: 'unix-timestamp-explained',
+    relatedArticleName: 'Unix Timestamps Explained: Epoch Time, Seconds vs Milliseconds',
     isNew: true,
   },
   {
@@ -210,6 +226,8 @@ export const tools: Tool[] = [
       { q: 'Is UUID truly unique?', a: 'UUID v4 has 122 random bits, making collisions astronomically unlikely. The probability of generating a duplicate is negligible for all practical purposes.' },
     ],
     related: ['hash-generator', 'unix-timestamp', 'jwt-decoder'],
+    relatedArticle: 'uuid-guide',
+    relatedArticleName: 'UUID Explained: v1, v4, v5 and When to Use Each',
     isNew: true,
   },
   {
@@ -270,6 +288,8 @@ export const tools: Tool[] = [
       { q: 'Is YAML a superset of JSON?', a: 'Yes — valid JSON is also valid YAML. YAML is more human-friendly with support for comments, multi-line strings, and less punctuation.' },
     ],
     related: ['json-formatter', 'json-to-csv', 'base64-encode-decode'],
+    relatedArticle: 'json-yaml-comparison',
+    relatedArticleName: 'JSON vs YAML: Differences, Use Cases, and When to Use Each',
     isNew: true,
   },
   {
@@ -413,6 +433,8 @@ export const tools: Tool[] = [
       { q: 'What is error correction level?', a: 'Error correction allows QR codes to be read even if partially damaged. Higher levels (Q, H) are more robust but create denser codes.' },
     ],
     related: ['base64-encode-decode', 'url-encode-decode', 'hash-generator'],
+    relatedArticle: 'qr-code-guide',
+    relatedArticleName: 'QR Codes Explained: How They Work and Best Practices',
     isNew: true,
   },
   {
@@ -473,6 +495,8 @@ export const tools: Tool[] = [
       { q: 'What formats are supported?', a: 'JPG, PNG, WebP, and GIF are supported as input. Output can be JPG, PNG, or WebP format.' },
     ],
     related: ['image-resize', 'favicon-generator', 'pdf-base64'],
+    relatedArticle: 'image-compression-guide',
+    relatedArticleName: 'Image Compression Guide: Reduce File Size Without Losing Quality',
     isPopular: true,
   },
 
@@ -496,6 +520,8 @@ export const tools: Tool[] = [
       { q: 'Why is Thai year 543 years ahead of the Western year?', a: 'The Thai Buddhist Era counts from the year of the Buddha\'s passing (Parinirvana), which occurred 543 years before the Christian Era began.' },
     ],
     related: ['cron-builder', 'hash-generator'],
+    relatedArticle: 'thai-date-converter-guide',
+    relatedArticleName: 'พ.ศ. กับ ค.ศ. ต่างกันอย่างไร? วิธีแปลงวันที่ไทยและสากล',
     isPopular: true,
   },
   {
@@ -546,6 +572,8 @@ export const tools: Tool[] = [
       { q: 'รองรับตัวเลขสูงสุดเท่าไหร่?', a: 'รองรับสูงสุด 999,999,999,999.99 บาท (เก้าร้อยเก้าสิบเก้าพันล้านบาท)' },
     ],
     related: ['thai-number-to-text', 'thai-date-converter', 'thai-vat-calculator'],
+    relatedArticle: 'thai-baht-to-words-guide',
+    relatedArticleName: 'วิธีเขียนจำนวนเงินเป็นตัวอักษรภาษาไทยบนเช็คให้ถูกต้อง',
     isNew: true,
   },
   {
@@ -571,6 +599,8 @@ export const tools: Tool[] = [
       { q: 'ผลลัพธ์แม่นยำแค่ไหน?', a: 'คำนวณตามหลักเกณฑ์กรมสรรพากรปี 2568 แต่เพื่อความถูกต้องสูงสุด ควรปรึกษาผู้เชี่ยวชาญด้านภาษีครับ' },
     ],
     related: ['thai-vat-calculator', 'thai-number-to-text', 'thai-date-converter'],
+    relatedArticle: 'thai-income-tax-2568-guide',
+    relatedArticleName: 'วิธีคำนวณภาษีเงินได้บุคคลธรรมดา 2568 พร้อมค่าลดหย่อนครบทุกรายการ',
     isNew: true,
   },
 
@@ -594,6 +624,8 @@ export const tools: Tool[] = [
       { q: 'What key size should I use?', a: '2048-bit is standard and sufficient for most use cases. Use 4096-bit for extra security, though it is slower to generate.' },
     ],
     related: ['hash-generator', 'uuid-generator', 'base64-encode-decode'],
+    relatedArticle: 'what-is-csr',
+    relatedArticleName: 'What is a CSR? How to Generate and Submit a Certificate Signing Request',
     isNew: true,
   },
   {
@@ -615,6 +647,8 @@ export const tools: Tool[] = [
       { q: 'How do I use it with Nginx?', a: 'Add ssl_certificate /path/to/cert.pem and ssl_certificate_key /path/to/key.pem to your Nginx server block.' },
     ],
     related: ['csr-generator', 'hash-generator', 'base64-encode-decode'],
+    relatedArticle: 'self-signed-certificate-guide',
+    relatedArticleName: 'How to Create a Self-signed SSL Certificate for Local Development',
     isNew: true,
   },
   {
@@ -636,6 +670,8 @@ export const tools: Tool[] = [
       { q: 'Can I convert private keys too?', a: 'Yes — the converter works with certificates, private keys, CSRs, and any PEM/DER encoded file.' },
     ],
     related: ['csr-generator', 'self-signed-cert', 'base64-encode-decode'],
+    relatedArticle: 'ssl-certificate-types-explained',
+    relatedArticleName: 'SSL Certificate Types Explained: PEM, DER, PKCS12, and More',
     isNew: true,
   },
   {
@@ -678,6 +714,8 @@ export const tools: Tool[] = [
       { q: 'Are the commands safe to run?', a: 'Yes — all generated commands use standard OpenSSL syntax. Always review the command before running, especially when specifying file paths.' },
     ],
     related: ['csr-generator', 'self-signed-cert', 'certificate-decoder', 'pem-der-converter'],
+    relatedArticle: 'tls-versions-explained',
+    relatedArticleName: 'TLS 1.0, 1.1, 1.2, and 1.3: Differences and Why Versions Matter',
     isNew: true,
   },
   {
@@ -699,6 +737,8 @@ export const tools: Tool[] = [
       { q: 'What format are the keys in?', a: 'Keys are exported in PEM format (PKCS#8 for private key, SPKI for public key) — compatible with OpenSSL, Node.js, Python cryptography library, Java, and most modern systems.' },
     ],
     related: ['csr-generator', 'self-signed-cert', 'openssl-command-builder'],
+    relatedArticle: 'rsa-encryption-explained',
+    relatedArticleName: 'RSA Encryption Explained: Public Keys, Private Keys, and How It Works',
     isNew: true,
   },
 ]
