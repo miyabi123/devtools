@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   },
 }
 
-const categories: ToolCategory[] = ['dev', 'thai', 'file', 'finance']
+const categories: ToolCategory[] = ['dev', 'thai', 'file', 'finance', 'openssl', 'linux']
 
 const breadcrumbJsonLd = {
   '@context': 'https://schema.org',
@@ -33,19 +33,8 @@ export default function ToolsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      <div className="min-h-screen" style={{ fontFamily: 'var(--font-sans)', background: '#f8f7f4' }}>
-        {/* Nav */}
-        <nav style={{ background: '#ffffff', borderBottom: '0.5px solid #c8c6c0' }} className="px-6 py-3.5 flex items-center justify-between">
-          <Link href="/" style={{ fontFamily: 'var(--font-mono)', fontSize: 32, fontWeight: 500, color: '#1a1917', textDecoration: 'none' }}>
-            free<span style={{ opacity: 0.4 }}>util</span>
-          </Link>
-          <div className="flex items-center gap-5">
-            <span style={{ fontSize: 13, color: '#1a1917' }}>tools</span>
-            <Link href="#" style={{ fontSize: 13, color: '#6b6960', textDecoration: 'none' }}>about</Link>
-          </div>
-        </nav>
-
-        {/* Header */}
+      <div style={{ fontFamily: 'var(--font-sans)', background: '#f8f7f4' }}>
+        {/* Page header */}
         <div className="px-6 py-10" style={{ background: '#ffffff', borderBottom: '0.5px solid #c8c6c0' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
             <Link href="/" style={{ fontSize: 12, color: '#a8a69e', textDecoration: 'none' }}>Home</Link>
@@ -93,8 +82,12 @@ export default function ToolsPage() {
                       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
                         <div style={{ width: 28, height: 28, borderRadius: 6, background: color.bg }} />
                         <div style={{ display: 'flex', gap: 4 }}>
-                          {tool.isNew && <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, padding: '2px 6px', borderRadius: 99, background: '#eeedfe', color: '#3c3489', fontWeight: 500 }}>new</span>}
-                          {tool.isPopular && <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, padding: '2px 6px', borderRadius: 99, background: '#faece7', color: '#712b13', fontWeight: 500 }}>popular</span>}
+                          {tool.isNew && (
+                            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, padding: '2px 6px', borderRadius: 99, background: '#eeedfe', color: '#3c3489', fontWeight: 500 }}>new</span>
+                          )}
+                          {tool.isPopular && (
+                            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, padding: '2px 6px', borderRadius: 99, background: '#faece7', color: '#712b13', fontWeight: 500 }}>popular</span>
+                          )}
                         </div>
                       </div>
                       <p style={{ fontSize: 13, fontWeight: 500, color: '#1a1917', marginBottom: 4 }}>{tool.name}</p>
@@ -106,14 +99,6 @@ export default function ToolsPage() {
             )
           })}
         </div>
-
-        <footer style={{ borderTop: '0.5px solid #c8c6c0', background: '#ffffff', padding: '16px 24px' }} className="flex items-center justify-between">
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#a8a69e' }}>freeutil.app · built with Next.js + Cloudflare</span>
-          <div className="flex gap-4">
-            <Link href="/privacy" style={{ fontSize: 11, color: '#a8a69e', textDecoration: 'none' }}>privacy</Link>
-            <Link href="#" style={{ fontSize: 11, color: '#a8a69e', textDecoration: 'none' }}>about</Link>
-          </div>
-        </footer>
       </div>
     </>
   )

@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { DM_Mono, DM_Sans } from 'next/font/google'
 import Script from 'next/script'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 import './globals.css'
 
 const dmSans = DM_Sans({
@@ -72,8 +74,13 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${dmSans.variable} ${dmMono.variable}`}>
-      <body className="bg-[#f8f7f4] text-[#1a1917] font-sans antialiased">
-        {children}
+      <body className="bg-[#f8f7f4] text-[#1a1917] font-sans antialiased" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <Header />
+        <main style={{ flex: 1 }}>
+          {children}
+        </main>
+        <Footer />
+
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-F8CDHZEK72"
           strategy="afterInteractive"

@@ -58,19 +58,22 @@ GET /api/currency?from=THB&to=USD        → Currency rates
 ```
 devtools/
 ├── app/
-│   ├── layout.tsx                    # Root layout — GA + AdSense via next/script
-│   ├── page.tsx                      # Homepage — HeroSearch + SearchableToolGrid + HomeAdSlot
+│   ├── layout.tsx                    # Root layout — Header + Footer + GA + AdSense
+│   ├── page.tsx                      # Homepage — HeroSearch + SearchableToolGrid + HomeAdSlot (no nav/footer)
 │   ├── manifest.ts                   # PWA manifest (force-static)
-│   ├── about/page.tsx                # About page (SEO + AdSense optimized)
+│   ├── about/page.tsx                # About page (SEO + AdSense optimized, no nav/footer)
 │   ├── blog/
-│   │   ├── page.tsx                  # Blog index
+│   │   ├── page.tsx                  # Blog index (no nav/footer)
 │   │   └── [slug]/page.tsx           # Article page + SEO + JSON-LD
 │   ├── privacy/page.tsx              # Privacy policy
 │   └── tools/
+│       ├── page.tsx                  # All tools page — grid by category (no nav/footer)
 │       └── [slug]/
 │           ├── page.tsx              # Tool page — metadata + JSON-LD + toolComponents
 │           └── opengraph-image.tsx   # Per-tool OG image (force-static + generateStaticParams)
 ├── components/
+│   ├── Header.tsx                    # Shared nav — logo + tools/blog/about links + active state
+│   ├── Footer.tsx                    # Shared footer — nav links + freeutil.app tagline
 │   ├── AdSense.tsx                   # AdLeaderboard, AdSidebar, AdInArticle
 │   ├── HomeAdSlot.tsx                # Client wrapper for AdSense on homepage
 │   ├── SearchableToolGrid.tsx        # Category filter tabs + Mobile 2-column responsive
@@ -111,6 +114,53 @@ Status:
   Error:   bg #fcebeb  border #f09595  text #a32d2d
   Warning: bg #faeeda  border #e8c97a  text #633806
   Info:    bg #eeedfe  border #8b7fd4  text #3c3489
+```
+
+### Header & Footer (Shared Components)
+
+Nav and footer live in `components/Header.tsx` and `components/Footer.tsx` — injected globally via `app/layout.tsx`. **Never add a nav or footer inside individual page files.**
+
+```tsx
+// Header — sticky top nav, 52px height
+// Logo: "free" + muted "util" in font-mono 20px
+// Nav links: tools / blog / about
+// Active state: bg #f8f7f4, border 0.5px #c8c6c0, text #1a1917
+// Inactive:    text #a8a69e, transparent bg
+
+// Footer — simple bottom bar
+// Left: "freeutil.app · free tools, no login required"
+// Right: tools / blog / about / privacy links
+```
+
+Nav links in `Header.tsx`:
+```tsx
+const navLinks = [
+  { href: '/tools', label: 'tools' },
+  { href: '/blog',  label: 'blog'  },
+  { href: '/about', label: 'about' },
+]
+```
+
+Footer links in `Footer.tsx`:
+```tsx
+const footerLinks = [
+  { href: '/tools',   label: 'tools'   },
+  { href: '/blog',    label: 'blog'    },
+  { href: '/about',   label: 'about'   },
+  { href: '/privacy', label: 'privacy' },
+]
+```
+
+`layout.tsx` structure:
+```tsx
+<body style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+  <Header />
+  <main style={{ flex: 1 }}>
+    {children}
+  </main>
+  <Footer />
+  {/* GA + AdSense Scripts */}
+</body>
 ```
 
 ### NumInput Component (Important!)
@@ -415,8 +465,8 @@ Google's "Low value content" flag targets sites with only one content type. free
   - ✅ About page (`app/about/page.tsx`) — 800+ word SEO content
   - ✅ Batch 1: 19 tool-linked articles
   - ✅ Batch 2: 10 tool-linked articles (new tools)
+  - ✅ Shared Header + Footer with /blog and /about links (all pages)
   - ⬜ Batch 3: 15 comparison + troubleshooting + how-to articles
-  - ⬜ Add /blog and /about links to Header navigation
   - ⬜ Update sitemap to include /about, /blog, /blog/*
   - ⬜ Deploy and request indexing in Search Console
   - ⬜ Wait 5-7 days then submit AdSense review
@@ -449,9 +499,16 @@ git add . && git commit -m "add [feature]" && git push
 - `nonprod` → Staging/testing
 - `worker` → Old Worker config backup
 
+---
+
 ## Project Knowledge Files
-- CLAUDE.md          → project documentation
-- tools.ts           → lib/tools.ts
-- articles.ts        → lib/articles.ts
-- blog-slug-page.tsx → app/blog/[slug]/page.tsx
-- tool-slug-page.tsx → app/tools/[slug]/page.tsx
+
+Files uploaded to Claude Project Knowledge and what they map to:
+
+| Knowledge file | Actual path in repo |
+|---|---|
+| `CLAUDE.md` | `CLAUDE.md` (this file) |
+| `tools.ts` | `lib/tools.ts` |
+| `articles.ts` | `lib/articles.ts` |
+| `blog-slug-page.tsx` | `app/blog/[slug]/page.tsx` |
+| `tool-slug-page.tsx` | `app/tools/[slug]/page.tsx` |

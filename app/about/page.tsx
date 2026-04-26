@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'About FreeUtil — Free Online Developer Tools, No Login Required',
-  description: 'FreeUtil is a free collection of 33+ online tools for developers, IT professionals, and everyday users. All tools run 100% in your browser — no server, no login, no tracking. Built for speed and privacy.',
+  description: 'FreeUtil is a free collection of 37+ online tools for developers, IT professionals, and everyday users. All tools run 100% in your browser — no server, no login, no tracking. Built for speed and privacy.',
   keywords: [
     'freeutil', 'free online tools', 'developer tools online', 'free developer utilities',
     'online tools no login', 'browser tools privacy', 'free it tools', 'thai developer tools',
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://freeutil.app/about' },
   openGraph: {
     title: 'About FreeUtil — Free Online Developer Tools',
-    description: 'FreeUtil is a free collection of 33+ online tools for developers and everyday users. No login, no tracking, 100% client-side.',
+    description: 'FreeUtil is a free collection of 37+ online tools for developers and everyday users. No login, no tracking, 100% client-side.',
     url: 'https://freeutil.app/about',
   },
 }
@@ -21,17 +21,17 @@ const TOOL_CATEGORIES = [
     name: 'Developer & IT Tools',
     color: '#eeedfe',
     textColor: '#3c3489',
-    count: 17,
-    tools: ['JWT Decoder', 'JSON Formatter', 'Base64 Encode/Decode', 'URL Encode/Decode', 'Hash Generator', 'Regex Tester', 'CIDR Calculator', 'Cron Builder', 'Unix Timestamp', 'UUID Generator', 'Password Generator', 'JSON ↔ CSV', 'JSON ↔ YAML', 'Color Converter', 'Word Counter', 'Markdown Preview', 'Diff Checker'],
+    count: 19,
+    tools: ['JWT Decoder', 'JSON Formatter', 'Base64 Encode/Decode', 'URL Encode/Decode', 'Hash Generator', 'Regex Tester', 'CIDR Calculator', 'Cron Builder', 'Unix Timestamp', 'UUID Generator', 'Password Generator', 'JSON ↔ CSV', 'JSON ↔ YAML', 'Color Converter', 'Word Counter', 'Markdown Preview', 'Diff Checker', 'Lorem Ipsum Generator', 'Text Case Converter'],
     desc: 'Essential utilities for software developers, system administrators, and IT professionals. From JWT token inspection to subnet calculation, these tools handle daily development tasks instantly in your browser.',
   },
   {
     name: 'Thai Language Tools',
     color: '#e1f5ee',
     textColor: '#085041',
-    count: 4,
-    tools: ['Thai Date Converter (พ.ศ. ↔ ค.ศ.)', 'Thai Number to Text', 'Thai Baht to Words', 'Thai Tax Calculator 2568'],
-    desc: 'Specialized tools for Thai users and developers. Convert Buddhist Era dates, write numbers in Thai words for cheque writing, and calculate personal income tax with 2025 deductions — all in Thai.',
+    count: 6,
+    tools: ['Thai Date Converter (พ.ศ. ↔ ค.ศ.)', 'Thai Number to Text', 'Thai Baht to Words', 'Thai Tax Calculator 2568', 'Thai ID Validator', 'Thai VAT Calculator'],
+    desc: 'Specialized tools for Thai users and developers. Convert Buddhist Era dates, write numbers in Thai words for cheque writing, calculate personal income tax, validate ID numbers, and compute VAT — all in Thai.',
   },
   {
     name: 'File & Image Tools',
@@ -45,9 +45,17 @@ const TOOL_CATEGORIES = [
     name: 'OpenSSL & Certificate Tools',
     color: '#eef6ff',
     textColor: '#1D4ED8',
-    count: 7,
-    tools: ['CSR Generator', 'Self-signed Cert Generator', 'PEM ↔ DER Converter', 'Certificate Decoder', 'OpenSSL Command Builder', 'RSA Key Generator', 'Lorem Ipsum Generator'],
-    desc: 'Professional SSL/TLS certificate tools for developers and sysadmins. Generate CSRs, create self-signed certificates for development, decode certificate details, and build OpenSSL commands visually — no OpenSSL installation required for generation tasks.',
+    count: 6,
+    tools: ['CSR Generator', 'Self-signed Cert Generator', 'PEM ↔ DER Converter', 'Certificate Decoder', 'OpenSSL Command Builder', 'RSA Key Generator'],
+    desc: 'Professional SSL/TLS certificate tools for developers and sysadmins. Generate CSRs, create self-signed certificates for development, decode certificate details, and build OpenSSL commands visually.',
+  },
+  {
+    name: 'Linux & DevOps Tools',
+    color: '#f0fdf4',
+    textColor: '#166534',
+    count: 1,
+    tools: ['Chmod Calculator'],
+    desc: 'Linux and DevOps utilities for sysadmins and developers. Calculate file permissions visually with octal and symbolic notation.',
   },
 ]
 
@@ -86,8 +94,8 @@ const PRINCIPLES = [
 
 const USECASES = [
   { role: 'Software Developers', uses: 'Decode JWT tokens during API debugging, format and validate JSON responses, test regular expressions, generate UUIDs for database records, convert between JSON and YAML for Kubernetes configs.' },
-  { role: 'System Administrators', uses: 'Calculate CIDR subnets for network planning, build cron expressions for scheduled tasks, generate CSR files for SSL certificate requests, decode existing certificates to check expiry dates.' },
-  { role: 'Thai Accountants & HR', uses: 'Convert Buddhist Era (พ.ศ.) dates to Christian Era (ค.ศ.) for international documents, calculate personal income tax with current year deductions, convert amounts to Thai words for cheque writing.' },
+  { role: 'System Administrators', uses: 'Calculate CIDR subnets for network planning, build cron expressions for scheduled tasks, generate CSR files for SSL certificate requests, decode existing certificates to check expiry dates, calculate chmod permissions.' },
+  { role: 'Thai Accountants & HR', uses: 'Convert Buddhist Era (พ.ศ.) dates to Christian Era (ค.ศ.) for international documents, calculate personal income tax with current year deductions, convert amounts to Thai words for cheque writing, compute VAT for invoices.' },
   { role: 'Security Professionals', uses: 'Generate RSA key pairs for encryption, create self-signed certificates for internal services, check SSL certificate chain and TLS version support, verify certificate fingerprints.' },
   { role: 'Web Designers', uses: 'Convert colors between HEX, RGB, and HSL formats, generate Lorem Ipsum placeholder text in English and Thai, compress images before uploading to websites, generate favicons from logo images.' },
   { role: 'Students & Learners', uses: 'Learn how JWT tokens are structured, understand Base64 encoding, practice with regular expressions, see how Unix timestamps work — all with instant visual feedback without any setup.' },
@@ -127,7 +135,7 @@ export default function AboutPage() {
       <section style={{ marginBottom: 56 }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12 }}>
           {[
-            { num: '33+', label: 'Free Tools' },
+            { num: '37+', label: 'Free Tools' },
             { num: '100%', label: 'Client-side' },
             { num: '0', label: 'Login Required' },
             { num: '0', label: 'Data Collected' },
@@ -148,7 +156,7 @@ export default function AboutPage() {
         <h2 style={{ fontSize: 22, fontWeight: 600, color: '#1a1917', marginBottom: 16 }}>What is FreeUtil?</h2>
         <div style={{ fontSize: 15, color: '#4a4845', lineHeight: 1.85 }}>
           <p style={{ marginBottom: 16 }}>
-            FreeUtil (freeutil.app) is a free, browser-based toolkit designed to solve the everyday problems that developers, sysadmins, designers, and business users face. Instead of searching Google for an online tool, downloading software, or writing a script from scratch, FreeUtil provides instant access to 33+ utilities from a single, fast-loading website.
+            FreeUtil (freeutil.app) is a free, browser-based toolkit designed to solve the everyday problems that developers, sysadmins, designers, and business users face. Instead of searching Google for an online tool, downloading software, or writing a script from scratch, FreeUtil provides instant access to 37+ utilities from a single, fast-loading website.
           </p>
           <p style={{ marginBottom: 16 }}>
             The project was started by an independent developer in Thailand who was frustrated by existing online tool sites — many require accounts, show intrusive ads, log your input data, or are cluttered with low-quality tools. FreeUtil was built with a clear philosophy: every tool should be fast, privacy-respecting, and genuinely useful.
@@ -172,13 +180,11 @@ export default function AboutPage() {
               borderRadius: 10, overflow: 'hidden',
             }}>
               <div style={{ padding: '14px 18px', borderBottom: '0.5px solid #e8e6e0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{
-                    fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 500,
-                    padding: '3px 10px', borderRadius: 99,
-                    background: cat.color, color: cat.textColor,
-                  }}>{cat.name}</span>
-                </div>
+                <span style={{
+                  fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 500,
+                  padding: '3px 10px', borderRadius: 99,
+                  background: cat.color, color: cat.textColor,
+                }}>{cat.name}</span>
                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#a8a69e' }}>{cat.count} tools</span>
               </div>
               <div style={{ padding: '14px 18px' }}>
@@ -187,8 +193,7 @@ export default function AboutPage() {
                   {cat.tools.map(tool => (
                     <span key={tool} style={{
                       fontFamily: 'var(--font-mono)', fontSize: 10, padding: '2px 8px',
-                      background: cat.color, color: cat.textColor,
-                      borderRadius: 4,
+                      background: cat.color, color: cat.textColor, borderRadius: 4,
                     }}>{tool}</span>
                   ))}
                 </div>
@@ -225,7 +230,7 @@ export default function AboutPage() {
           FreeUtil serves a diverse audience — from senior software engineers to students learning to code, and from Thai accountants to international security professionals.
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: '#c8c6c0', border: '1px solid #c8c6c0', borderRadius: 10, overflow: 'hidden' }}>
-          {USECASES.map((uc, i) => (
+          {USECASES.map(uc => (
             <div key={uc.role} style={{ background: '#ffffff', padding: '16px 18px', display: 'grid', gridTemplateColumns: '180px 1fr', gap: 16, alignItems: 'flex-start' }}>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 500, color: '#1a1917', paddingTop: 2 }}>{uc.role}</span>
               <span style={{ fontSize: 13, color: '#4a4845', lineHeight: 1.7 }}>{uc.uses}</span>
@@ -300,7 +305,7 @@ export default function AboutPage() {
             Start using FreeUtil today
           </h2>
           <p style={{ fontSize: 14, color: '#a8a69e', marginBottom: 24, lineHeight: 1.7 }}>
-            33+ tools. 100% free. No login. No tracking. Works in any browser.
+            37+ tools. 100% free. No login. No tracking. Works in any browser.
           </p>
           <Link href="/" style={{
             fontFamily: 'var(--font-mono)', fontSize: 13, padding: '12px 28px',

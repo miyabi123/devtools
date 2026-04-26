@@ -28,21 +28,13 @@ const organizationJsonLd = {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen" style={{ fontFamily: 'var(--font-sans)', background: '#f8f7f4' }}>
+    <div style={{ fontFamily: 'var(--font-sans)', background: '#f8f7f4' }}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
-      <nav style={{ background: '#ffffff', borderBottom: '0.5px solid #c8c6c0' }} className="px-6 py-3.5 flex items-center justify-between">
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 32, fontWeight: 500, color: '#1a1917' }}>
-          free<span style={{ opacity: 0.4 }}>util</span>
-        </span>
-        <div className="flex items-center gap-5">
-          <Link href="/tools" style={{ fontSize: 13, color: '#6b6960', textDecoration: 'none' }}>tools</Link>
-          <Link href="#" style={{ fontSize: 13, color: '#6b6960', textDecoration: 'none' }}>about</Link>
-        </div>
-      </nav>
 
+      {/* Hero */}
       <div className="px-6 py-12" style={{ borderBottom: '0.5px solid #c8c6c0', background: '#ffffff' }}>
         <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#a8a69e', letterSpacing: '0.08em', marginBottom: 12 }}>
           {tools.length}+ tools · free · no login required
@@ -71,14 +63,6 @@ export default function HomePage() {
       <div className="mx-6 mb-6">
         <HomeAdSlot />
       </div>
-
-      <footer style={{ borderTop: '0.5px solid #c8c6c0', background: '#ffffff', padding: '16px 24px' }} className="flex items-center justify-between">
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#a8a69e' }}>freeutil.app · built with Next.js + Cloudflare</span>
-        <div className="flex gap-4">
-          <Link href="/privacy" style={{ fontSize: 11, color: '#a8a69e', textDecoration: 'none' }}>privacy</Link>
-          <Link href="#" style={{ fontSize: 11, color: '#a8a69e', textDecoration: 'none' }}>about</Link>
-        </div>
-      </footer>
     </div>
   )
 }
