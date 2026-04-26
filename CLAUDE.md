@@ -9,16 +9,14 @@ Built as a passive income project with Google AdSense monetization.
 - **Stack:** Next.js 16, TypeScript, Tailwind CSS, Cloudflare Pages
 - **Fonts:** DM Sans (`--font-sans`), DM Mono (`--font-mono`)
 - **Package manager:** pnpm
-- **CI/CD:** GitHub → Cloudflare Pages (auto-deploy on push)
+- **CI/CD:** GitHub (miyabi123/devtools) → Cloudflare Pages (auto-deploy on push)
 - **Output mode:** `output: 'export'` (Static HTML — no server/Workers)
 - **Hosting:** Cloudflare Pages (migrated from Workers April 2026)
-- **Branches:** `cloudflare-pages` (production) | `main` (Worker backup)
+- **Branches:** `main` (production) | `nonprod` (staging) | `worker` (old Worker backup)
 
 ---
 
 ## Architecture — Static Export (Important!)
-
-Since April 2026, the project uses `output: 'export'` in `next.config.ts`.
 
 ```ts
 // next.config.ts
@@ -29,64 +27,29 @@ const nextConfig: NextConfig = {
 }
 ```
 
-### What this means:
-- Next.js generates **pure static HTML/CSS/JS** files
-- Cloudflare Pages serves files directly from CDN — **no Workers involved**
-- Solved Error 1101 (Worker exceeded resource limits)
-- Faster page load, better Core Web Vitals, better SEO
-- **No API routes** (`/api/*`) — cannot use server-side code
-
 ### Rules when adding new files:
-- Any dynamic route file (e.g. `opengraph-image.tsx`) **must have** `generateStaticParams()`
+- Any dynamic route file **must have** `generateStaticParams()`
 - Any special route file must have `export const dynamic = 'force-static'`
 - **Never** use `export const runtime = 'nodejs'` — incompatible with static export
-
-### Files that needed fixing for static export:
-- `app/opengraph-image.tsx` — added `export const dynamic = 'force-static'`
-- `app/manifest.ts` — added `export const dynamic = 'force-static'`
-- `app/tools/[slug]/opengraph-image.tsx` — added both `dynamic = 'force-static'` + `generateStaticParams()`
+- **No API routes** (`/api/*`) — cannot use server-side code
 
 ---
 
 ## Phase 2 Architecture — Cloudflare Workers (Separate)
 
-Since the main site is static export, **Phase 2 server-side tools cannot use Next.js API routes**.
-Instead, deploy a **separate Cloudflare Worker** at `api.freeutil.app`.
-
-### Plan:
 ```
 freeutil.app          → Static site (Cloudflare Pages)
 api.freeutil.app      → Cloudflare Worker (Phase 2 tools)
 ```
 
-### Worker setup:
-```js
-// wrangler.toml
-name = "freeutil-api"
-main = "src/worker.js"
-compatibility_date = "2026-01-01"
-
-[route]
-pattern = "api.freeutil.app/*"
-zone_name = "freeutil.app"
-```
-
 ### Phase 2 tools → Worker endpoints:
 ```
-GET /api/dns?domain=example.com&type=A    → DNS Record Lookup (DoH 1.1.1.1)
-GET /api/myip                             → My IP (CF-Connecting-IP header)
-GET /api/geoip?ip=1.2.3.4                → IP Geolocation (CF-IPCountry/City)
+GET /api/dns?domain=example.com&type=A    → DNS Record Lookup
+GET /api/myip                             → My IP
+GET /api/geoip?ip=1.2.3.4                → IP Geolocation
 GET /api/ssl?domain=example.com          → SSL Certificate info
-GET /api/currency?from=THB&to=USD        → Currency rates (external API)
+GET /api/currency?from=THB&to=USD        → Currency rates
 ```
-
-### Client-side fetch from Worker:
-```tsx
-const res = await fetch('https://api.freeutil.app/dns?domain=google.com&type=A')
-const data = await res.json()
-```
-
-### CF Workers free tier: 100,000 req/day — sufficient until significant traffic
 
 ---
 
@@ -96,13 +59,13 @@ const data = await res.json()
 devtools/
 ├── app/
 │   ├── layout.tsx                    # Root layout — GA + AdSense via next/script
-│   ├── page.tsx                      # Homepage — search + tool grid
+│   ├── page.tsx                      # Homepage — HeroSearch + SearchableToolGrid + HomeAdSlot
 │   ├── manifest.ts                   # PWA manifest (force-static)
-│   ├── opengraph-image.tsx           # Homepage OG image (force-static)
+│   ├── about/page.tsx                # About page (SEO + AdSense optimized)
+│   ├── blog/
+│   │   ├── page.tsx                  # Blog index
+│   │   └── [slug]/page.tsx           # Article page + SEO + JSON-LD
 │   ├── privacy/page.tsx              # Privacy policy
-│   ├── favicon.ico
-│   ├── apple-icon.png
-│   ├── icon.svg
 │   └── tools/
 │       └── [slug]/
 │           ├── page.tsx              # Tool page — metadata + JSON-LD + toolComponents
@@ -110,15 +73,18 @@ devtools/
 ├── components/
 │   ├── AdSense.tsx                   # AdLeaderboard, AdSidebar, AdInArticle
 │   ├── HomeAdSlot.tsx                # Client wrapper for AdSense on homepage
-│   ├── SearchInput.tsx               # Search input
+│   ├── SearchableToolGrid.tsx        # Category filter tabs + Mobile 2-column responsive
 │   ├── ToolLayout.tsx                # Shared layout for all tool pages
-│   └── tools/                       # Individual tool components (one file per tool)
+│   ├── articles/                     # Blog article components (TSX per article)
+│   └── tools/                       # Tool components (one file per tool)
 ├── lib/
-│   └── tools.ts                     # Central tool registry
+│   ├── tools.ts                     # Central tool registry
+│   └── articles.ts                  # Blog article metadata
 ├── public/
-│   ├── ads.txt                      # AdSense: google.com, pub-2562848751614063, DIRECT, f08c47fec0942fa0
-│   ├── icon-192.png
-│   └── icon-512.png
+│   ├── ads.txt                      # google.com, pub-2562848751614063, DIRECT, f08c47fec0942fa0
+│   ├── robots.txt
+│   ├── sitemap.xml
+│   └── icon-192.png / icon-512.png
 ├── next.config.ts                   # output: 'export', trailingSlash, images unoptimized
 └── next-sitemap.config.js           # Sitemap + robots.txt (runs postbuild)
 ```
@@ -129,196 +95,276 @@ devtools/
 
 ### Colors
 ```
-Background:  #f8f7f4  (warm off-white)
-Text:        #1a1917  (near-black)
-Border:      #c8c6c0  (warm gray)
-Muted text:  #6b6960  #a8a69e
-White:       #ffffff
+Background:  #f8f7f4  Text: #1a1917  Border: #c8c6c0
+Muted:       #6b6960  #a8a69e  White: #ffffff
 
 Categories:
-  Dev / IT:       bg #eeedfe  text #3c3489  (purple)
-  Thai Tools:     bg #e1f5ee  text #085041  (teal)
-  PDF & Image:    bg #faeeda  text #633806  (amber)
-  Finance:        bg #faece7  text #712b13  (coral)
-  Linux & DevOps: bg #f0f0f0  text #444441  (gray)
-  OpenSSL & Cert: bg #eef6ff  text #1D4ED8  (blue)
-  Network:        bg #eff6ff  text #1E40AF  (blue)
-  Text & Content: bg #f0f0f0  text #444441  (gray)
+  dev:     bg #eeedfe  text #3c3489  (purple)
+  thai:    bg #e1f5ee  text #085041  (teal)
+  file:    bg #faeeda  text #633806  (amber)
+  finance: bg #faece7  text #712b13  (coral)
+  openssl: bg #eef6ff  text #1D4ED8  (blue)
+  linux:   bg #f0fdf4  text #166534  (green)
 
-Status colors:
-  Success:  bg #e1f5ee  text #085041
-  Error:    bg #fcebeb  text #a32d2d
-  Warning:  bg #faeeda  text #633806
-  Info:     bg #eeedfe  text #3c3489
+Status:
+  Success: bg #e1f5ee  border #1D9E75  text #085041
+  Error:   bg #fcebeb  border #f09595  text #a32d2d
+  Warning: bg #faeeda  border #e8c97a  text #633806
+  Info:    bg #eeedfe  border #8b7fd4  text #3c3489
 ```
 
-### Typography
+### NumInput Component (Important!)
+**Always define NumInput OUTSIDE the main component function** to prevent focus/cursor jumping:
+
 ```tsx
-// Mono — technical content, labels, tags, code
-style={{ fontFamily: 'var(--font-mono)' }}
+// ✅ CORRECT — top-level function
+function NumInput({ value, onChange, placeholder, max }: {...}) {
+  const [str, setStr] = useState(value === 0 ? '' : String(value))
+  return <input type="text" inputMode="numeric" value={str} onChange={...} />
+}
 
-// Sans — body text, descriptions
-style={{ fontFamily: 'var(--font-sans)' }}
+export default function MyTool() { ... }
+
+// ❌ WRONG — inside component body causes re-render issues
+export default function MyTool() {
+  const NumInput = (...) => <input ... />  // DO NOT DO THIS
+}
 ```
 
-### Common UI Patterns
-```tsx
-// Input box (primary)
-<div style={{ background: '#ffffff', border: '1.5px solid #1a1917', borderRadius: 10, overflow: 'hidden' }}>
-
-// Card / result box
-<div style={{ background: '#ffffff', border: '1px solid #c8c6c0', borderRadius: 8, overflow: 'hidden' }}>
-
-// Info box
-<div style={{ background: '#f8f7f4', border: '0.5px solid #c8c6c0', borderRadius: 8, padding: '12px 14px' }}>
-
-// Error box
-<div style={{ background: '#fcebeb', border: '0.5px solid #f09595', borderRadius: 6, padding: '10px 14px' }}>
-
-// Mode toggle (pill tabs)
-<div style={{ display: 'flex', background: '#f8f7f4', border: '0.5px solid #c8c6c0', borderRadius: 6, overflow: 'hidden' }}>
-  <button style={{ background: active ? '#1a1917' : 'transparent', color: active ? '#f8f7f4' : '#6b6960' }}>
-
-// Copy button
-<button style={{ fontFamily: 'var(--font-mono)', fontSize: 9, padding: '1px 7px',
-  background: copied ? '#e1f5ee' : 'transparent', color: copied ? '#085041' : '#a8a69e',
-  border: `0.5px solid ${copied ? '#1D9E75' : '#e8e6e0'}`, borderRadius: 3 }}>
-  {copied ? '✓' : 'copy'}
-</button>
-
-// Section label
-<p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#a8a69e', letterSpacing: '0.06em' }}>LABEL</p>
-```
+**Same rule applies to Row, Field, NavBtn** — all sub-components must be top-level functions.
 
 ---
 
 ## Adding a New Tool — Checklist
 
-### Step 1 — Register in `lib/tools.ts`
-```typescript
-{
-  slug: 'tool-slug',
-  name: 'Tool Name',
-  shortDesc: 'One line description',
-  longDesc: 'SEO-optimized 2-4 sentences with keywords...',
-  category: 'dev',   // dev | thai | file | finance
-  keywords: ['keyword 1', 'keyword 2'],
-  howTo: ['Step 1', 'Step 2', 'Step 3'],
-  faq: [{ q: 'Question?', a: 'Answer.' }],
-  related: ['other-slug-1', 'other-slug-2'],
-  isNew: true,      // optional
-  isPopular: true,  // optional
-}
-```
+1. Register in `lib/tools.ts` with slug, name, shortDesc, longDesc, category, keywords, howTo, faq, related
+2. Create `components/tools/ToolName.tsx` — `'use client'`, design system styles
+3. Register in `app/tools/[slug]/page.tsx` toolComponents map
+4. Push → Cloudflare auto-deploys → Request indexing in Search Console
 
-### Step 2 — Create `components/tools/ToolName.tsx`
-```tsx
-'use client'
-import { useState } from 'react'
+## Adding a New Article — Checklist
 
-export default function ToolName() {
-  return (
-    <div className="space-y-4">
-      {/* tool UI */}
-    </div>
-  )
-}
-```
-
-### Step 3 — Register in `app/tools/[slug]/page.tsx`
-```tsx
-const toolComponents: Record<string, React.ComponentType> = {
-  // existing tools...
-  'tool-slug': dynamic(() => import('@/components/tools/ToolName')),
-}
-```
-
-### Step 4 — Push
-```powershell
-git add .
-git commit -m "add tool-name tool"
-git push
-```
-
-Cloudflare auto-deploys → sitemap regenerates → request indexing in Search Console.
+1. Add entry in `lib/articles.ts` (slug, title, description, category, categoryColor, categoryText, readTime, publishedAt, relatedTool?, lang, keywords)
+2. Create `components/articles/ArticleName.tsx` — `'use client'`, use `.prose-article` className, write full article body
+3. Add static import + map entry in `app/blog/[slug]/page.tsx`
+4. If article links to a tool, add `relatedArticle` + `relatedArticleName` to that tool in `lib/tools.ts`
+5. Push → Cloudflare auto-deploys → Request indexing in Search Console
 
 ---
 
 ## Analytics & Monetization
 
-### Google Analytics — ID: `G-F8CDHZEK72`
-Loaded via `<Script strategy="afterInteractive">` in `app/layout.tsx`
-
-### Google AdSense — Publisher: `ca-pub-2562848751614063`
-- Loaded via `<Script strategy="afterInteractive">` in `app/layout.tsx`
-- `ads.txt`: `google.com, pub-2562848751614063, DIRECT, f08c47fec0942fa0`
-- Status: Authorized ✅ | Approval: Getting ready ⏳
+- **Google Analytics:** `G-F8CDHZEK72`
+- **AdSense Publisher:** `ca-pub-2562848751614063`
+- **Status:** Authorized ✅ | Getting ready ⏳ (pending organic traffic + content review)
+- **ads.txt:** ✅ Authorized
 
 **Ad slots:**
-| Component | Slot ID | Format | Placement |
-|---|---|---|---|
-| `<AdLeaderboard />` | 4258757514 | auto horizontal | Under tool header |
-| `<AdSidebar />` | 7704215914 | auto square | Right sidebar |
-| `<AdInArticle />` | 9484201440 | fluid in-article | Between how-to and FAQ |
-
-**AdSense behavior:** Hides automatically (max-height: 0) when no ads loaded — no empty white space.
+| Component | Slot ID | Placement |
+|---|---|---|
+| `<AdLeaderboard />` | 4258757514 | Under tool header |
+| `<AdSidebar />` | 7704215914 | Right sidebar |
+| `<AdInArticle />` | 9484201440 | Between how-to and FAQ |
 
 ---
 
-## SEO Structure
+## SEO & Content Structure
 
 - Per-tool metadata via `generateMetadata()` in `app/tools/[slug]/page.tsx`
 - JSON-LD: WebApplication, BreadcrumbList, HowTo, FAQPage per tool
-- Canonical: `https://freeutil.app/tools/{slug}`
+- JSON-LD: Article schema per blog post
+- Canonical URLs set for all pages
 - Sitemap: auto via `next-sitemap` postbuild
-- OG images: auto-generated per tool via `app/tools/[slug]/opengraph-image.tsx`
-- Static export = faster TTFB = better Core Web Vitals = better rank
+- OG images: auto-generated per tool
+- About page: 800+ word content, SEO + AdSense optimized
+
+### Article Language Policy
+- **English** — all articles except Thai Tools category
+- **Thai** — Thai Tools category articles only (ภาษา, VAT, บัตรประชาชน ฯลฯ)
+- Reason: English maximizes AdSense RPM; Thai reserved for content only Thai users would search
 
 ---
 
-## Tools Completed ✅ (22 tools)
+## Tools Completed ✅ (37 tools)
 
-| Slug | Component | Category |
+### Dev / IT (19)
+| Slug | Component |
+|---|---|
+| jwt-decoder | JwtDecoder.tsx |
+| json-formatter | JsonFormatter.tsx |
+| base64-encode-decode | Base64Tool.tsx |
+| url-encode-decode | UrlEncodeDecode.tsx |
+| hash-generator | HashGenerator.tsx |
+| regex-tester | RegexTester.tsx |
+| cidr-calculator | CidrCalculator.tsx |
+| cron-builder | CronBuilder.tsx |
+| unix-timestamp | UnixTimestamp.tsx |
+| uuid-generator | UuidGenerator.tsx |
+| password-generator | PasswordGenerator.tsx |
+| json-to-csv | JsonToCsv.tsx |
+| json-to-yaml | JsonToYaml.tsx |
+| color-converter | ColorConverter.tsx |
+| word-counter | WordCounter.tsx |
+| markdown-preview | MarkdownPreview.tsx |
+| diff-checker | DiffChecker.tsx |
+| lorem-ipsum-generator | LoremIpsumGenerator.tsx |
+| text-case-converter | TextCaseConverter.tsx |
+
+### Thai Tools (6)
+| Slug | Component |
+|---|---|
+| thai-date-converter | ThaiDateConverter.tsx |
+| thai-number-to-text | ThaiNumberToText.tsx |
+| thai-baht-to-words | ThaiBahtToWords.tsx |
+| thai-tax-calculator | ThaiTaxCalculator.tsx |
+| thai-id-validator | ThaiIdValidator.tsx |
+| thai-vat-calculator | ThaiVatCalculator.tsx |
+
+### File & Convert (5)
+| Slug | Component |
+|---|---|
+| pdf-base64 | PdfBase64.tsx |
+| qr-code-generator | QrCodeGenerator.tsx |
+| image-resize | ImageResize.tsx |
+| favicon-generator | FaviconGenerator.tsx |
+| image-compressor | ImageCompressor.tsx |
+
+### OpenSSL & Cert (6)
+| Slug | Component |
+|---|---|
+| csr-generator | CSRGenerator.tsx |
+| self-signed-cert | SelfSignedCertGenerator.tsx |
+| pem-der-converter | PemDerConverter.tsx |
+| certificate-decoder | CertificateDecoder.tsx |
+| openssl-command-builder | OpenSSLCommandBuilder.tsx |
+| rsa-key-generator | RSAKeyGenerator.tsx |
+
+### Linux & DevOps (1)
+| Slug | Component |
+|---|---|
+| chmod-calculator | ChmodCalculator.tsx |
+
+---
+
+## Blog Articles
+
+### Article Strategy — Why variety matters for AdSense
+Google's "Low value content" flag targets sites with only one content type. freeutil.app needs:
+- **Depth signal**: articles that stand alone without being tied to a specific tool
+- **Variety signal**: comparison, troubleshooting, how-to — not just "what is X" definitions
+- **Commercial signal**: articles where readers have purchase/decision intent → higher RPM
+
+### Article Types & AdSense RPM
+| Type | RPM Range | Why |
 |---|---|---|
-| jwt-decoder | JwtDecoder.tsx | dev |
-| json-formatter | JsonFormatter.tsx | dev |
-| base64-encode-decode | Base64Tool.tsx | dev |
-| url-encode-decode | UrlEncodeDecode.tsx | dev |
-| hash-generator | HashGenerator.tsx | dev |
-| regex-tester | RegexTester.tsx | dev |
-| cidr-calculator | CidrCalculator.tsx | dev |
-| cron-builder | CronBuilder.tsx | dev |
-| unix-timestamp | UnixTimestamp.tsx | dev |
-| uuid-generator | UuidGenerator.tsx | dev |
-| password-generator | PasswordGenerator.tsx | dev |
-| json-to-csv | JsonToCsv.tsx | dev |
-| json-to-yaml | JsonToYaml.tsx | dev |
-| color-converter | ColorConverter.tsx | dev |
-| thai-date-converter | ThaiDateConverter.tsx | thai |
-| thai-number-to-text | ThaiNumberToText.tsx | thai |
-| thai-baht-to-words | ThaiBahtToWords.tsx (clone of ThaiNumberToText) | thai |
-| pdf-base64 | PdfBase64.tsx | file |
-| qr-code-generator | QrCodeGenerator.tsx | file |
-| image-resize | ImageResize.tsx | file |
-| favicon-generator | FaviconGenerator.tsx | file |
-| image-compressor | ImageCompressor.tsx | file |
+| Comparison (X vs Y) | $4–8 | Commercial intent — readers deciding between options |
+| Error / Troubleshooting | $5–9 | Urgent intent — high engagement, multiple page views |
+| How-to guides | $5–10 | Developer audience is high-CPM demographic |
+| Tool-linked informational | $2–5 | Info intent — lower but solid |
+| Thai-specific | $2–5 | Niche, low competition |
+| Glossary / Definitions | $1–3 | Top-of-funnel, low intent |
+
+---
+
+## Blog Articles Completed ✅ (39 articles)
+
+### Batch 1 — Tool-linked informational (19 articles)
+
+#### Dev / IT (9)
+- `what-is-jwt` → WhatIsJWT.tsx
+- `base64-encoding-explained` → Base64Explained.tsx
+- `cidr-subnetting-guide` → CIDRGuide.tsx
+- `regex-guide-for-developers` → RegexGuide.tsx
+- `hash-functions-md5-sha256-sha512` → HashFunctions.tsx
+- `cron-expression-guide` → CronGuide.tsx
+- `uuid-guide` → UUIDGuide.tsx
+- `unix-timestamp-explained` → UnixTimestamp.tsx
+- `json-yaml-comparison` → JSONvsYAML.tsx
+
+#### OpenSSL & Cert (5)
+- `ssl-certificate-types-explained` → SSLCertTypes.tsx
+- `self-signed-certificate-guide` → SelfSignedCertGuide.tsx
+- `what-is-csr` → WhatIsCSR.tsx
+- `tls-versions-explained` → TLSVersions.tsx
+- `rsa-encryption-explained` → RSAExplained.tsx
+
+#### Thai Tools (3 — Thai language)
+- `thai-income-tax-2568-guide` → ThaiTaxGuide.tsx
+- `thai-baht-to-words-guide` → ThaiBahtToWordsGuide.tsx
+- `thai-date-converter-guide` → ThaiDateGuide.tsx
+
+#### File & Image (2)
+- `image-compression-guide` → ImageCompressionGuide.tsx
+- `qr-code-guide` → QRCodeGuide.tsx
+
+### Batch 2 — Tool-linked informational, new tools (10 articles)
+
+#### Dev / IT (7)
+- `json-formatting-guide` → JsonFormattingGuide.tsx
+- `url-encoding-explained` → UrlEncodingExplained.tsx
+- `password-security-guide` → PasswordSecurityGuide.tsx
+- `json-to-csv-guide` → JsonToCsvGuide.tsx
+- `css-color-formats-explained` → CssColorFormatsExplained.tsx
+- `markdown-guide` → MarkdownGuide.tsx
+- `content-length-seo-guide` → ContentLengthSeoGuide.tsx
+
+#### File & Image (1)
+- `favicon-guide` → FaviconGuide.tsx
+
+#### OpenSSL & Cert (1)
+- `x509-certificate-guide` → X509CertificateGuide.tsx
+
+#### Thai Tools (1 — Thai language)
+- `thai-number-writing-guide` → ThaiNumberWritingGuide.tsx
+
+---
+
+## Blog Articles Roadmap
+
+### Batch 3 — P1: Comparison + Troubleshooting + How-to (15 articles, English)
+
+#### Comparison articles (highest RPM — commercial intent)
+- [ ] `https-vs-http` — HTTPS vs HTTP: What's the Difference and Why It Matters
+- [ ] `jwt-vs-session-auth` — JWT vs Session-based Authentication: Which Should You Use?
+- [ ] `rsa-vs-ecdsa-vs-ed25519` — RSA vs ECDSA vs Ed25519: Choosing the Right Key Algorithm
+- [ ] `json-vs-xml` — JSON vs XML: Differences and When to Use Each
+- [ ] `png-vs-jpg-vs-webp` — PNG vs JPG vs WebP: Which Image Format Should You Use?
+- [ ] `sha256-vs-bcrypt-vs-argon2` — SHA-256 vs bcrypt vs Argon2: Password Hashing Compared
+- [ ] `lets-encrypt-vs-paid-ssl` — Let's Encrypt vs Paid SSL Certificates: What's the Difference?
+
+#### Error / Troubleshooting articles (urgent intent, high engagement)
+- [ ] `err-ssl-protocol-error` — ERR_SSL_PROTOCOL_ERROR: Causes and How to Fix It
+- [ ] `invalid-json-fix` — Invalid JSON: How to Find and Fix JSON Errors
+- [ ] `jwt-expired-error` — JWT Expired: What It Means and How to Handle Token Expiry
+- [ ] `cors-error-fix` — CORS Error Fix: Access-Control-Allow-Origin Explained
+- [ ] `413-request-entity-too-large` — 413 Request Entity Too Large: How to Fix It in Nginx and Apache
+
+#### How-to guides (developer audience, high RPM)
+- [ ] `nginx-ssl-lets-encrypt` — How to Set Up HTTPS on Nginx with Let's Encrypt
+- [ ] `linux-file-permissions-explained` — How to Read Linux File Permissions (chmod, chown, ls -l)
+- [ ] `linux-cron-job-setup` — Linux Cron Job: A Practical Setup and Debugging Guide
+
+### Batch 4 — P2: Depth + Thai-specific (10 articles)
+
+#### Standalone informational (not tied to a specific tool)
+- [ ] `what-is-ssl-tls` — What is SSL/TLS? How HTTPS Actually Works
+- [ ] `public-key-cryptography-explained` — Public Key Cryptography Explained Simply
+- [ ] `http-status-codes-guide` — HTTP Status Codes: A Complete Reference (200, 301, 404, 500…)
+- [ ] `dns-explained` — How DNS Works: From Domain Name to IP Address
+- [ ] `api-authentication-methods` — API Authentication Methods: API Keys, OAuth, JWT Compared
+- [ ] `linux-permissions-cheatsheet` — Linux File Permissions Cheatsheet: chmod, chown, umask
+
+#### Thai-specific (Thai language — low competition)
+- [ ] `pdpa-thailand-developers` — Thai PDPA for Developers: What You Need to Know (ภาษาอังกฤษ)
+- [ ] `thai-vat-guide` — คู่มือ VAT สำหรับผู้ประกอบการไทย: ออกใบกำกับภาษีให้ถูกต้อง
+- [ ] `thai-company-tax-id` — เลขประจำตัวผู้เสียภาษี (Tax ID) ไทย: ความหมายและการตรวจสอบ
+- [ ] `https-ssl-pdpa-thai-business` — ธุรกิจออนไลน์ต้องมี SSL ไหม? PDPA และความปลอดภัยข้อมูล
 
 ---
 
 ## Tools Roadmap
 
-### Phase 1 — Client-side only
-
-#### Dev / IT
-- [ ] Diff Checker
-- [ ] Markdown Preview
-- [ ] Word Counter
-
-#### Thai Tools
-- [ ] Thai ID Validator
-- [ ] Thai VAT Calculator
-- [ ] Thai Tax Calculator
-- [ ] Thai Phone Formatter
+### Phase 1 Remaining — Client-side only
 
 #### PDF & Image
 - [ ] Image → WebP
@@ -327,7 +373,6 @@ Loaded via `<Script strategy="afterInteractive">` in `app/layout.tsx`
 - [ ] SVG Optimizer
 
 #### Linux & DevOps
-- [ ] Chmod Calculator
 - [ ] SSH Config Generator
 - [ ] Nginx Config Generator
 - [ ] iptables Rule Builder
@@ -344,106 +389,69 @@ Loaded via `<Script strategy="afterInteractive">` in `app/layout.tsx`
 - [ ] Break-even Calculator
 
 #### Text & Content
-- [ ] Lorem Ipsum Generator
-- [ ] Text Case Converter
 - [ ] String Escape/Unescape
 
-#### OpenSSL & Certificate
-- [ ] CSR Generator (Web Crypto API)
-- [ ] Self-signed Cert Generator
-- [ ] Certificate Decoder
-- [ ] PEM ↔ DER Converter
-- [ ] RSA Key Generator (Web Crypto API)
-- [ ] OpenSSL Command Builder
-
----
-
 ### Phase 2 — Cloudflare Workers at `api.freeutil.app`
+- [ ] DNS Record Lookup
+- [ ] My IP Address
+- [ ] IP Geolocation
+- [ ] SSL Certificate Checker
+- [ ] Currency Converter
+- [ ] Bandwidth Calculator (client-side)
+- [ ] IPv6 Calculator (client-side)
+- [ ] Port Reference Table (client-side)
 
-> ⚠️ Cannot use Next.js API routes — site is static export.
-> Must deploy separate Cloudflare Worker at `api.freeutil.app`
-
-- [ ] DNS Record Lookup — `GET /api/dns?domain=&type=`
-- [ ] My IP Address — `GET /api/myip` (CF-Connecting-IP)
-- [ ] IP Geolocation — `GET /api/geoip?ip=` (CF-IPCountry/City)
-- [ ] SSL Certificate Checker — `GET /api/ssl?domain=`
-- [ ] Currency Converter — `GET /api/currency?from=&to=` (external API)
-- [ ] Bandwidth Calculator — client-side (no Worker needed)
-- [ ] IPv6 Calculator — client-side (no Worker needed)
-- [ ] Port Reference Table — static data (no Worker needed)
-- [ ] SSL Expiry Monitor — needs DB for email (complex)
-
----
-
-### Phase 3 — Requires VPS
-
-> Not possible on Cloudflare — needs ICMP/raw socket
-
+### Phase 3 — VPS Required
 - [ ] Ping
 - [ ] Traceroute
 - [ ] Port Scanner
 
 ---
 
-## Homepage Redesign Plan (Pending — at 30+ tools)
+## AdSense Status & Action Items
 
-- Large search bar centered
-- Category pills filter
-- Popular section via Cloudflare KV (real-time usage tracking)
-- Tool grid filtered by category
+- **Current issue:** "Low value content" — under review
+- **Fix applied:**
+  - ✅ About page (`app/about/page.tsx`) — 800+ word SEO content
+  - ✅ Batch 1: 19 tool-linked articles
+  - ✅ Batch 2: 10 tool-linked articles (new tools)
+  - ⬜ Batch 3: 15 comparison + troubleshooting + how-to articles
+  - ⬜ Add /blog and /about links to Header navigation
+  - ⬜ Update sitemap to include /about, /blog, /blog/*
+  - ⬜ Deploy and request indexing in Search Console
+  - ⬜ Wait 5-7 days then submit AdSense review
 
 ---
 
 ## Known Issues & Notes
 
-- **Cloudflare Pages ✅:** ย้ายจาก Workers → Pages สำเร็จ April 2026 — Desktop 100/100, SEO 100/100
-- **Error 1101 FIXED:** ใช้ `output: 'export'` + Cloudflare Pages — ไม่มี Workers เลย
-- **`app/opengraph-image.tsx` ถูกลบ:** ไม่รองรับ `output: 'export'` กับ `ImageResponse` — ลบออกแล้ว
-- **Static export rules:** Any dynamic route needs `generateStaticParams()` + `export const dynamic = 'force-static'`
-- **No API routes:** Phase 2 tools must use separate CF Worker at `api.freeutil.app`
-- **ThaiBahtToWords:** เป็น full clone ของ ThaiNumberToText.tsx — ไม่ใช่ re-export
-- **AdSense:** `ads.txt` = Authorized ✅. Status still "Getting ready" — waiting for organic traffic
-- **AdSense warning** `data-nscript attribute` — cosmetic only, ignore
-- **next-sitemap config:** Must be plain JS (no TypeScript types)
-- **Script tags:** Always `<Script strategy="afterInteractive">` — never raw `<script>` in `<head>`
-- **crossOrigin:** Capital O in JSX (`crossOrigin` not `crossorigin`)
-- **Cache issues:** `Remove-Item -Recurse -Force .next && pnpm dev` when tools show 404
+- **NumInput cursor bug:** Fixed — always define NumInput as top-level function, never inside component body
+- **Static export rules:** Dynamic routes need `generateStaticParams()` + `force-static`
+- **No API routes:** Phase 2 needs separate CF Worker at `api.freeutil.app`
+- **AdSense data-nscript warning:** Cosmetic only, ignore
+- **Cache issues:** `Remove-Item -Recurse -Force .next && pnpm dev`
+- **crossOrigin:** Capital O in JSX
+- **CSR/SelfSigned TypeScript error:** `certReqInfo.buffer as ArrayBuffer` fix
 
 ---
 
-## Git Branches
-
-```
-cloudflare-pages  → Production branch (Cloudflare Pages deploys from this)
-main              → Worker backup (ไม่ได้ใช้ deploy แล้ว)
-```
-
-**สำคัญ:** ทำงานและ push ที่ branch `cloudflare-pages` เสมอครับ
+## Git Workflow
 
 ```powershell
-# ตรวจสอบ branch ปัจจุบัน
-git branch
-
-# สลับไป cloudflare-pages
-git checkout cloudflare-pages
-
-# Start of day
+git checkout main   # always work on main (production)
 git pull && pnpm dev
-
-# After changes
-git add .
-git commit -m "add [tool-name] tool"
-git push
-# Cloudflare Pages auto-deploys in ~2-3 min
+git add . && git commit -m "add [feature]" && git push
+# Cloudflare Pages auto-deploys ~2-3 min
 ```
 
----
+**Branches:**
+- `main` → Production (Cloudflare Pages deploys from this)
+- `nonprod` → Staging/testing
+- `worker` → Old Worker config backup
 
-## Environment
-
-- Node.js: 22.x
-- Next.js: 16.2.1
-- pnpm: 10.x
-- TypeScript: 5.x
-- Tailwind: 4.x
-- Cloudflare Pages (free tier) — static export, no Workers
+## Project Knowledge Files
+- CLAUDE.md          → project documentation
+- tools.ts           → lib/tools.ts
+- articles.ts        → lib/articles.ts
+- blog-slug-page.tsx → app/blog/[slug]/page.tsx
+- tool-slug-page.tsx → app/tools/[slug]/page.tsx

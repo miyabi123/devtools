@@ -58,6 +58,8 @@ export const tools: Tool[] = [
       { q: 'Does it support JSON with comments (JSONC)?', a: 'Standard JSON does not allow comments. The validator will flag comments as errors per the JSON spec.' },
     ],
     related: ['jwt-decoder', 'base64-encode-decode', 'url-encode-decode'],
+    relatedArticle: 'json-formatting-guide',
+    relatedArticleName: "JSON Formatting and Validation: A Developer's Complete Guide",
     isPopular: true,
   },
   {
@@ -164,6 +166,8 @@ export const tools: Tool[] = [
       { q: 'Why do spaces become %20?', a: 'Spaces are not allowed in URLs. %20 is the percent-encoded representation of a space character (ASCII code 32).' },
     ],
     related: ['base64-encode-decode', 'hash-generator', 'regex-tester'],
+    relatedArticle: 'url-encoding-explained',
+    relatedArticleName: 'URL Encoding Explained: Percent-Encoding, encodeURI vs encodeURIComponent',
   },
   {
     slug: 'hash-generator',
@@ -248,6 +252,8 @@ export const tools: Tool[] = [
       { q: 'What makes a strong password?', a: 'A strong password is at least 12 characters long and includes a mix of uppercase, lowercase, numbers, and symbols. Avoid dictionary words and personal information.' },
     ],
     related: ['hash-generator', 'uuid-generator', 'base64-encode-decode'],
+    relatedArticle: 'password-security-guide',
+    relatedArticleName: 'Password Security Guide: What Makes a Strong Password and How to Generate One',
     isNew: true,
   },
   {
@@ -268,6 +274,8 @@ export const tools: Tool[] = [
       { q: 'Can I use a custom delimiter?', a: 'Yes — you can choose comma, semicolon, tab, or pipe as the delimiter.' },
     ],
     related: ['json-formatter', 'base64-encode-decode', 'url-encode-decode'],
+    relatedArticle: 'json-to-csv-guide',
+    relatedArticleName: 'JSON to CSV Conversion: How to Export JSON Data for Excel and Google Sheets',
     isNew: true,
   },
   {
@@ -284,7 +292,7 @@ export const tools: Tool[] = [
       'Copy or download the converted output',
     ],
     faq: [
-      { q: 'What is YAML?', a: 'YAML (YAML Ain\'t Markup Language) is a human-readable data serialization format commonly used for configuration files in DevOps, Kubernetes, Docker, and CI/CD pipelines.' },
+      { q: 'What is YAML?', a: "YAML (YAML Ain't Markup Language) is a human-readable data serialization format commonly used for configuration files in DevOps, Kubernetes, Docker, and CI/CD pipelines." },
       { q: 'Is YAML a superset of JSON?', a: 'Yes — valid JSON is also valid YAML. YAML is more human-friendly with support for comments, multi-line strings, and less punctuation.' },
     ],
     related: ['json-formatter', 'json-to-csv', 'base64-encode-decode'],
@@ -310,6 +318,8 @@ export const tools: Tool[] = [
       { q: 'What is HSL?', a: 'HSL stands for Hue, Saturation, Lightness. It is more intuitive than RGB for humans — hue is the color angle (0-360°), saturation is color intensity (0-100%), and lightness is brightness (0-100%).' },
     ],
     related: ['hash-generator', 'image-compressor', 'favicon-generator'],
+    relatedArticle: 'css-color-formats-explained',
+    relatedArticleName: 'CSS Color Formats Explained: HEX, RGB, HSL, and When to Use Each',
     isNew: true,
   },
   {
@@ -331,6 +341,8 @@ export const tools: Tool[] = [
       { q: 'Is there a character limit?', a: 'No limit — the tool handles large texts. All processing is done in your browser.' },
     ],
     related: ['thai-number-to-text', 'json-formatter', 'url-encode-decode'],
+    relatedArticle: 'content-length-seo-guide',
+    relatedArticleName: 'Content Length and SEO: How Many Words Do You Really Need?',
     isNew: true,
   },
   {
@@ -352,6 +364,8 @@ export const tools: Tool[] = [
       { q: 'Does it support GitHub Flavored Markdown (GFM)?', a: 'Yes — including tables and strikethrough text.' },
     ],
     related: ['word-counter', 'json-formatter', 'url-encode-decode'],
+    relatedArticle: 'markdown-guide',
+    relatedArticleName: 'Markdown Guide: Complete Syntax Reference for Developers and Writers',
     isNew: true,
   },
   {
@@ -501,6 +515,8 @@ export const tools: Tool[] = [
       { q: 'Which favicon sizes do I need?', a: 'The essential sizes are 16×16 (browser tab), 32×32 (taskbar), 180×180 (Apple touch icon), and 192×192 (Android/PWA). This tool generates all of them.' },
     ],
     related: ['image-resize', 'qr-code-generator', 'base64-encode-decode'],
+    relatedArticle: 'favicon-guide',
+    relatedArticleName: 'Favicon Guide: Sizes, Formats, and How to Add One to Your Website',
     isNew: true,
   },
   {
@@ -526,7 +542,7 @@ export const tools: Tool[] = [
     isPopular: true,
   },
 
-  // ── Phase 2: Thai tools ────────────────────────────────────────
+  // ── Thai tools ────────────────────────────────────────────────
   {
     slug: 'thai-date-converter',
     name: 'Thai Date Converter',
@@ -543,7 +559,7 @@ export const tools: Tool[] = [
     faq: [
       { q: 'พ.ศ. ต่างจาก ค.ศ. กี่ปี?', a: 'ปีพุทธศักราชมากกว่าปีคริสต์ศักราช 543 ปี เช่น พ.ศ. 2567 = ค.ศ. 2024' },
       { q: 'รองรับการแปลงวันที่ก่อน ค.ศ. 1 ไหม?', a: 'รองรับการแปลงตั้งแต่ พ.ศ. 1 (ค.ศ. 544 ก่อนคริสตกาล) เป็นต้นมา' },
-      { q: 'Why is Thai year 543 years ahead of the Western year?', a: 'The Thai Buddhist Era counts from the year of the Buddha\'s passing (Parinirvana), which occurred 543 years before the Christian Era began.' },
+      { q: 'Why is Thai year 543 years ahead of the Western year?', a: "The Thai Buddhist Era counts from the year of the Buddha's passing (Parinirvana), which occurred 543 years before the Christian Era began." },
     ],
     related: ['cron-builder', 'hash-generator'],
     relatedArticle: 'thai-date-converter-guide',
@@ -559,7 +575,7 @@ export const tools: Tool[] = [
     keywords: [
       'แปลงตัวเลขเป็นคำอ่านภาษาไทย', 'ตัวเลขเป็นตัวหนังสือ', 'แปลงเลขเป็นคำ',
       'จำนวนเงินเป็นตัวอักษร', 'เขียนเช็คภาษาไทย', 'thai number to text',
-      'baht to words', 'แปลงเงินเป็นตัวหนังสือ', 'ตัวเลขภาษาไทย'
+      'baht to words', 'แปลงเงินเป็นตัวหนังสือ', 'ตัวเลขภาษาไทย',
     ],
     howTo: [
       'กรอกตัวเลขที่ต้องการแปลงในช่องป้อนข้อมูล',
@@ -573,6 +589,8 @@ export const tools: Tool[] = [
       { q: 'รองรับทศนิยม (สตางค์) ไหม?', a: 'รองรับครับ ในโหมดจำนวนเงิน ทศนิยม 2 ตำแหน่งจะแปลงเป็นสตางค์โดยอัตโนมัติ เช่น 10.50 = สิบบาทห้าสิบสตางค์' },
     ],
     related: ['thai-date-converter', 'thai-vat-calculator', 'thai-id-validator'],
+    relatedArticle: 'thai-number-writing-guide',
+    relatedArticleName: 'วิธีอ่านและเขียนตัวเลขภาษาไทย: หลักพัน หมื่น แสน ล้าน',
     isNew: true,
   },
   {
@@ -584,7 +602,7 @@ export const tools: Tool[] = [
     keywords: [
       'จำนวนเงินเป็นตัวอักษร', 'เขียนเช็คภาษาไทย', 'แปลงเงินเป็นตัวหนังสือ',
       'บาทเป็นตัวอักษร', 'thai baht to words', 'cheque writing thai',
-      'ใบสำคัญจ่าย', 'สัญญาซื้อขาย', 'จำนวนเงินภาษาไทย'
+      'ใบสำคัญจ่าย', 'สัญญาซื้อขาย', 'จำนวนเงินภาษาไทย',
     ],
     howTo: [
       'กรอกจำนวนเงินที่ต้องการแปลง เช่น 1500.50',
@@ -611,7 +629,7 @@ export const tools: Tool[] = [
     keywords: [
       'คำนวณภาษีเงินได้บุคคลธรรมดา', 'ภาษีเงินได้ 2568', 'คำนวณภาษี 2568',
       'ลดหย่อนภาษี 2568', 'thai tax calculator', 'income tax thailand 2025',
-      'ภาษีบุคคลธรรมดา', 'คำนวณภาษีออนไลน์', 'เสียภาษีเท่าไหร่'
+      'ภาษีบุคคลธรรมดา', 'คำนวณภาษีออนไลน์', 'เสียภาษีเท่าไหร่',
     ],
     howTo: [
       'กรอกรายได้ต่อปีและประเภทเงินได้ (เงินเดือน, ฟรีแลนซ์, อื่นๆ)',
@@ -681,7 +699,7 @@ export const tools: Tool[] = [
     isNew: true,
   },
 
-  // ──  OpenSSL & Cert ────────────────────────────────────────
+  // ── OpenSSL & Cert ────────────────────────────────────────────
   {
     slug: 'csr-generator',
     name: 'CSR Generator',
@@ -719,8 +737,8 @@ export const tools: Tool[] = [
       'Download both files and configure your web server',
     ],
     faq: [
-      { q: 'What is a self-signed certificate?', a: 'A self-signed certificate is signed by its own private key instead of a Certificate Authority. Browsers will show a warning, but it is perfect for development and testing.' },
-      { q: 'Can I use this for production?', a: 'Not recommended for production — browsers will show security warnings. Use a CA-issued certificate (e.g. Let\'s Encrypt) for production sites.' },
+      { q: 'What is a self-signed certificate?', a: "A self-signed certificate is signed by its own private key instead of a Certificate Authority. Browsers will show a warning, but it is perfect for development and testing." },
+      { q: 'Can I use this for production?', a: "Not recommended for production — browsers will show security warnings. Use a CA-issued certificate (e.g. Let's Encrypt) for production sites." },
       { q: 'How do I use it with Nginx?', a: 'Add ssl_certificate /path/to/cert.pem and ssl_certificate_key /path/to/key.pem to your Nginx server block.' },
     ],
     related: ['csr-generator', 'hash-generator', 'base64-encode-decode'],
@@ -770,6 +788,8 @@ export const tools: Tool[] = [
       { q: 'What information can I see?', a: 'Subject (CN, O, OU, C), Issuer, validity period (Not Before / Not After), Subject Alternative Names (SANs), public key info, signature algorithm, and SHA-1/SHA-256 fingerprints.' },
     ],
     related: ['csr-generator', 'self-signed-cert', 'pem-der-converter'],
+    relatedArticle: 'x509-certificate-guide',
+    relatedArticleName: 'X.509 Certificates Explained: How to Read and Inspect SSL Certificate Details',
     isNew: true,
   },
   {
@@ -819,7 +839,7 @@ export const tools: Tool[] = [
     isNew: true,
   },
 
-  // ── Linux & DevOps ────────────────────────────────────────
+  // ── Linux & DevOps ────────────────────────────────────────────
   {
     slug: 'chmod-calculator',
     name: 'Chmod Calculator',
@@ -848,7 +868,7 @@ export const tools: Tool[] = [
   },
 ]
 
-// ── Helpers ─────────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────────
 
 export const getTool = (slug: string): Tool | undefined =>
   tools.find(t => t.slug === slug)
@@ -868,7 +888,7 @@ export const categoryLabel: Record<ToolCategory, string> = {
   file:    'File & convert',
   finance: 'Finance',
   openssl: 'OpenSSL & Cert',
-  linux:   'Linux & DevOps',   
+  linux:   'Linux & DevOps',
 }
 
 export const categoryColors: Record<ToolCategory, { bg: string; text: string }> = {

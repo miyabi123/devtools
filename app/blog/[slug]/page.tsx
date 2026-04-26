@@ -57,6 +57,17 @@ import ThaiBahtToWordsGuide from '@/components/articles/ThaiBahtToWordsGuide'
 import ThaiDateGuide from '@/components/articles/ThaiDateGuide'
 import ImageCompressionGuide from '@/components/articles/ImageCompressionGuide'
 import QRCodeGuide from '@/components/articles/QRCodeGuide'
+// ── New articles ─────────────────────────────────────────────────
+import JsonFormattingGuide from '@/components/articles/JsonFormattingGuide'
+import UrlEncodingExplained from '@/components/articles/UrlEncodingExplained'
+import PasswordSecurityGuide from '@/components/articles/PasswordSecurityGuide'
+import JsonToCsvGuide from '@/components/articles/JsonToCsvGuide'
+import CssColorFormatsExplained from '@/components/articles/CssColorFormatsExplained'
+import MarkdownGuide from '@/components/articles/MarkdownGuide'
+import ContentLengthSeoGuide from '@/components/articles/ContentLengthSeoGuide'
+import FaviconGuide from '@/components/articles/FaviconGuide'
+import X509CertificateGuide from '@/components/articles/X509CertificateGuide'
+import ThaiNumberWritingGuide from '@/components/articles/ThaiNumberWritingGuide'
 
 const articleComponents: Record<string, React.ComponentType> = {
   'what-is-jwt': WhatIsJWT,
@@ -78,6 +89,17 @@ const articleComponents: Record<string, React.ComponentType> = {
   'thai-date-converter-guide': ThaiDateGuide,
   'image-compression-guide': ImageCompressionGuide,
   'qr-code-guide': QRCodeGuide,
+  // ── New articles ──────────────────────────────────────────────
+  'json-formatting-guide': JsonFormattingGuide,
+  'url-encoding-explained': UrlEncodingExplained,
+  'password-security-guide': PasswordSecurityGuide,
+  'json-to-csv-guide': JsonToCsvGuide,
+  'css-color-formats-explained': CssColorFormatsExplained,
+  'markdown-guide': MarkdownGuide,
+  'content-length-seo-guide': ContentLengthSeoGuide,
+  'favicon-guide': FaviconGuide,
+  'x509-certificate-guide': X509CertificateGuide,
+  'thai-number-writing-guide': ThaiNumberWritingGuide,
 }
 
 export default async function BlogArticlePage({
