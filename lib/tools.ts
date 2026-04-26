@@ -1,4 +1,4 @@
-export type ToolCategory = 'dev' | 'thai' | 'file' | 'finance' | 'openssl'
+export type ToolCategory = 'dev' | 'thai' | 'file' | 'finance' | 'openssl' | 'linux'
 
 export interface Tool {
   slug: string
@@ -766,6 +766,34 @@ export const tools: Tool[] = [
     relatedArticleName: 'RSA Encryption Explained: Public Keys, Private Keys, and How It Works',
     isNew: true,
   },
+
+  // ── Linux & DevOps ────────────────────────────────────────
+  {
+    slug: 'chmod-calculator',
+    name: 'Chmod Calculator',
+    shortDesc: 'Calculate Linux file permissions visually',
+    longDesc: 'Free online chmod calculator for Linux and Unix file permissions. Build permission strings visually by toggling read, write, and execute checkboxes for owner, group, and others. Instantly see the octal notation (e.g. 755), symbolic notation (e.g. rwxr-xr-x), and the exact chmod command to run. Includes 10 common permission presets for web servers, scripts, and private files. All calculation runs 100% client-side — no data is sent to any server.',
+    category: 'linux',
+    keywords: [
+      'chmod calculator', 'linux permissions calculator', 'chmod 755', 'chmod 644',
+      'file permission calculator', 'octal permissions', 'unix chmod', 'rwx calculator',
+      'linux file permissions', 'chmod command generator', 'chmod symbolic',
+    ],
+    howTo: [
+      'Toggle the checkboxes for Read, Write, Execute under Owner, Group, and Others',
+      'Or type an octal value directly (e.g. 755) to set permissions instantly',
+      'Or paste a symbolic string (e.g. rwxr-xr-x) to decode it',
+      'Copy the chmod command and run it in your terminal',
+    ],
+    faq: [
+      { q: 'What does chmod 755 mean?', a: 'chmod 755 gives the owner full read/write/execute (7), and group and others read/execute but no write (5). Common for web server directories and executable scripts.' },
+      { q: 'What is the difference between octal and symbolic notation?', a: 'Octal uses three digits (e.g. 755) where each digit is the sum of read(4)+write(2)+execute(1). Symbolic uses letters like rwxr-xr-x which is more human-readable.' },
+      { q: 'What permissions should I use for web files?', a: 'Typically 644 for files (owner read/write, others read-only) and 755 for directories (owner full, others read/execute). Never use 777 in production.' },
+      { q: 'What does the execute bit mean for directories?', a: 'For directories, the execute bit means the ability to enter (cd into) the directory. Without it, users cannot access files inside even if they have read permission.' },
+    ],
+    related: ['hash-generator', 'uuid-generator', 'cron-builder'],
+    isNew: true,
+  },
 ]
 
 // ── Helpers ─────────────────────────────────────────────────────
@@ -788,6 +816,7 @@ export const categoryLabel: Record<ToolCategory, string> = {
   file:    'File & convert',
   finance: 'Finance',
   openssl: 'OpenSSL & Cert',
+  linux:   'Linux & DevOps',   
 }
 
 export const categoryColors: Record<ToolCategory, { bg: string; text: string }> = {
@@ -796,4 +825,5 @@ export const categoryColors: Record<ToolCategory, { bg: string; text: string }> 
   file:    { bg: '#faeeda', text: '#633806' },
   finance: { bg: '#faece7', text: '#712b13' },
   openssl: { bg: '#eef6ff', text: '#1D4ED8' },
+  linux:   { bg: '#f0fdf4', text: '#166534' },
 }
