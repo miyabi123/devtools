@@ -71,6 +71,7 @@ const toolComponents: Record<string, React.ComponentType> = {
   'certificate-decoder': dynamic(() => import('@/components/tools/CertificateDecoder')),
   'openssl-command-builder': dynamic(() => import('@/components/tools/OpenSSLCommandBuilder')),
   'rsa-key-generator': dynamic(() => import('@/components/tools/RSAKeyGenerator')),
+  'thai-id-validator': dynamic(() => import('@/components/tools/ThaiIdValidator')),
 }
 
 export default async function ToolPage({
