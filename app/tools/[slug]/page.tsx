@@ -72,6 +72,9 @@ const toolComponents: Record<string, React.ComponentType> = {
   'openssl-command-builder': dynamic(() => import('@/components/tools/OpenSSLCommandBuilder')),
   'rsa-key-generator': dynamic(() => import('@/components/tools/RSAKeyGenerator')),
   'thai-id-validator': dynamic(() => import('@/components/tools/ThaiIdValidator')),
+  'chmod-calculator': dynamic(() => import('@/components/tools/ChmodCalculator')),
+  'text-case-converter': dynamic(() => import('@/components/tools/TextCaseConverter')),
+  'thai-vat-calculator': dynamic(() => import('@/components/tools/ThaiVatCalculator')),
 }
 
 export default async function ToolPage({
