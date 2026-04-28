@@ -316,7 +316,7 @@ Google's "Low value content" flag targets sites with only one content type. free
 
 ---
 
-## Blog Articles Completed ✅ (39 articles)
+## Blog Articles Completed ✅ (54 articles)
 
 ### Batch 1 — Tool-linked informational (19 articles)
 
@@ -367,32 +367,55 @@ Google's "Low value content" flag targets sites with only one content type. free
 #### Thai Tools (1 — Thai language)
 - `thai-number-writing-guide` → ThaiNumberWritingGuide.tsx
 
+### Batch 3 — Comparison + Error fix + How-to (15 articles, English)
+
+#### Comparison articles (7)
+- `https-vs-http` → HttpsVsHttp.tsx
+- `jwt-vs-session-auth` → JwtVsSessionAuth.tsx
+- `rsa-vs-ecdsa-vs-ed25519` → RsaVsEcdsaVsEd25519.tsx
+- `json-vs-xml` → JsonVsXml.tsx
+- `png-vs-jpg-vs-webp` → PngVsJpgVsWebp.tsx
+- `sha256-vs-bcrypt-vs-argon2` → Sha256VsBcryptVsArgon2.tsx
+- `lets-encrypt-vs-paid-ssl` → LetsEncryptVsPaidSsl.tsx
+
+#### Error / Troubleshooting articles (5)
+- `err-ssl-protocol-error` → ErrSslProtocolError.tsx
+- `invalid-json-fix` → InvalidJsonFix.tsx
+- `jwt-expired-error` → JwtExpiredError.tsx
+- `cors-error-fix` → CorsErrorFix.tsx
+- `413-request-entity-too-large` → RequestEntityTooLarge.tsx
+
+#### How-to guides (3)
+- `nginx-ssl-lets-encrypt` → NginxSslLetsEncrypt.tsx
+- `linux-file-permissions-explained` → LinuxFilePermissionsExplained.tsx
+- `linux-cron-job-setup` → LinuxCronJobSetup.tsx
+
 ---
 
 ## Blog Articles Roadmap
 
-### Batch 3 — P1: Comparison + Troubleshooting + How-to (15 articles, English)
+### Batch 3 — P1: Comparison + Troubleshooting + How-to (15 articles, English) ✅ Done
 
 #### Comparison articles (highest RPM — commercial intent)
-- [ ] `https-vs-http` — HTTPS vs HTTP: What's the Difference and Why It Matters
-- [ ] `jwt-vs-session-auth` — JWT vs Session-based Authentication: Which Should You Use?
-- [ ] `rsa-vs-ecdsa-vs-ed25519` — RSA vs ECDSA vs Ed25519: Choosing the Right Key Algorithm
-- [ ] `json-vs-xml` — JSON vs XML: Differences and When to Use Each
-- [ ] `png-vs-jpg-vs-webp` — PNG vs JPG vs WebP: Which Image Format Should You Use?
-- [ ] `sha256-vs-bcrypt-vs-argon2` — SHA-256 vs bcrypt vs Argon2: Password Hashing Compared
-- [ ] `lets-encrypt-vs-paid-ssl` — Let's Encrypt vs Paid SSL Certificates: What's the Difference?
+- [x] `https-vs-http` — HTTPS vs HTTP: What's the Difference and Why It Matters
+- [x] `jwt-vs-session-auth` — JWT vs Session-based Authentication: Which Should You Use?
+- [x] `rsa-vs-ecdsa-vs-ed25519` — RSA vs ECDSA vs Ed25519: Choosing the Right Key Algorithm
+- [x] `json-vs-xml` — JSON vs XML: Differences and When to Use Each
+- [x] `png-vs-jpg-vs-webp` — PNG vs JPG vs WebP: Which Image Format Should You Use?
+- [x] `sha256-vs-bcrypt-vs-argon2` — SHA-256 vs bcrypt vs Argon2: Password Hashing Compared
+- [x] `lets-encrypt-vs-paid-ssl` — Let's Encrypt vs Paid SSL Certificates: What's the Difference?
 
 #### Error / Troubleshooting articles (urgent intent, high engagement)
-- [ ] `err-ssl-protocol-error` — ERR_SSL_PROTOCOL_ERROR: Causes and How to Fix It
-- [ ] `invalid-json-fix` — Invalid JSON: How to Find and Fix JSON Errors
-- [ ] `jwt-expired-error` — JWT Expired: What It Means and How to Handle Token Expiry
-- [ ] `cors-error-fix` — CORS Error Fix: Access-Control-Allow-Origin Explained
-- [ ] `413-request-entity-too-large` — 413 Request Entity Too Large: How to Fix It in Nginx and Apache
+- [x] `err-ssl-protocol-error` — ERR_SSL_PROTOCOL_ERROR: Causes and How to Fix It
+- [x] `invalid-json-fix` — Invalid JSON: How to Find and Fix JSON Errors
+- [x] `jwt-expired-error` — JWT Expired: What It Means and How to Handle Token Expiry
+- [x] `cors-error-fix` — CORS Error Fix: Access-Control-Allow-Origin Explained
+- [x] `413-request-entity-too-large` — 413 Request Entity Too Large: How to Fix It in Nginx and Apache
 
 #### How-to guides (developer audience, high RPM)
-- [ ] `nginx-ssl-lets-encrypt` — How to Set Up HTTPS on Nginx with Let's Encrypt
-- [ ] `linux-file-permissions-explained` — How to Read Linux File Permissions (chmod, chown, ls -l)
-- [ ] `linux-cron-job-setup` — Linux Cron Job: A Practical Setup and Debugging Guide
+- [x] `nginx-ssl-lets-encrypt` — How to Set Up HTTPS on Nginx with Let's Encrypt
+- [x] `linux-file-permissions-explained` — How to Read Linux File Permissions (chmod, chown, ls -l)
+- [x] `linux-cron-job-setup` — Linux Cron Job: A Practical Setup and Debugging Guide
 
 ### Batch 4 — P2: Depth + Thai-specific (10 articles)
 
@@ -466,7 +489,7 @@ Google's "Low value content" flag targets sites with only one content type. free
   - ✅ Batch 1: 19 tool-linked articles
   - ✅ Batch 2: 10 tool-linked articles (new tools)
   - ✅ Shared Header + Footer with /blog and /about links (all pages)
-  - ⬜ Batch 3: 15 comparison + troubleshooting + how-to articles
+  - ✅ Batch 3: 15 comparison + troubleshooting + how-to articles
   - ⬜ Update sitemap to include /about, /blog, /blog/*
   - ⬜ Deploy and request indexing in Search Console
   - ⬜ Wait 5-7 days then submit AdSense review
