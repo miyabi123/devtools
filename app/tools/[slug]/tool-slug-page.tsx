@@ -75,6 +75,7 @@ const toolComponents: Record<string, React.ComponentType> = {
   'chmod-calculator': dynamic(() => import('@/components/tools/ChmodCalculator')),
   'text-case-converter': dynamic(() => import('@/components/tools/TextCaseConverter')),
   'thai-vat-calculator': dynamic(() => import('@/components/tools/ThaiVatCalculator')),
+  'mermaid-diagram': dynamic(() => import('@/components/tools/MermaidDiagram')),
 }
 
 export default async function ToolPage({

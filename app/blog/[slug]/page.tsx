@@ -68,6 +68,22 @@ import ContentLengthSeoGuide from '@/components/articles/ContentLengthSeoGuide'
 import FaviconGuide from '@/components/articles/FaviconGuide'
 import X509CertificateGuide from '@/components/articles/X509CertificateGuide'
 import ThaiNumberWritingGuide from '@/components/articles/ThaiNumberWritingGuide'
+// ── Batch 3 imports (เพิ่มหลัง Batch 2 imports) ──────────────
+import HttpsVsHttp from '@/components/articles/HttpsVsHttp'
+import JwtVsSessionAuth from '@/components/articles/JwtVsSessionAuth'
+import RsaVsEcdsaVsEd25519 from '@/components/articles/RsaVsEcdsaVsEd25519'
+import JsonVsXml from '@/components/articles/JsonVsXml'
+import PngVsJpgVsWebp from '@/components/articles/PngVsJpgVsWebp'
+import Sha256VsBcryptVsArgon2 from '@/components/articles/Sha256VsBcryptVsArgon2'
+import LetsEncryptVsPaidSsl from '@/components/articles/LetsEncryptVsPaidSsl'
+import ErrSslProtocolError from '@/components/articles/ErrSslProtocolError'
+import InvalidJsonFix from '@/components/articles/InvalidJsonFix'
+import JwtExpiredError from '@/components/articles/JwtExpiredError'
+import CorsErrorFix from '@/components/articles/CorsErrorFix'
+import RequestEntityTooLarge from '@/components/articles/RequestEntityTooLarge'
+import NginxSslLetsEncrypt from '@/components/articles/NginxSslLetsEncrypt'
+import LinuxFilePermissionsExplained from '@/components/articles/LinuxFilePermissionsExplained'
+import LinuxCronJobSetup from '@/components/articles/LinuxCronJobSetup'
 
 const articleComponents: Record<string, React.ComponentType> = {
   'what-is-jwt': WhatIsJWT,
@@ -100,6 +116,22 @@ const articleComponents: Record<string, React.ComponentType> = {
   'favicon-guide': FaviconGuide,
   'x509-certificate-guide': X509CertificateGuide,
   'thai-number-writing-guide': ThaiNumberWritingGuide,
+  // ── Batch 3 map entries (เพิ่มใน articleComponents object) ────
+  'https-vs-http': HttpsVsHttp,
+  'jwt-vs-session-auth': JwtVsSessionAuth,
+  'rsa-vs-ecdsa-vs-ed25519': RsaVsEcdsaVsEd25519,
+  'json-vs-xml': JsonVsXml,
+  'png-vs-jpg-vs-webp': PngVsJpgVsWebp,
+  'sha256-vs-bcrypt-vs-argon2': Sha256VsBcryptVsArgon2,
+  'lets-encrypt-vs-paid-ssl': LetsEncryptVsPaidSsl,
+  'err-ssl-protocol-error': ErrSslProtocolError,
+  'invalid-json-fix': InvalidJsonFix,
+  'jwt-expired-error': JwtExpiredError,
+  'cors-error-fix': CorsErrorFix,
+  '413-request-entity-too-large': RequestEntityTooLarge,
+  'nginx-ssl-lets-encrypt': NginxSslLetsEncrypt,
+  'linux-file-permissions-explained': LinuxFilePermissionsExplained,
+  'linux-cron-job-setup': LinuxCronJobSetup,
 }
 
 export default async function BlogArticlePage({
