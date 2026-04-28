@@ -437,6 +437,32 @@ export const tools: Tool[] = [
     isNew: true,
   },
   {
+    slug: 'mermaid-diagram',
+    name: 'Mermaid Diagram Editor',
+    shortDesc: 'Create flowcharts, ERDs, sequence diagrams with Mermaid',
+    longDesc: 'Free online Mermaid diagram editor with live preview. Write Mermaid syntax and see your diagram render instantly — supports Flowchart, Sequence Diagram, ERD (Entity Relationship Diagram), Mind Map, Sankey, Gantt, Pie Chart, Git Graph, and more. Export diagrams as PNG or SVG. Perfect for developers documenting systems, database schemas, and workflows. All rendering runs 100% in your browser — no data sent to any server.',
+    category: 'dev',
+    keywords: [
+      'mermaid diagram', 'flowchart maker', 'erd diagram online', 'sequence diagram generator',
+      'mermaid editor', 'mermaid live editor', 'diagram as code', 'mind map generator',
+      'sankey diagram', 'gantt chart maker', 'free diagram tool', 'mermaid online',
+    ],
+    howTo: [
+      'Select a diagram type from the preset buttons (Flowchart, Sequence, ERD, etc.)',
+      'Edit the Mermaid code in the left panel — the diagram updates live',
+      'Click any preset to load a starter template you can customize',
+      'Click Export PNG or Export SVG to download your diagram',
+    ],
+    faq: [
+      { q: 'What is Mermaid?', a: 'Mermaid is a JavaScript-based diagramming tool that renders text definitions into diagrams. It\'s widely used in GitHub README files, Notion, GitLab, and many documentation tools.' },
+      { q: 'Which diagram types are supported?', a: 'Flowchart, Sequence Diagram, Class Diagram, ERD, State Diagram, Gantt, Pie Chart, Mind Map, Sankey, Git Graph, and more — all standard Mermaid diagram types are supported.' },
+      { q: 'Can I use this in GitHub?', a: 'Yes — Mermaid syntax in GitHub markdown is rendered automatically. Copy your code and paste it in a GitHub README inside a ```mermaid code block.' },
+      { q: 'Can I export the diagram?', a: 'Yes — you can export as PNG (for presentations and docs) or SVG (for scalable, editable vector graphics).' },
+    ],
+    related: ['regex-tester', 'json-formatter', 'markdown-preview'],
+    isNew: true,
+  },
+  {
     slug: 'pdf-base64',
     name: 'PDF ↔ Base64',
     shortDesc: 'Convert PDF files to Base64 and back',
