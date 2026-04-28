@@ -2,11 +2,10 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 
-// ── Presets ──────────────────────────────────────────────────────
-const PRESETS: { label: string; type: string; code: string }[] = [
+// ── Presets ───────────────────────────────────────────────────────
+const PRESETS: { label: string; code: string }[] = [
   {
     label: 'Flowchart',
-    type: 'flowchart',
     code: `flowchart TD
     A([Start]) --> B{Is it working?}
     B -->|Yes| C[Great!]
@@ -17,7 +16,6 @@ const PRESETS: { label: string; type: string; code: string }[] = [
   },
   {
     label: 'Sequence',
-    type: 'sequence',
     code: `sequenceDiagram
     participant U as User
     participant F as Frontend
@@ -33,13 +31,11 @@ const PRESETS: { label: string; type: string; code: string }[] = [
   },
   {
     label: 'ERD',
-    type: 'erd',
     code: `erDiagram
     USER {
         int id PK
         string name
         string email
-        datetime created_at
     }
     ORDER {
         int id PK
@@ -51,13 +47,11 @@ const PRESETS: { label: string; type: string; code: string }[] = [
         int id PK
         string name
         decimal price
-        int stock
     }
     ORDER_ITEM {
         int order_id FK
         int product_id FK
         int quantity
-        decimal price
     }
     USER ||--o{ ORDER : "places"
     ORDER ||--|{ ORDER_ITEM : "contains"
@@ -65,7 +59,6 @@ const PRESETS: { label: string; type: string; code: string }[] = [
   },
   {
     label: 'Mind Map',
-    type: 'mindmap',
     code: `mindmap
   root((Project))
     Frontend
@@ -82,26 +75,7 @@ const PRESETS: { label: string; type: string; code: string }[] = [
       Monitoring`,
   },
   {
-    label: 'Sequence (Auth)',
-    type: 'sequence',
-    code: `sequenceDiagram
-    autonumber
-    actor U as User
-    participant App
-    participant Auth as Auth Server
-    participant DB
-
-    U->>App: Login (email + password)
-    App->>Auth: Validate credentials
-    Auth->>DB: Query user
-    DB-->>Auth: User record
-    Auth-->>App: JWT token
-    App-->>U: Set cookie + redirect
-    Note over U,App: User is now authenticated`,
-  },
-  {
     label: 'Gantt',
-    type: 'gantt',
     code: `gantt
     title Project Timeline
     dateFormat  YYYY-MM-DD
@@ -118,7 +92,6 @@ const PRESETS: { label: string; type: string; code: string }[] = [
   },
   {
     label: 'Pie Chart',
-    type: 'pie',
     code: `pie title Traffic Sources
     "Organic Search" : 42.5
     "Direct" : 25.3
@@ -128,7 +101,6 @@ const PRESETS: { label: string; type: string; code: string }[] = [
   },
   {
     label: 'Git Graph',
-    type: 'gitgraph',
     code: `gitGraph
     commit id: "Initial commit"
     commit id: "Add README"
@@ -145,8 +117,19 @@ const PRESETS: { label: string; type: string; code: string }[] = [
     commit id: "Release v1.0"`,
   },
   {
+    label: 'State',
+    code: `stateDiagram-v2
+    [*] --> Idle
+    Idle --> Loading : fetch()
+    Loading --> Success : data received
+    Loading --> Error : request failed
+    Success --> Idle : reset()
+    Error --> Loading : retry()
+    Error --> Idle : dismiss()
+    Success --> [*] : close()`,
+  },
+  {
     label: 'Sankey',
-    type: 'sankey',
     code: `sankey-beta
     Revenue,Product A,300
     Revenue,Product B,200
@@ -161,102 +144,109 @@ const PRESETS: { label: string; type: string; code: string }[] = [
     Gross Profit,Net Profit,210`,
   },
   {
-    label: 'State',
-    type: 'state',
-    code: `stateDiagram-v2
-    [*] --> Idle
-    Idle --> Loading : fetch()
-    Loading --> Success : data received
-    Loading --> Error : request failed
-    Success --> Idle : reset()
-    Error --> Loading : retry()
-    Error --> Idle : dismiss()
-    Success --> [*] : close()`,
+    label: 'Sequence (Auth)',
+    code: `sequenceDiagram
+    autonumber
+    actor U as User
+    participant App
+    participant Auth as Auth Server
+    participant DB
+
+    U->>App: Login (email + password)
+    App->>Auth: Validate credentials
+    Auth->>DB: Query user
+    DB-->>Auth: User record
+    Auth-->>App: JWT token
+    App-->>U: Set cookie + redirect
+    Note over U,App: User is now authenticated`,
   },
 ]
 
-// ── Mermaid loader (CDN) ──────────────────────────────────────────
-let mermaidLoaded = false
-let mermaidLoading = false
-const mermaidCallbacks: Array<() => void> = []
-
-function loadMermaid(cb: () => void) {
-  if (mermaidLoaded) { cb(); return }
-  mermaidCallbacks.push(cb)
-  if (mermaidLoading) return
-  mermaidLoading = true
-  const s = document.createElement('script')
-  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.1/mermaid.min.js'
-  s.onload = () => {
-    mermaidLoaded = true
-    mermaidLoading = false
-    mermaidCallbacks.forEach(fn => fn())
-    mermaidCallbacks.length = 0
-  }
-  document.head.appendChild(s)
+// ── Mermaid type (matches mermaid@10 API) ─────────────────────────
+interface MermaidAPI {
+  initialize: (cfg: Record<string, unknown>) => void
+  render: (id: string, code: string, el?: HTMLElement) => Promise<{ svg: string }>
 }
 
-// ── Main component ────────────────────────────────────────────────
+// ── Component ─────────────────────────────────────────────────────
 export default function MermaidDiagram() {
-  const [code, setCode] = useState(PRESETS[0].code)
+  const [code, setCode]                 = useState(PRESETS[0].code)
   const [activePreset, setActivePreset] = useState(0)
-  const [svgOutput, setSvgOutput] = useState('')
-  const [error, setError] = useState('')
-  const [ready, setReady] = useState(false)
-  const [copying, setCopying] = useState(false)
-  const [theme, setTheme] = useState<'default' | 'neutral' | 'dark' | 'forest'>('default')
-  const renderIdRef = useRef(0)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [svgOutput, setSvgOutput]       = useState('')
+  const [error, setError]               = useState('')
+  const [ready, setReady]               = useState(false)
+  const [copying, setCopying]           = useState(false)
+  const [theme, setTheme]               = useState<'default' | 'neutral' | 'dark' | 'forest'>('default')
 
-  // Load Mermaid from CDN
+  const renderSeq  = useRef(0)
+  const mermaidRef = useRef<MermaidAPI | null>(null)
+  // mermaid v10 render() requires a real mounted DOM element
+  const hiddenRef  = useRef<HTMLDivElement>(null)
+
+  // Dynamic import mermaid from npm — no CDN, works on Cloudflare Pages
   useEffect(() => {
-    loadMermaid(() => setReady(true))
+    import('mermaid').then(mod => {
+      mermaidRef.current = mod.default as unknown as MermaidAPI
+      setReady(true)
+    }).catch(() => {
+      setError('Failed to load Mermaid')
+    })
   }, [])
 
-  // Render diagram
-  const render = useCallback(async (src: string, t: string) => {
-    if (!ready || typeof window === 'undefined') return
-    const m = (window as unknown as { mermaid: { initialize: (c: object) => void; render: (id: string, code: string) => Promise<{ svg: string }> } }).mermaid
-    if (!m) return
+  // Re-render whenever code / theme / ready changes
+  const doRender = useCallback(async (src: string, t: string) => {
+    const m = mermaidRef.current
+    if (!ready || !m) return
+    const seq = ++renderSeq.current
 
-    const id = ++renderIdRef.current
     try {
       m.initialize({
         startOnLoad: false,
         theme: t,
         securityLevel: 'loose',
-        fontFamily: 'DM Mono, monospace',
       })
-      const uid = `mermaid-${Date.now()}`
-      const { svg } = await m.render(uid, src)
-      if (renderIdRef.current !== id) return
+
+      const uid = `mmd-${seq}-${Date.now()}`
+      const { svg } = await m.render(uid, src, hiddenRef.current ?? undefined)
+
+      if (renderSeq.current !== seq) return // stale
       setSvgOutput(svg)
       setError('')
     } catch (e: unknown) {
-      if (renderIdRef.current !== id) return
-      const msg = e instanceof Error ? e.message : String(e)
-      setError(msg.replace(/^Error:/i, '').trim())
+      if (renderSeq.current !== seq) return
+      const raw = e instanceof Error ? e.message : String(e)
+      const msg = raw.split('\n')[0]
+        .replace(/^Parse error on line \d+:/i, 'Parse error:')
+        .trim()
+      setError(msg || 'Invalid Mermaid syntax')
       setSvgOutput('')
     }
   }, [ready])
 
   useEffect(() => {
-    const timer = setTimeout(() => render(code, theme), 300)
-    return () => clearTimeout(timer)
-  }, [code, theme, render])
+    const t = setTimeout(() => doRender(code, theme), 350)
+    return () => clearTimeout(t)
+  }, [code, theme, doRender])
 
-  // Export PNG
+  // ── Exports ───────────────────────────────────────────────────
+  const exportSvg = () => {
+    if (!svgOutput) return
+    const a = document.createElement('a')
+    a.download = 'diagram.svg'
+    a.href = URL.createObjectURL(new Blob([svgOutput], { type: 'image/svg+xml' }))
+    a.click()
+  }
+
   const exportPng = () => {
     if (!svgOutput) return
-    const blob = new Blob([svgOutput], { type: 'image/svg+xml' })
-    const url = URL.createObjectURL(blob)
+    const url = URL.createObjectURL(new Blob([svgOutput], { type: 'image/svg+xml' }))
     const img = new Image()
     img.onload = () => {
       const scale = 2
-      const canvas = document.createElement('canvas')
-      canvas.width = img.width * scale
-      canvas.height = img.height * scale
-      const ctx = canvas.getContext('2d')!
+      const c = document.createElement('canvas')
+      c.width  = img.width  * scale
+      c.height = img.height * scale
+      const ctx = c.getContext('2d')!
       ctx.scale(scale, scale)
       ctx.fillStyle = '#ffffff'
       ctx.fillRect(0, 0, img.width, img.height)
@@ -264,31 +254,28 @@ export default function MermaidDiagram() {
       URL.revokeObjectURL(url)
       const a = document.createElement('a')
       a.download = 'diagram.png'
-      a.href = canvas.toDataURL('image/png')
+      a.href = c.toDataURL('image/png')
       a.click()
     }
     img.src = url
   }
 
-  // Export SVG
-  const exportSvg = () => {
-    if (!svgOutput) return
-    const blob = new Blob([svgOutput], { type: 'image/svg+xml' })
-    const a = document.createElement('a')
-    a.download = 'diagram.svg'
-    a.href = URL.createObjectURL(blob)
-    a.click()
-  }
-
-  // Copy code
   const copyCode = async () => {
     await navigator.clipboard.writeText(code)
     setCopying(true)
     setTimeout(() => setCopying(false), 1500)
   }
 
+  // ── UI ────────────────────────────────────────────────────────
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+      {/* Hidden render target — mermaid v10 needs a mounted DOM node */}
+      <div
+        ref={hiddenRef}
+        aria-hidden="true"
+        style={{ position: 'fixed', left: -99999, top: 0, visibility: 'hidden', pointerEvents: 'none' }}
+      />
 
       {/* Preset pills */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -298,34 +285,37 @@ export default function MermaidDiagram() {
             onClick={() => { setCode(p.code); setActivePreset(i) }}
             style={{
               fontFamily: 'var(--font-mono)', fontSize: 11, padding: '5px 12px',
-              borderRadius: 99, border: `1px solid ${activePreset === i ? '#3c3489' : '#c8c6c0'}`,
+              borderRadius: 99,
+              border:     `1px solid ${activePreset === i ? '#3c3489' : '#c8c6c0'}`,
               background: activePreset === i ? '#eeedfe' : '#ffffff',
-              color: activePreset === i ? '#3c3489' : '#6b6960',
+              color:      activePreset === i ? '#3c3489' : '#6b6960',
               cursor: 'pointer', transition: 'all 0.15s',
             }}
           >{p.label}</button>
         ))}
       </div>
 
-      {/* Editor + Preview side-by-side */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, minHeight: 480 }}>
+      {/* Editor + Preview */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
 
-        {/* Left — code editor */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-          {/* Editor header */}
+        {/* Left: editor */}
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             background: '#f8f7f4', border: '1.5px solid #1a1917',
             borderRadius: '10px 10px 0 0', padding: '8px 12px',
           }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#a8a69e', letterSpacing: '0.06em' }}>MERMAID CODE</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#a8a69e', letterSpacing: '0.06em' }}>
+              MERMAID CODE
+            </span>
             <button
               onClick={copyCode}
               style={{
                 fontFamily: 'var(--font-mono)', fontSize: 10, padding: '3px 10px',
-                borderRadius: 6, border: `0.5px solid ${copying ? '#1D9E75' : '#c8c6c0'}`,
+                borderRadius: 6,
+                border:     `0.5px solid ${copying ? '#1D9E75' : '#c8c6c0'}`,
                 background: copying ? '#e1f5ee' : '#ffffff',
-                color: copying ? '#085041' : '#6b6960',
+                color:      copying ? '#085041' : '#6b6960',
                 cursor: 'pointer', transition: 'all 0.15s',
               }}
             >{copying ? '✓ copied' : 'copy'}</button>
@@ -340,15 +330,14 @@ export default function MermaidDiagram() {
               borderRadius: '0 0 10px 10px',
               fontFamily: 'var(--font-mono)', fontSize: 12.5, lineHeight: 1.7,
               color: '#1a1917', background: '#ffffff', outline: 'none',
-              minHeight: 440, tabSize: 2,
+              minHeight: 460, tabSize: 2,
             }}
             onKeyDown={e => {
               if (e.key === 'Tab') {
                 e.preventDefault()
                 const el = e.currentTarget
                 const s = el.selectionStart, en = el.selectionEnd
-                const v = el.value
-                el.value = v.slice(0, s) + '  ' + v.slice(en)
+                el.value = el.value.slice(0, s) + '  ' + el.value.slice(en)
                 el.selectionStart = el.selectionEnd = s + 2
                 setCode(el.value)
               }
@@ -356,61 +345,62 @@ export default function MermaidDiagram() {
           />
         </div>
 
-        {/* Right — preview */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-          {/* Preview header */}
+        {/* Right: preview */}
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             background: '#f8f7f4', border: '1.5px solid #1a1917',
             borderRadius: '10px 10px 0 0', padding: '8px 12px',
           }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#a8a69e', letterSpacing: '0.06em' }}>PREVIEW</span>
-            <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-              {/* Theme selector */}
-              <select
-                value={theme}
-                onChange={e => setTheme(e.target.value as typeof theme)}
-                style={{
-                  fontFamily: 'var(--font-mono)', fontSize: 10, padding: '3px 8px',
-                  border: '0.5px solid #c8c6c0', borderRadius: 6, background: '#ffffff',
-                  color: '#6b6960', cursor: 'pointer', outline: 'none',
-                }}
-              >
-                <option value="default">Default</option>
-                <option value="neutral">Neutral</option>
-                <option value="forest">Forest</option>
-                <option value="dark">Dark</option>
-              </select>
-            </div>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#a8a69e', letterSpacing: '0.06em' }}>
+              PREVIEW
+            </span>
+            <select
+              value={theme}
+              onChange={e => setTheme(e.target.value as typeof theme)}
+              style={{
+                fontFamily: 'var(--font-mono)', fontSize: 10, padding: '3px 8px',
+                border: '0.5px solid #c8c6c0', borderRadius: 6,
+                background: '#ffffff', color: '#6b6960',
+                cursor: 'pointer', outline: 'none',
+              }}
+            >
+              <option value="default">Default</option>
+              <option value="neutral">Neutral</option>
+              <option value="forest">Forest</option>
+              <option value="dark">Dark</option>
+            </select>
           </div>
 
-          {/* SVG canvas */}
-          <div
-            ref={containerRef}
-            style={{
-              flex: 1, border: '1.5px solid #1a1917', borderTop: 'none',
-              borderRadius: '0 0 10px 10px', background: theme === 'dark' ? '#1a1917' : '#ffffff',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              overflow: 'auto', padding: 16, minHeight: 440,
-              position: 'relative',
-            }}
-          >
-            {!ready && (
-              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: '#a8a69e' }}>Loading Mermaid...</p>
+          <div style={{
+            flex: 1, border: '1.5px solid #1a1917', borderTop: 'none',
+            borderRadius: '0 0 10px 10px',
+            background: theme === 'dark' ? '#1a1917' : '#ffffff',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            overflow: 'auto', padding: 20, minHeight: 460,
+          }}>
+            {!ready && !error && (
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: '#a8a69e' }}>
+                Loading…
+              </p>
             )}
             {ready && error && (
               <div style={{
-                background: '#fcebeb', border: '1px solid #f09595', borderRadius: 8,
-                padding: '12px 16px', maxWidth: '90%',
+                background: '#fcebeb', border: '1px solid #f09595',
+                borderRadius: 8, padding: '12px 16px', maxWidth: '90%',
               }}>
-                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#a32d2d', letterSpacing: '0.06em', margin: '0 0 6px' }}>SYNTAX ERROR</p>
-                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: '#a32d2d', margin: 0, lineHeight: 1.6 }}>{error}</p>
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#a32d2d', letterSpacing: '0.06em', margin: '0 0 6px' }}>
+                  SYNTAX ERROR
+                </p>
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: '#a32d2d', margin: 0, lineHeight: 1.6 }}>
+                  {error}
+                </p>
               </div>
             )}
-            {ready && !error && svgOutput && (
+            {!error && svgOutput && (
               <div
                 dangerouslySetInnerHTML={{ __html: svgOutput }}
-                style={{ maxWidth: '100%', maxHeight: '100%' }}
+                style={{ maxWidth: '100%', overflow: 'auto' }}
               />
             )}
           </div>
@@ -426,7 +416,7 @@ export default function MermaidDiagram() {
             fontFamily: 'var(--font-mono)', fontSize: 11, padding: '8px 18px',
             border: '1px solid #c8c6c0', borderRadius: 8,
             background: '#ffffff', color: svgOutput ? '#1a1917' : '#a8a69e',
-            cursor: svgOutput ? 'pointer' : 'not-allowed', transition: 'all 0.15s',
+            cursor: svgOutput ? 'pointer' : 'not-allowed',
           }}
         >↓ Export SVG</button>
         <button
@@ -437,7 +427,7 @@ export default function MermaidDiagram() {
             border: '1px solid #1a1917', borderRadius: 8,
             background: svgOutput ? '#1a1917' : '#f8f7f4',
             color: svgOutput ? '#f8f7f4' : '#a8a69e',
-            cursor: svgOutput ? 'pointer' : 'not-allowed', transition: 'all 0.15s',
+            cursor: svgOutput ? 'pointer' : 'not-allowed',
           }}
         >↓ Export PNG</button>
       </div>
@@ -445,7 +435,9 @@ export default function MermaidDiagram() {
       {/* GitHub tip */}
       <div style={{ background: '#eeedfe', border: '0.5px solid #8b7fd4', borderRadius: 8, padding: '10px 14px' }}>
         <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#3c3489', margin: 0, lineHeight: 1.7 }}>
-          💡 <strong>GitHub tip:</strong> Paste your code in a <code style={{ background: '#d4d0f8', padding: '1px 5px', borderRadius: 3 }}>```mermaid</code> block in any README or PR comment — GitHub renders it automatically.
+          💡 <strong>GitHub tip:</strong> Paste your code inside a{' '}
+          <code style={{ background: '#d4d0f8', padding: '1px 5px', borderRadius: 3 }}>```mermaid</code>{' '}
+          block in any README or PR — GitHub renders it automatically.
         </p>
       </div>
 
