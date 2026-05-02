@@ -84,6 +84,30 @@ import RequestEntityTooLarge from '@/components/articles/RequestEntityTooLarge'
 import NginxSslLetsEncrypt from '@/components/articles/NginxSslLetsEncrypt'
 import LinuxFilePermissionsExplained from '@/components/articles/LinuxFilePermissionsExplained'
 import LinuxCronJobSetup from '@/components/articles/LinuxCronJobSetup'
+// ── Batch 4 imports (เพิ่มต่อจาก Batch 3 imports) ──────────────
+import WhatIsSslTls from '@/components/articles/WhatIsSslTls'
+import PublicKeyCryptographyExplained from '@/components/articles/PublicKeyCryptographyExplained'
+import HttpStatusCodesGuide from '@/components/articles/HttpStatusCodesGuide'
+import DnsExplained from '@/components/articles/DnsExplained'
+import ApiAuthenticationMethods from '@/components/articles/ApiAuthenticationMethods'
+import LinuxPermissionsCheatsheet from '@/components/articles/LinuxPermissionsCheatsheet'
+import PdpaThailandDevelopers from '@/components/articles/PdpaThailandDevelopers'
+import ThaiVatGuide from '@/components/articles/ThaiVatGuide'
+import ThaiCompanyTaxId from '@/components/articles/ThaiCompanyTaxId'
+import HttpsSslPdpaThaiiBusiness from '@/components/articles/HttpsSslPdpaThaiiBusiness'
+// ── Batch 5 imports ──────────────────────────────────────────────
+import BestFreeDeveloperTools2025 from '@/components/articles/BestFreeDeveloperTools2025'
+import ApiTestingGuide from '@/components/articles/ApiTestingGuide'
+import VpsVsSharedHosting from '@/components/articles/VpsVsSharedHosting'
+import CloudflareFreeGuide from '@/components/articles/CloudflareFreeGuide'
+import HttpsEverywhereGuide from '@/components/articles/HttpsEverywhereGuide'
+import CommonWebSecurityMistakes from '@/components/articles/CommonWebSecurityMistakes'
+import DataEncryptionExplained from '@/components/articles/DataEncryptionExplained'
+import TwoFactorAuthGuide from '@/components/articles/TwoFactorAuthGuide'
+import ThaiDeveloperSalaryGuide from '@/components/articles/ThaiDeveloperSalaryGuide'
+import FreelanceTaxThailand from '@/components/articles/FreelanceTaxThailand'
+import OpenSourceLicenseGuide from '@/components/articles/OpenSourceLicenseGuide'
+import GitWorkflowGuide from '@/components/articles/GitWorkflowGuide'
 
 const articleComponents: Record<string, React.ComponentType> = {
   'what-is-jwt': WhatIsJWT,
@@ -132,6 +156,30 @@ const articleComponents: Record<string, React.ComponentType> = {
   'nginx-ssl-lets-encrypt': NginxSslLetsEncrypt,
   'linux-file-permissions-explained': LinuxFilePermissionsExplained,
   'linux-cron-job-setup': LinuxCronJobSetup,
+  // ── Batch 4 map entries (เพิ่มใน articleComponents object) ───────
+  'what-is-ssl-tls': WhatIsSslTls,
+  'public-key-cryptography-explained': PublicKeyCryptographyExplained,
+  'http-status-codes-guide': HttpStatusCodesGuide,
+  'dns-explained': DnsExplained,
+  'api-authentication-methods': ApiAuthenticationMethods,
+  'linux-permissions-cheatsheet': LinuxPermissionsCheatsheet,
+  'pdpa-thailand-developers': PdpaThailandDevelopers,
+  'thai-vat-guide': ThaiVatGuide,
+  'thai-company-tax-id': ThaiCompanyTaxId,
+  'https-ssl-pdpa-thai-business': HttpsSslPdpaThaiiBusiness,
+  // ── Batch 5 map entries ──────────────────────────────────────────
+  'best-free-developer-tools-2025': BestFreeDeveloperTools2025,
+  'api-testing-guide': ApiTestingGuide,
+  'vps-vs-shared-hosting': VpsVsSharedHosting,
+  'cloudflare-free-tier-guide': CloudflareFreeGuide,
+  'https-everywhere-guide': HttpsEverywhereGuide,
+  'common-web-security-mistakes': CommonWebSecurityMistakes,
+  'data-encryption-explained': DataEncryptionExplained,
+  'two-factor-authentication-guide': TwoFactorAuthGuide,
+  'thai-developer-salary-guide': ThaiDeveloperSalaryGuide,
+  'freelance-tax-thailand': FreelanceTaxThailand,
+  'open-source-license-guide': OpenSourceLicenseGuide,
+  'git-workflow-guide': GitWorkflowGuide,
 }
 
 export default async function BlogArticlePage({
