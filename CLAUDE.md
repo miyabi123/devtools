@@ -59,15 +59,16 @@ GET /api/currency?from=THB&to=USD        → Currency rates
 devtools/
 ├── app/
 │   ├── layout.tsx                    # Root layout — Header + Footer + GA + AdSense
-│   ├── page.tsx                      # Homepage — HeroSearch + SearchableToolGrid + HomeAdSlot (no nav/footer)
+│   ├── page.tsx                      # Homepage — Hero + Popular Tools + Categories + Latest Blog
 │   ├── manifest.ts                   # PWA manifest (force-static)
-│   ├── about/page.tsx                # About page (SEO + AdSense optimized, no nav/footer)
+│   ├── about/page.tsx                # About page (SEO + AdSense optimized)
 │   ├── blog/
-│   │   ├── page.tsx                  # Blog index (no nav/footer)
+│   │   ├── layout.tsx                # Blog layout — exports metadata for SEO (server component)
+│   │   ├── page.tsx                  # Blog index — 'use client', category filter + article grid
 │   │   └── [slug]/page.tsx           # Article page + SEO + JSON-LD
 │   ├── privacy/page.tsx              # Privacy policy
 │   └── tools/
-│       ├── page.tsx                  # All tools page — grid by category (no nav/footer)
+│       ├── page.tsx                  # All tools page — grid by category
 │       └── [slug]/
 │           ├── page.tsx              # Tool page — metadata + JSON-LD + toolComponents
 │           └── opengraph-image.tsx   # Per-tool OG image (force-static + generateStaticParams)
@@ -90,6 +91,89 @@ devtools/
 │   └── icon-192.png / icon-512.png
 ├── next.config.ts                   # output: 'export', trailingSlash, images unoptimized
 └── next-sitemap.config.js           # Sitemap + robots.txt (runs postbuild)
+```
+
+---
+
+## Page Designs
+
+### Homepage — `app/page.tsx` (Server Component)
+
+Structure (top to bottom):
+1. **Hero** — tagline + subtitle + 2 CTA buttons ("Browse all tools →", "Read the blog")
+2. **Popular Tools grid** — pulls `isPopular: true` from tools.ts, shows 8 tools as cards
+3. **Ad slot** — `<HomeAdSlot />` between tools and categories
+4. **Categories** — 6 category cards (icon + label + count + desc), links to `/tools?cat=X`
+5. **From the Blog** — 3 latest articles by `publishedAt` desc, table-row style
+
+Key patterns:
+```tsx
+// Popular tools — mark in tools.ts
+isPopular: true  // add to high-traffic tools in lib/tools.ts
+
+// Categories with icons
+{ key: 'dev',     icon: '{ }',  desc: 'JSON, JWT, Base64, Regex, UUID' },
+{ key: 'thai',    icon: 'ก ข',  desc: 'วันที่ ภาษี VAT บัตรประชาชน' },
+{ key: 'file',    icon: '⇄',    desc: 'Images, QR codes, Favicons' },
+{ key: 'finance', icon: '฿',    desc: 'VAT, Tax, Loan, Income calculators' },
+{ key: 'openssl', icon: '🔒',   desc: 'Certs, CSR, RSA Keys, PEM/DER' },
+{ key: 'linux',   icon: '$_',   desc: 'chmod, cron, permissions' },
+
+// Latest articles — sorted by publishedAt desc, show 3
+const recentArticles = [...articles]
+  .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+  .slice(0, 3)
+```
+
+No `'use client'` — this is a server component with `export const metadata`.
+
+### Blog Index — `app/blog/page.tsx` (Client Component)
+
+Structure (top to bottom):
+1. **Header** — title + total article count
+2. **Category filter tabs** — All + unique categories from articles.ts, with count per category
+3. **Featured card** — first article in current filter, displayed large with full description
+4. **Article grid** — remaining articles, 3-column card grid, truncated description
+5. **Show all button** — initially shows 12 articles, expand on click
+
+Key patterns:
+```tsx
+'use client'  // required for filter state
+
+// Category filter — derives from articles data, no hardcoding
+const allCategories = Array.from(new Set(articles.map(a => a.category))).sort()
+
+// Page size
+const PAGE_SIZE = 12
+const displayed = showAll ? filtered : filtered.slice(0, PAGE_SIZE)
+
+// Featured = first item in filtered list
+const featuredArticle = filtered[0]
+const restArticles = displayed.slice(1)
+
+// Reset showAll on category change
+const handleCatChange = (cat: string) => {
+  setActiveCat(cat)
+  setShowAll(false)
+}
+```
+
+**SEO Note:** Because `app/blog/page.tsx` is `'use client'`, metadata must be exported from `app/blog/layout.tsx` (server component) instead:
+
+```tsx
+// app/blog/layout.tsx — server component, exports metadata
+import type { Metadata } from 'next'
+import { articles } from '@/lib/articles'
+
+export const metadata: Metadata = {
+  title: 'Developer Guides & Tutorials | FreeUtil Blog',
+  description: `${articles.length} in-depth articles on web development, networking, SSL/TLS, Linux, and Thai developer topics.`,
+  alternates: { canonical: 'https://freeutil.app/blog' },
+}
+
+export default function BlogLayout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>
+}
 ```
 
 ---
@@ -132,25 +216,6 @@ Nav and footer live in `components/Header.tsx` and `components/Footer.tsx` — i
 // Right: tools / blog / about / privacy links
 ```
 
-Nav links in `Header.tsx`:
-```tsx
-const navLinks = [
-  { href: '/tools', label: 'tools' },
-  { href: '/blog',  label: 'blog'  },
-  { href: '/about', label: 'about' },
-]
-```
-
-Footer links in `Footer.tsx`:
-```tsx
-const footerLinks = [
-  { href: '/tools',   label: 'tools'   },
-  { href: '/blog',    label: 'blog'    },
-  { href: '/about',   label: 'about'   },
-  { href: '/privacy', label: 'privacy' },
-]
-```
-
 `layout.tsx` structure:
 ```tsx
 <body style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -188,14 +253,15 @@ export default function MyTool() {
 ## Adding a New Tool — Checklist
 
 1. Register in `lib/tools.ts` with slug, name, shortDesc, longDesc, category, keywords, howTo, faq, related
-2. Create `components/tools/ToolName.tsx` — `'use client'`, design system styles
-3. Register in `app/tools/[slug]/page.tsx` toolComponents map
-4. Push → Cloudflare auto-deploys → Request indexing in Search Console
+2. Add `isPopular: true` if it's a high-traffic tool (shows on homepage)
+3. Create `components/tools/ToolName.tsx` — `'use client'`, design system styles
+4. Register in `app/tools/[slug]/page.tsx` toolComponents map
+5. Push → Cloudflare auto-deploys → Request indexing in Search Console
 
 ## Adding a New Article — Checklist
 
 1. Add entry in `lib/articles.ts` (slug, title, description, category, categoryColor, categoryText, readTime, publishedAt, relatedTool?, lang, keywords)
-2. Create `components/articles/ArticleName.tsx` — `'use client'`, use `.prose-article` className, write full article body
+2. Create `components/articles/ArticleName.tsx` — `'use client'`, use `.prose-freeutil` className, write full article body
 3. Add static import + map entry in `app/blog/[slug]/page.tsx`
 4. If article links to a tool, add `relatedArticle` + `relatedArticleName` to that tool in `lib/tools.ts`
 5. Push → Cloudflare auto-deploys → Request indexing in Search Console
@@ -215,12 +281,14 @@ export default function MyTool() {
 | `<AdLeaderboard />` | 4258757514 | Under tool header |
 | `<AdSidebar />` | 7704215914 | Right sidebar |
 | `<AdInArticle />` | 9484201440 | Between how-to and FAQ |
+| `<HomeAdSlot />` | — | Homepage between Popular Tools and Categories |
 
 ---
 
 ## SEO & Content Structure
 
 - Per-tool metadata via `generateMetadata()` in `app/tools/[slug]/page.tsx`
+- Blog index metadata via `app/blog/layout.tsx` (server component — required because page.tsx is client)
 - JSON-LD: WebApplication, BreadcrumbList, HowTo, FAQPage per tool
 - JSON-LD: Article schema per blog post
 - Canonical URLs set for all pages
@@ -235,7 +303,7 @@ export default function MyTool() {
 
 ---
 
-## Tools Completed ✅ (37 tools)
+## Tools Completed ✅ (38 tools)
 
 ### Dev / IT (19)
 | Slug | Component |
@@ -294,29 +362,14 @@ export default function MyTool() {
 |---|---|
 | chmod-calculator | ChmodCalculator.tsx |
 
----
-
-## Blog Articles
-
-### Article Strategy — Why variety matters for AdSense
-Google's "Low value content" flag targets sites with only one content type. freeutil.app needs:
-- **Depth signal**: articles that stand alone without being tied to a specific tool
-- **Variety signal**: comparison, troubleshooting, how-to — not just "what is X" definitions
-- **Commercial signal**: articles where readers have purchase/decision intent → higher RPM
-
-### Article Types & AdSense RPM
-| Type | RPM Range | Why |
-|---|---|---|
-| Comparison (X vs Y) | $4–8 | Commercial intent — readers deciding between options |
-| Error / Troubleshooting | $5–9 | Urgent intent — high engagement, multiple page views |
-| How-to guides | $5–10 | Developer audience is high-CPM demographic |
-| Tool-linked informational | $2–5 | Info intent — lower but solid |
-| Thai-specific | $2–5 | Niche, low competition |
-| Glossary / Definitions | $1–3 | Top-of-funnel, low intent |
+### Finance (1)
+| Slug | Component |
+|---|---|
+| (coming soon) | — |
 
 ---
 
-## Blog Articles Completed ✅ (54 articles)
+## Blog Articles Completed ✅ (63 articles)
 
 ### Batch 1 — Tool-linked informational (19 articles)
 
@@ -367,9 +420,9 @@ Google's "Low value content" flag targets sites with only one content type. free
 #### Thai Tools (1 — Thai language)
 - `thai-number-writing-guide` → ThaiNumberWritingGuide.tsx
 
-### Batch 3 — Comparison + Error fix + How-to (15 articles, English)
+### Batch 3 — Comparison + Troubleshooting + How-to (15 articles)
 
-#### Comparison articles (7)
+#### Comparison (7)
 - `https-vs-http` → HttpsVsHttp.tsx
 - `jwt-vs-session-auth` → JwtVsSessionAuth.tsx
 - `rsa-vs-ecdsa-vs-ed25519` → RsaVsEcdsaVsEd25519.tsx
@@ -378,60 +431,55 @@ Google's "Low value content" flag targets sites with only one content type. free
 - `sha256-vs-bcrypt-vs-argon2` → Sha256VsBcryptVsArgon2.tsx
 - `lets-encrypt-vs-paid-ssl` → LetsEncryptVsPaidSsl.tsx
 
-#### Error / Troubleshooting articles (5)
+#### Error / Troubleshooting (5)
 - `err-ssl-protocol-error` → ErrSslProtocolError.tsx
 - `invalid-json-fix` → InvalidJsonFix.tsx
 - `jwt-expired-error` → JwtExpiredError.tsx
 - `cors-error-fix` → CorsErrorFix.tsx
 - `413-request-entity-too-large` → RequestEntityTooLarge.tsx
 
-#### How-to guides (3)
+#### How-to (3)
 - `nginx-ssl-lets-encrypt` → NginxSslLetsEncrypt.tsx
 - `linux-file-permissions-explained` → LinuxFilePermissionsExplained.tsx
 - `linux-cron-job-setup` → LinuxCronJobSetup.tsx
 
+### Batch 4 — Standalone depth + Thai-specific (10 articles)
+
+#### Standalone informational — OpenSSL & Dev (6)
+- `what-is-ssl-tls` → WhatIsSslTls.tsx
+- `public-key-cryptography-explained` → PublicKeyCryptographyExplained.tsx
+- `http-status-codes-guide` → HttpStatusCodesGuide.tsx
+- `dns-explained` → DnsExplained.tsx
+- `api-authentication-methods` → ApiAuthenticationMethods.tsx
+- `linux-permissions-cheatsheet` → LinuxPermissionsCheatsheet.tsx
+
+#### Thai-specific (4 — Thai language)
+- `pdpa-thailand-developers` → PdpaThailandDevelopers.tsx
+- `thai-vat-guide` → ThaiVatGuide.tsx
+- `thai-company-tax-id` → ThaiCompanyTaxId.tsx
+- `https-ssl-pdpa-thai-business` → HttpsSslPdpaThaiiBusiness.tsx
+
+### Batch 5 — Broader dev topics + Thai community (12 articles)
+
+#### Dev / IT — Broader topics (9)
+- `best-free-developer-tools-2025` → BestFreeDeveloperTools2025.tsx
+- `api-testing-guide` → ApiTestingGuide.tsx
+- `vps-vs-shared-hosting` → VpsVsSharedHosting.tsx
+- `cloudflare-free-tier-guide` → CloudflareFreeGuide.tsx
+- `https-everywhere-guide` → HttpsEverywhereGuide.tsx
+- `common-web-security-mistakes` → CommonWebSecurityMistakes.tsx
+- `data-encryption-explained` → DataEncryptionExplained.tsx
+- `two-factor-authentication-guide` → TwoFactorAuthGuide.tsx
+- `open-source-license-guide` → OpenSourceLicenseGuide.tsx
+- `git-workflow-guide` → GitWorkflowGuide.tsx
+
+#### Thai community (2 — Thai language)
+- `thai-developer-salary-guide` → ThaiDeveloperSalaryGuide.tsx
+- `freelance-tax-thailand` → FreelanceTaxThailand.tsx
+
 ---
 
 ## Blog Articles Roadmap
-
-### Batch 3 — P1: Comparison + Troubleshooting + How-to (15 articles, English) ✅ Done
-
-#### Comparison articles (highest RPM — commercial intent)
-- [x] `https-vs-http` — HTTPS vs HTTP: What's the Difference and Why It Matters
-- [x] `jwt-vs-session-auth` — JWT vs Session-based Authentication: Which Should You Use?
-- [x] `rsa-vs-ecdsa-vs-ed25519` — RSA vs ECDSA vs Ed25519: Choosing the Right Key Algorithm
-- [x] `json-vs-xml` — JSON vs XML: Differences and When to Use Each
-- [x] `png-vs-jpg-vs-webp` — PNG vs JPG vs WebP: Which Image Format Should You Use?
-- [x] `sha256-vs-bcrypt-vs-argon2` — SHA-256 vs bcrypt vs Argon2: Password Hashing Compared
-- [x] `lets-encrypt-vs-paid-ssl` — Let's Encrypt vs Paid SSL Certificates: What's the Difference?
-
-#### Error / Troubleshooting articles (urgent intent, high engagement)
-- [x] `err-ssl-protocol-error` — ERR_SSL_PROTOCOL_ERROR: Causes and How to Fix It
-- [x] `invalid-json-fix` — Invalid JSON: How to Find and Fix JSON Errors
-- [x] `jwt-expired-error` — JWT Expired: What It Means and How to Handle Token Expiry
-- [x] `cors-error-fix` — CORS Error Fix: Access-Control-Allow-Origin Explained
-- [x] `413-request-entity-too-large` — 413 Request Entity Too Large: How to Fix It in Nginx and Apache
-
-#### How-to guides (developer audience, high RPM)
-- [x] `nginx-ssl-lets-encrypt` — How to Set Up HTTPS on Nginx with Let's Encrypt
-- [x] `linux-file-permissions-explained` — How to Read Linux File Permissions (chmod, chown, ls -l)
-- [x] `linux-cron-job-setup` — Linux Cron Job: A Practical Setup and Debugging Guide
-
-### Batch 4 — P2: Depth + Thai-specific (10 articles)
-
-#### Standalone informational (not tied to a specific tool)
-- [ ] `what-is-ssl-tls` — What is SSL/TLS? How HTTPS Actually Works
-- [ ] `public-key-cryptography-explained` — Public Key Cryptography Explained Simply
-- [ ] `http-status-codes-guide` — HTTP Status Codes: A Complete Reference (200, 301, 404, 500…)
-- [ ] `dns-explained` — How DNS Works: From Domain Name to IP Address
-- [ ] `api-authentication-methods` — API Authentication Methods: API Keys, OAuth, JWT Compared
-- [ ] `linux-permissions-cheatsheet` — Linux File Permissions Cheatsheet: chmod, chown, umask
-
-#### Thai-specific (Thai language — low competition)
-- [ ] `pdpa-thailand-developers` — Thai PDPA for Developers: What You Need to Know (ภาษาอังกฤษ)
-- [ ] `thai-vat-guide` — คู่มือ VAT สำหรับผู้ประกอบการไทย: ออกใบกำกับภาษีให้ถูกต้อง
-- [ ] `thai-company-tax-id` — เลขประจำตัวผู้เสียภาษี (Tax ID) ไทย: ความหมายและการตรวจสอบ
-- [ ] `https-ssl-pdpa-thai-business` — ธุรกิจออนไลน์ต้องมี SSL ไหม? PDPA และความปลอดภัยข้อมูล
 
 ---
 
@@ -488,8 +536,12 @@ Google's "Low value content" flag targets sites with only one content type. free
   - ✅ About page (`app/about/page.tsx`) — 800+ word SEO content
   - ✅ Batch 1: 19 tool-linked articles
   - ✅ Batch 2: 10 tool-linked articles (new tools)
+  - ✅ Batch 3: 15 Comparison + Troubleshooting + How-to articles
+  - ✅ Batch 4: 10 Standalone depth + Thai-specific articles
+  - ✅ Batch 5: 12 Broader dev topics + Thai community articles
   - ✅ Shared Header + Footer with /blog and /about links (all pages)
-  - ✅ Batch 3: 15 comparison + troubleshooting + how-to articles
+  - ✅ Homepage redesigned — Popular Tools + Categories + Blog preview
+  - ✅ Blog page redesigned — category filter + featured card + grid layout
   - ⬜ Update sitemap to include /about, /blog, /blog/*
   - ⬜ Deploy and request indexing in Search Console
   - ⬜ Wait 5-7 days then submit AdSense review
@@ -505,6 +557,7 @@ Google's "Low value content" flag targets sites with only one content type. free
 - **Cache issues:** `Remove-Item -Recurse -Force .next && pnpm dev`
 - **crossOrigin:** Capital O in JSX
 - **CSR/SelfSigned TypeScript error:** `certReqInfo.buffer as ArrayBuffer` fix
+- **Blog page metadata:** `app/blog/page.tsx` is `'use client'` — metadata lives in `app/blog/layout.tsx`
 
 ---
 
@@ -535,3 +588,5 @@ Files uploaded to Claude Project Knowledge and what they map to:
 | `articles.ts` | `lib/articles.ts` |
 | `blog-slug-page.tsx` | `app/blog/[slug]/page.tsx` |
 | `tool-slug-page.tsx` | `app/tools/[slug]/page.tsx` |
+| `home-page.tsx` | `app/page.tsx` |
+| `blog-page.tsx` | `app/blog/page.tsx` |
