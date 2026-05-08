@@ -125,6 +125,29 @@ import ThaiCompanyRegistration from '@/components/articles/ThaiCompanyRegistrati
 import HowToGenerateSshKey from '@/components/articles/HowToGenerateSshKey'
 import HowToReadSslCertificate from '@/components/articles/HowToReadSslCertificate'
 import HowToDebugApiRequests from '@/components/articles/HowToDebugApiRequests'
+// ============================================================
+// BATCH 6 — เพิ่มใน app/blog/[slug]/page.tsx
+// ============================================================
+ 
+// ── Imports ───────────────────────────────────────────────────
+import ErrConnectionRefused from '@/components/articles/ErrConnectionRefused'
+import GatewayTimeout504 from '@/components/articles/GatewayTimeout504'
+import CertificateExpiredFix from '@/components/articles/CertificateExpiredFix'
+import InternalServerError500 from '@/components/articles/InternalServerError500'
+import MixedContentWarningFix from '@/components/articles/MixedContentWarningFix'
+import EnvironmentVariablesGuide from '@/components/articles/EnvironmentVariablesGuide'
+import CiCdExplained from '@/components/articles/CiCdExplained'
+import DockerComposeGuide from '@/components/articles/DockerComposeGuide'
+import NginxConfigGuide from '@/components/articles/NginxConfigGuide'
+import CoreWebVitalsGuide from '@/components/articles/CoreWebVitalsGuide'
+import WebPerformanceOptimization from '@/components/articles/WebPerformanceOptimization'
+import HttpCachingGuide from '@/components/articles/HttpCachingGuide'
+import XssAttackExplained from '@/components/articles/XssAttackExplained'
+import SqlInjectionExplained from '@/components/articles/SqlInjectionExplained'
+import WebSecurityHeaders from '@/components/articles/WebSecurityHeaders'
+import NginxVsApache from '@/components/articles/NginxVsApache'
+import MysqlVsPostgresql from '@/components/articles/MysqlVsPostgresql'
+import MonolithVsMicroservices from '@/components/articles/MonolithVsMicroservices'
 
 const articleComponents: Record<string, React.ComponentType> = {
   'what-is-jwt': WhatIsJWT,
@@ -214,6 +237,25 @@ const articleComponents: Record<string, React.ComponentType> = {
   'how-to-generate-ssh-key': HowToGenerateSshKey,
   'how-to-read-ssl-certificate': HowToReadSslCertificate,
   'how-to-debug-api-requests': HowToDebugApiRequests,
+  // ── articleComponents map entries ─────────────────────────────
+  'err-connection-refused': ErrConnectionRefused,
+  '504-gateway-timeout-fix': GatewayTimeout504,
+  'certificate-expired-fix': CertificateExpiredFix,
+  '500-internal-server-error-fix': InternalServerError500,
+  'mixed-content-warning-fix': MixedContentWarningFix,
+  'environment-variables-guide': EnvironmentVariablesGuide,
+  'ci-cd-explained': CiCdExplained,
+  'docker-compose-guide': DockerComposeGuide,
+  'nginx-config-guide': NginxConfigGuide,
+  'core-web-vitals-guide': CoreWebVitalsGuide,
+  'web-performance-optimization': WebPerformanceOptimization,
+  'http-caching-guide': HttpCachingGuide,
+  'xss-attack-explained': XssAttackExplained,
+  'sql-injection-explained': SqlInjectionExplained,
+  'web-security-headers': WebSecurityHeaders,
+  'nginx-vs-apache': NginxVsApache,
+  'mysql-vs-postgresql': MysqlVsPostgresql,
+  'monolith-vs-microservices': MonolithVsMicroservices,
 }
 
 export default async function BlogArticlePage({
