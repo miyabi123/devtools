@@ -108,6 +108,23 @@ import ThaiDeveloperSalaryGuide from '@/components/articles/ThaiDeveloperSalaryG
 import FreelanceTaxThailand from '@/components/articles/FreelanceTaxThailand'
 import OpenSourceLicenseGuide from '@/components/articles/OpenSourceLicenseGuide'
 import GitWorkflowGuide from '@/components/articles/GitWorkflowGuide'
+import LinuxCommandsCheatsheet from '@/components/articles/LinuxCommandsCheatsheet'
+import GitCommandsCheatsheet from '@/components/articles/GitCommandsCheatsheet'
+import OpensslCommandsCheatsheet from '@/components/articles/OpensslCommandsCheatsheet'
+import RegexCheatsheet from '@/components/articles/RegexCheatsheet'
+import WhatIsApi from '@/components/articles/WhatIsApi'
+import HowDnsWorks from '@/components/articles/HowDnsWorks'
+import WhatIsSsh from '@/components/articles/WhatIsSsh'
+import WhatIsDocker from '@/components/articles/WhatIsDocker'
+import WhatIsWebhook from '@/components/articles/WhatIsWebhook'
+import RestVsGraphqlVsGrpc from '@/components/articles/RestVsGraphqlVsGrpc'
+import SqlVsNosql from '@/components/articles/SqlVsNosql'
+import SymmetricVsAsymmetricEncryption from '@/components/articles/SymmetricVsAsymmetricEncryption'
+import ThaiPdpaDevelopers from '@/components/articles/ThaiPdpaDevelopers'
+import ThaiCompanyRegistration from '@/components/articles/ThaiCompanyRegistration'
+import HowToGenerateSshKey from '@/components/articles/HowToGenerateSshKey'
+import HowToReadSslCertificate from '@/components/articles/HowToReadSslCertificate'
+import HowToDebugApiRequests from '@/components/articles/HowToDebugApiRequests'
 
 const articleComponents: Record<string, React.ComponentType> = {
   'what-is-jwt': WhatIsJWT,
@@ -180,6 +197,23 @@ const articleComponents: Record<string, React.ComponentType> = {
   'freelance-tax-thailand': FreelanceTaxThailand,
   'open-source-license-guide': OpenSourceLicenseGuide,
   'git-workflow-guide': GitWorkflowGuide,
+  'linux-commands-cheatsheet': LinuxCommandsCheatsheet,
+  'git-commands-cheatsheet': GitCommandsCheatsheet,
+  'openssl-commands-cheatsheet': OpensslCommandsCheatsheet,
+  'regex-cheatsheet': RegexCheatsheet,
+  'what-is-api': WhatIsApi,
+  'how-dns-works': HowDnsWorks,
+  'what-is-ssh': WhatIsSsh,
+  'what-is-docker': WhatIsDocker,
+  'what-is-webhook': WhatIsWebhook,
+  'rest-vs-graphql-vs-grpc': RestVsGraphqlVsGrpc,
+  'sql-vs-nosql': SqlVsNosql,
+  'symmetric-vs-asymmetric-encryption': SymmetricVsAsymmetricEncryption,
+  'thai-pdpa-developers': ThaiPdpaDevelopers,
+  'thai-company-registration': ThaiCompanyRegistration,
+  'how-to-generate-ssh-key': HowToGenerateSshKey,
+  'how-to-read-ssl-certificate': HowToReadSslCertificate,
+  'how-to-debug-api-requests': HowToDebugApiRequests,
 }
 
 export default async function BlogArticlePage({
