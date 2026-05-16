@@ -148,6 +148,28 @@ import WebSecurityHeaders from '@/components/articles/WebSecurityHeaders'
 import NginxVsApache from '@/components/articles/NginxVsApache'
 import MysqlVsPostgresql from '@/components/articles/MysqlVsPostgresql'
 import MonolithVsMicroservices from '@/components/articles/MonolithVsMicroservices'
+// ── Imports ───────────────────────────────────────────────────
+// Format A: Ultimate Guides
+import DeveloperSecurityChecklist from '@/components/articles/DeveloperSecurityChecklist'
+import LinuxServerSetupGuide from '@/components/articles/LinuxServerSetupGuide'
+import ApiDesignBestPractices from '@/components/articles/ApiDesignBestPractices'
+import SslTlsCompleteGuide from '@/components/articles/SslTlsCompleteGuide'
+// Format B: Quick Answers
+import WhatIsALoadBalancer from '@/components/articles/WhatIsALoadBalancer'
+import WhatIsACdn from '@/components/articles/WhatIsACdn'
+import WhatIsAReverseProxy from '@/components/articles/WhatIsAReverseProxy'
+import WhatIsBase64 from '@/components/articles/WhatIsBase64'
+import AuthenticationVsAuthorization from '@/components/articles/AuthenticationVsAuthorization'
+import HowHttpsWorks from '@/components/articles/HowHttpsWorks'
+import HowToReadATraceroute from '@/components/articles/HowToReadATraceroute'
+import Chmod755Vs644 from '@/components/articles/Chmod755Vs644'
+// Format C: Practical Playbooks
+import WebsiteLaunchChecklist from '@/components/articles/WebsiteLaunchChecklist'
+import CodeReviewChecklist from '@/components/articles/CodeReviewChecklist'
+import IncidentResponseRunbook from '@/components/articles/IncidentResponseRunbook'
+import GitCommitMessageGuide from '@/components/articles/GitCommitMessageGuide'
+import ThaiStartupTechStack from '@/components/articles/ThaiStartupTechStack'
+import NewDeveloperOnboardingChecklist from '@/components/articles/NewDeveloperOnboardingChecklist'
 
 const articleComponents: Record<string, React.ComponentType> = {
   'what-is-jwt': WhatIsJWT,
@@ -256,6 +278,25 @@ const articleComponents: Record<string, React.ComponentType> = {
   'nginx-vs-apache': NginxVsApache,
   'mysql-vs-postgresql': MysqlVsPostgresql,
   'monolith-vs-microservices': MonolithVsMicroservices,
+  //batch 8
+  'developer-security-checklist': DeveloperSecurityChecklist,
+  'linux-server-setup-guide': LinuxServerSetupGuide,
+  'api-design-best-practices': ApiDesignBestPractices,
+  'ssl-tls-complete-guide': SslTlsCompleteGuide,
+  'what-is-a-load-balancer': WhatIsALoadBalancer,
+  'what-is-a-cdn': WhatIsACdn,
+  'what-is-a-reverse-proxy': WhatIsAReverseProxy,
+  'what-is-base64': WhatIsBase64,
+  'difference-between-authentication-and-authorization': AuthenticationVsAuthorization,
+  'how-https-works': HowHttpsWorks,
+  'how-to-read-a-traceroute': HowToReadATraceroute,
+  'chmod-755-vs-644': Chmod755Vs644,
+  'website-launch-checklist': WebsiteLaunchChecklist,
+  'code-review-checklist': CodeReviewChecklist,
+  'incident-response-runbook': IncidentResponseRunbook,
+  'git-commit-message-guide': GitCommitMessageGuide,
+  'thai-startup-tech-stack': ThaiStartupTechStack,
+  'new-developer-onboarding-checklist': NewDeveloperOnboardingChecklist,
 }
 
 export default async function BlogArticlePage({
